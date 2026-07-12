@@ -27,5 +27,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
       - name: Validate package and packed consumer
         run: npm run validate
