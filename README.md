@@ -49,6 +49,25 @@ Node.js:
 
 The repository currently uses Node 24 in CI.
 
+## Trial test harness
+
+The private extraction trial uses a blocking test harness covering:
+
+- deterministic server-side rendering;
+- Chromium component rendering;
+- client hydration without mismatch;
+- automatic accessibility checks with Axe;
+- isolated root, visitor and Studio dependency graphs;
+- explicit opt-in CSS entry points;
+- clean installation from the generated tarball;
+- TypeScript and runtime imports from the packed artifact;
+- one compatible Svelte runtime in the consumer;
+- registry-publication refusal.
+
+Install the Chromium test browser once on a development machine:
+
+    npx playwright install chromium
+
 ## Local validation
 
 Install dependencies:

@@ -130,6 +130,36 @@ try {
 	);
 
 	await writeFile(
+		join(consumerDirectory, 'verify-svelte.mjs'),
+		[
+			"import { realpath } from 'node:fs/promises';",
+			"import { createRequire } from 'node:module';",
+			'',
+			'const consumerRequire = createRequire(import.meta.url);',
+			'const packageRequire = createRequire(',
+			"\tnew URL('./node_modules/giadaware-ui-components/package.json', import.meta.url)",
+			');',
+			'',
+			"const consumerResolution = await realpath(consumerRequire.resolve('svelte'));",
+			"const packageResolution = await realpath(packageRequire.resolve('svelte'));",
+			'',
+			'if (consumerResolution !== packageResolution) {',
+			"\tthrow new Error('Package and consumer resolve different Svelte runtimes.');",
+			'}',
+			'',
+			'console.log(',
+			'\tJSON.stringify(',
+			'\t\t{ consumerResolution, packageResolution },',
+			'\t\tnull,',
+			'\t\t2',
+			'\t)',
+			');',
+			"console.log('Single Svelte runtime resolution passed.');",
+			''
+		].join('\n')
+	);
+
+	await writeFile(
 		join(consumerDirectory, 'index.ts'),
 		[
 			"import 'giadaware-ui-components';",
@@ -169,6 +199,56 @@ try {
 		true
 	);
 
+	const dependencyTreeResult = run(
+		'npm',
+		['ls', 'svelte', '--json', '--all'],
+		consumerDirectory
+	);
+
+	const dependencyTree = JSON.parse(
+		dependencyTreeResult.stdout
+	);
+
+	const svelteVersions = new Set();
+
+	function collectSvelteVersions(node) {
+		const svelte = node?.dependencies?.svelte;
+
+		if (svelte?.version) {
+			svelteVersions.add(svelte.version);
+		}
+
+		for (
+			const dependency of
+			Object.values(node?.dependencies ?? {})
+		) {
+			collectSvelteVersions(dependency);
+		}
+	}
+
+	collectSvelteVersions(dependencyTree);
+
+	if (svelteVersions.size !== 1) {
+		throw new Error(
+			`Expected one Svelte version, found: ${
+				[...svelteVersions].join(', ') || 'none'
+			}`
+		);
+	}
+
+	console.log(
+		`Single Svelte version in consumer tree: ${
+			[...svelteVersions][0]
+		}`
+	);
+
+	run(
+		process.execPath,
+		['verify-svelte.mjs'],
+		consumerDirectory,
+		true
+	);
+
 	run(
 		process.execPath,
 		['index.mjs'],
@@ -202,9 +282,30 @@ try {
 		);
 	}
 
+	const sourceCommit = run(
+		'git',
+		['rev-parse', 'HEAD'],
+		root
+	).stdout.trim();
+
+	const sourceTreeState =
+		run(
+			'git',
+			[
+				'status',
+				'--porcelain',
+				'--untracked-files=all'
+			],
+			root
+		).stdout.trim() === ''
+			? 'clean'
+			: 'dirty';
+
 	console.log(
 		JSON.stringify(
 			{
+				sourceCommit,
+				sourceTreeState,
 				filename: artifact.filename,
 				sha256,
 				files: paths
