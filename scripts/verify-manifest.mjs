@@ -72,6 +72,31 @@ requireValue(
 	'prepublishOnly must refuse publication'
 );
 
+requireValue(
+	manifest.scripts?.test ===
+		'npm run test:ssr && npm run test:browser',
+	'test must run SSR and browser gates'
+);
+
+requireValue(
+	manifest.scripts?.['verify:graphs'] ===
+		'node scripts/verify-entry-graphs.mjs',
+	'entry-graph verification must remain enabled'
+);
+
+requireValue(
+	manifest.scripts?.['verify:publication'] ===
+		'node scripts/verify-publication-block.mjs',
+	'publication-block verification must remain enabled'
+);
+
+requireValue(
+	manifest.scripts?.validate?.includes(
+		'npm run verify:pack'
+	),
+	'validate must include packed-consumer verification'
+);
+
 const expectedExports = [
 	'.',
 	'./visitor',
