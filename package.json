@@ -1,0 +1,75 @@
+{
+	"name": "giadaware-ui-components",
+	"version": "0.0.0",
+	"private": true,
+	"description": "Private-incubation Svelte components for GiadaWare",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build && npm run package",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"package": "svelte-kit sync && svelte-package",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"lint:package": "publint",
+		"prepack": "npm run package && publint",
+		"prepublishOnly": "node scripts/refuse-publish.mjs",
+		"verify:manifest": "node scripts/verify-manifest.mjs",
+		"validate": "npm run check && npm run build && npm run lint:package && npm run verify:manifest && npm run verify:pack",
+		"verify:pack": "node scripts/verify-pack.mjs"
+	},
+	"files": [
+		"dist",
+		"CHANGELOG.md",
+		"!dist/**/*.test.*",
+		"!dist/**/*.spec.*"
+	],
+	"sideEffects": [
+		"**/*.css"
+	],
+	"svelte": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./visitor": {
+			"types": "./dist/visitor/index.d.ts",
+			"svelte": "./dist/visitor/index.js",
+			"default": "./dist/visitor/index.js"
+		},
+		"./studio": {
+			"types": "./dist/studio/index.d.ts",
+			"svelte": "./dist/studio/index.js",
+			"default": "./dist/studio/index.js"
+		},
+		"./styles.css": "./dist/styles.css",
+		"./visitor/styles.css": "./dist/visitor/styles.css",
+		"./studio/styles.css": "./dist/studio/styles.css"
+	},
+	"peerDependencies": {
+		"svelte": "^5.0.0"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^7.0.1",
+		"@sveltejs/kit": "^2.63.0",
+		"@sveltejs/package": "^2.5.8",
+		"@sveltejs/vite-plugin-svelte": "^7.1.2",
+		"publint": "^0.3.21",
+		"svelte": "^5.56.1",
+		"svelte-check": "^4.6.0",
+		"typescript": "^6.0.3",
+		"vite": "^8.0.16"
+	},
+	"keywords": [
+		"svelte",
+		"components",
+		"giadaware"
+	],
+	"engines": {
+		"node": "^20.19.0 || >=22.12.0"
+	}
+}
