@@ -3,6 +3,10 @@ import { readFile } from 'node:fs/promises';
 const manifest = JSON.parse(
 	await readFile(new URL('../package.json', import.meta.url), 'utf8')
 );
+const formStatusSource = await readFile(
+	new URL('../src/lib/FormStatus.svelte', import.meta.url),
+	'utf8'
+);
 
 const errors = [];
 
@@ -50,6 +54,51 @@ requireValue(
 requireValue(
 	!manifest.dependencies?.svelte,
 	'Svelte must not be a runtime dependency'
+);
+
+requireValue(
+	!manifest.dependencies?.['@sveltejs/kit'],
+	'SvelteKit must not be a runtime dependency'
+);
+
+requireValue(
+	[
+		'dependencies',
+		'devDependencies',
+		'peerDependencies',
+		'optionalDependencies'
+	].every((field) =>
+		!Object.keys(manifest[field] ?? {}).some((name) =>
+			name.includes('atelier-kit')
+		)
+	),
+	'Atelier-Kit must not be a package dependency'
+);
+
+const formStatusCustomProperties = [
+	...formStatusSource.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	formStatusCustomProperties.length > 0 &&
+		formStatusCustomProperties.every((property) =>
+			property.startsWith('--giu-form-status-')
+		),
+	'FormStatus must use only neutral --giu-form-status-* tokens'
+);
+
+requireValue(
+	!formStatusSource.includes(':global') &&
+		!formStatusSource.includes('--studio-') &&
+		!formStatusSource.includes('--site-'),
+	'FormStatus CSS must remain scoped and application-neutral'
+);
+
+requireValue(
+	[...formStatusSource.matchAll(/var\(([^)]+)\)/g)].every(
+		([, value]) => value.includes(',')
+	),
+	'FormStatus custom-property uses must provide fallbacks'
 );
 
 requireValue(

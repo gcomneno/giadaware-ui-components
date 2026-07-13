@@ -4,6 +4,13 @@
 
 ### Added
 
+- `FormStatus` root component with the closed `success`, `error`, `warning`
+  and `info` tone contract.
+- Persistent-by-default and browser-only timed status dismissal with prop-reset,
+  hydration and cleanup coverage.
+- Deterministic `alert`/assertive semantics for errors and `status`/polite
+  semantics for all other FormStatus tones.
+- Scoped FormStatus styling through neutral `--giu-form-status-*` tokens.
 - `SocialIcon` root component with a closed five-identifier registry.
 - Distinct GitHub brand and GitHub Sponsors heart glyphs.
 - Decorative and informative accessibility modes.
