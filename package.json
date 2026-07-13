@@ -27,6 +27,7 @@
 	"files": [
 		"dist",
 		"CHANGELOG.md",
+		"THIRD_PARTY_NOTICES.md",
 		"!dist/**/*.test.*",
 		"!dist/**/*.spec.*"
 	],
@@ -81,5 +82,8 @@
 	],
 	"engines": {
 		"node": "^20.19.0 || >=22.12.0"
+	},
+	"dependencies": {
+		"esm-env": "1.2.2"
 	}
 }

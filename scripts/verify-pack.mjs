@@ -72,8 +72,27 @@ try {
 		'CHANGELOG.md',
 		'LICENSE',
 		'README.md',
+		'THIRD_PARTY_NOTICES.md',
+		'dist/SocialIcon.svelte',
+		'dist/SocialIcon.svelte.d.ts',
 		'dist/index.d.ts',
 		'dist/index.js',
+		'dist/social-icon-paths.d.ts',
+		'dist/social-icon-paths.js',
+		'dist/social-icon-runtime.d.ts',
+		'dist/social-icon-runtime.js',
+		'dist/social-icon.d.ts',
+		'dist/social-icon.js',
+		'dist/social-icons/facebook.d.ts',
+		'dist/social-icons/facebook.js',
+		'dist/social-icons/github-sponsors.d.ts',
+		'dist/social-icons/github-sponsors.js',
+		'dist/social-icons/github.d.ts',
+		'dist/social-icons/github.js',
+		'dist/social-icons/instagram.d.ts',
+		'dist/social-icons/instagram.js',
+		'dist/social-icons/x.d.ts',
+		'dist/social-icons/x.js',
 		'dist/studio/index.d.ts',
 		'dist/studio/index.js',
 		'dist/studio/styles.css',
@@ -111,6 +130,13 @@ try {
 				dependencies: {
 					'giadaware-ui-components': `file:${tarball}`,
 					svelte: rootManifest.devDependencies.svelte
+				},
+				devDependencies: {
+					'@sveltejs/vite-plugin-svelte':
+						rootManifest.devDependencies[
+							'@sveltejs/vite-plugin-svelte'
+						],
+					vite: rootManifest.devDependencies.vite
 				}
 			},
 			null,
@@ -121,10 +147,178 @@ try {
 	await writeFile(
 		join(consumerDirectory, 'index.mjs'),
 		[
-			"await import('giadaware-ui-components');",
-			"await import('giadaware-ui-components/visitor');",
-			"await import('giadaware-ui-components/studio');",
+			"const root = await import('giadaware-ui-components');",
+			"const visitor = await import('giadaware-ui-components/visitor');",
+			"const studio = await import('giadaware-ui-components/studio');",
+			'',
+			"if (typeof root.SocialIcon !== 'function') {",
+			"\tthrow new Error('SocialIcon runtime export is missing.');",
+			'}',
+			'',
+			"const expectedIds = ['instagram', 'facebook', 'x', 'github', 'github-sponsors'];",
+			'',
+			"if (JSON.stringify(root.SOCIAL_ICON_IDS) !== JSON.stringify(expectedIds)) {",
+			"\tthrow new Error('SOCIAL_ICON_IDS runtime export is incorrect.');",
+			'}',
+			'',
+			'if (Object.keys(visitor).length !== 0 || Object.keys(studio).length !== 0) {',
+			"\tthrow new Error('Visitor and Studio runtime exports must remain empty.');",
+			'}',
+			'',
 			"console.log('Clean consumer runtime imports passed.');",
+			''
+		].join('\n')
+	);
+
+	await writeFile(
+		join(consumerDirectory, 'production-invalid-id.mjs'),
+		[
+			"import { render } from 'svelte/server';",
+			"import { SocialIcon } from 'giadaware-ui-components';",
+			'',
+			'const warnings = [];',
+			'const originalWarn = console.warn;',
+			'',
+			'console.warn = (...args) => {',
+			'\twarnings.push(args);',
+			'};',
+			'',
+			'try {',
+			'\tconst invalidIdResult = render(SocialIcon, {',
+			"\t\tprops: { id: 'invalid-production-id' }",
+			'\t});',
+			'',
+			"\tif (invalidIdResult.body.includes('<svg')) {",
+			"\t\tthrow new Error('Invalid production ID rendered an SVG.');",
+			'\t}',
+			'',
+			'\tconst missingLabelResult = render(SocialIcon, {',
+			"\t\tprops: { id: 'github', decorative: false }",
+			'\t});',
+			'',
+			"\tif (missingLabelResult.body.includes('<svg')) {",
+			"\t\tthrow new Error('Missing production ariaLabel rendered an SVG.');",
+			'\t}',
+			'',
+			'\tif (warnings.length !== 0) {',
+			"\t\tthrow new Error('Invalid production props emitted a warning.');",
+			'\t}',
+			'} finally {',
+			'\tconsole.warn = originalWarn;',
+			'}',
+			'',
+			"console.log('Production invalid-props behavior passed.');",
+			''
+		].join('\n')
+	);
+
+	await writeFile(
+		join(consumerDirectory, 'vite.production-invalid.config.mjs'),
+		[
+			"import { svelte } from '@sveltejs/vite-plugin-svelte';",
+			"import { defineConfig } from 'vite';",
+			'',
+			'export default defineConfig({',
+			'\tplugins: [svelte()],',
+			'\tbuild: {',
+			"\t\tssr: 'production-invalid-id.mjs',",
+			"\t\toutDir: 'dist-production-invalid',",
+			'\t\temptyOutDir: true,',
+			'\t\trollupOptions: {',
+			'\t\t\toutput: {',
+			"\t\t\t\tentryFileNames: 'production-invalid.mjs'",
+			'\t\t\t}',
+			'\t\t}',
+			'\t},',
+			'\tssr: {',
+			"\t\tnoExternal: ['giadaware-ui-components']",
+			'\t}',
+			'});',
+			''
+		].join('\n')
+	);
+
+	await writeFile(
+		join(consumerDirectory, 'registry-only.mjs'),
+		[
+			"import { SOCIAL_ICON_IDS } from 'giadaware-ui-components';",
+			'',
+			"const expectedIds = ['instagram', 'facebook', 'x', 'github', 'github-sponsors'];",
+			'',
+			'if (JSON.stringify(SOCIAL_ICON_IDS) !== JSON.stringify(expectedIds)) {',
+			"\tthrow new Error('Registry-only consumer received incorrect IDs.');",
+			'}',
+			'',
+			"console.log('Registry-only consumer passed.');",
+			''
+		].join('\n')
+	);
+
+	await writeFile(
+		join(consumerDirectory, 'vite.registry.config.mjs'),
+		[
+			"import { writeFile } from 'node:fs/promises';",
+			"import { svelte } from '@sveltejs/vite-plugin-svelte';",
+			"import { defineConfig } from 'vite';",
+			'',
+			"const moduleManifest = new URL('./registry-modules.json', import.meta.url);",
+			'',
+			'const recordChunkModules = {',
+			"\tname: 'record-chunk-modules',",
+			'\tasync generateBundle(_options, bundle) {',
+			'\t\tconst modules = Object.values(bundle)',
+			"\t\t\t.filter((output) => output.type === 'chunk')",
+			'\t\t\t.flatMap((chunk) => Object.keys(chunk.modules));',
+			'',
+			'\t\tawait writeFile(',
+			'\t\t\tmoduleManifest,',
+			"\t\t\tJSON.stringify([...new Set(modules)].sort(), null, 2) + '\\n'",
+			'\t\t);',
+			'\t}',
+			'};',
+			'',
+			'export default defineConfig({',
+			'\tplugins: [svelte(), recordChunkModules],',
+			'\tbuild: {',
+			"\t\tssr: 'registry-only.mjs',",
+			"\t\toutDir: 'dist-registry',",
+			'\t\temptyOutDir: true,',
+			'\t\trollupOptions: {',
+			'\t\t\toutput: {',
+			"\t\t\t\tentryFileNames: 'registry.mjs'",
+			'\t\t\t}',
+			'\t\t}',
+			'\t},',
+			'\tssr: {',
+			"\t\tnoExternal: ['giadaware-ui-components']",
+			'\t}',
+			'});',
+			''
+		].join('\n')
+	);
+
+	await writeFile(
+		join(consumerDirectory, 'vite.config.mjs'),
+		[
+			"import { svelte } from '@sveltejs/vite-plugin-svelte';",
+			"import { defineConfig } from 'vite';",
+			'',
+			'export default defineConfig({',
+			'\tplugins: [svelte()],',
+			'\tbuild: {',
+			"\t\tssr: 'index.mjs',",
+			"\t\toutDir: 'dist-ssr',",
+			'\t\temptyOutDir: true,',
+			'\t\trollupOptions: {',
+			'\t\t\toutput: {',
+			"\t\t\t\tentryFileNames: '[name].mjs'",
+			'\t\t\t}',
+			'\t\t}',
+			'\t},',
+			'\tssr: {',
+			"\t\tnoExternal: ['giadaware-ui-components']",
+			'\t}',
+			'});',
 			''
 		].join('\n')
 	);
@@ -162,9 +356,30 @@ try {
 	await writeFile(
 		join(consumerDirectory, 'index.ts'),
 		[
-			"import 'giadaware-ui-components';",
+			"import { SOCIAL_ICON_IDS, SocialIcon } from 'giadaware-ui-components';",
+			"import type { SocialIconId } from 'giadaware-ui-components';",
+			"import type { ComponentProps } from 'svelte';",
 			"import 'giadaware-ui-components/visitor';",
 			"import 'giadaware-ui-components/studio';",
+			'',
+			"const id: SocialIconId = 'github-sponsors';",
+			'const informativeProps: ComponentProps<typeof SocialIcon> = {',
+			"\tid: 'github',",
+			'\tdecorative: false,',
+			"\tariaLabel: 'GitHub profile'",
+			'};',
+			'',
+			'// @ts-expect-error Informative icons require ariaLabel.',
+			'const missingInformativeLabel: ComponentProps<typeof SocialIcon> = {',
+			"\tid: 'github',",
+			'\tdecorative: false',
+			'};',
+			'',
+			'void id;',
+			'void informativeProps;',
+			'void missingInformativeLabel;',
+			'void SOCIAL_ICON_IDS;',
+			'void SocialIcon;',
 			''
 		].join('\n')
 	);
@@ -174,8 +389,9 @@ try {
 		JSON.stringify(
 			{
 				compilerOptions: {
-					module: 'NodeNext',
-					moduleResolution: 'NodeNext',
+					module: 'ESNext',
+					moduleResolution: 'Bundler',
+					allowArbitraryExtensions: true,
 					strict: true,
 					skipLibCheck: true,
 					noEmit: true
@@ -251,7 +467,146 @@ try {
 
 	run(
 		process.execPath,
-		['index.mjs'],
+		[
+			join(
+				consumerDirectory,
+				'node_modules',
+				'vite',
+				'bin',
+				'vite.js'
+			),
+			'build',
+			'--config',
+			'vite.production-invalid.config.mjs'
+		],
+		consumerDirectory,
+		true
+	);
+
+	run(
+		process.execPath,
+		[
+			join(
+				'dist-production-invalid',
+				'production-invalid.mjs'
+			)
+		],
+		consumerDirectory,
+		true
+	);
+
+	run(
+		process.execPath,
+		[
+			join(
+				consumerDirectory,
+				'node_modules',
+				'vite',
+				'bin',
+				'vite.js'
+			),
+			'build',
+			'--config',
+			'vite.registry.config.mjs'
+		],
+		consumerDirectory,
+		true
+	);
+
+	const registryBundle = await readFile(
+		join(
+			consumerDirectory,
+			'dist-registry',
+			'registry.mjs'
+		),
+		'utf8'
+	);
+	const registryModules = JSON.parse(
+		await readFile(
+			join(consumerDirectory, 'registry-modules.json'),
+			'utf8'
+		)
+	).map((moduleId) => moduleId.replaceAll('\\', '/'));
+
+	const forbiddenRegistryModules = [
+		'/dist/SocialIcon.svelte',
+		'/dist/social-icon-runtime.js',
+		'/dist/social-icon-paths.js',
+		'/dist/social-icons/'
+	];
+
+	for (const forbiddenModule of forbiddenRegistryModules) {
+		if (
+			registryModules.some((moduleId) =>
+				moduleId.includes(forbiddenModule)
+			)
+		) {
+			throw new Error(
+				`Registry-only chunks unexpectedly include a SocialIcon module: ${forbiddenModule}`
+			);
+		}
+	}
+
+	if (
+		!registryModules.some((moduleId) =>
+			moduleId.includes('/dist/social-icon.js')
+		)
+	) {
+		throw new Error(
+			'Registry-only chunks do not include dist/social-icon.js.'
+		);
+	}
+
+	const forbiddenRegistryBundleFragments = [
+		'M7.0301.084c-1.2768',
+		'M9.101 23.691v-7.98',
+		'M14.234 10.162 22.977',
+		'M12 .297c-6.63',
+		'M14 20.408c-.492.308',
+		'SocialIcon received the unsupported id',
+		'no non-empty ariaLabel'
+	];
+
+	for (const fragment of forbiddenRegistryBundleFragments) {
+		if (registryBundle.includes(fragment)) {
+			throw new Error(
+				`Registry-only bundle unexpectedly contains SocialIcon geometry or runtime code: ${fragment}`
+			);
+		}
+	}
+
+	run(
+		process.execPath,
+		[join('dist-registry', 'registry.mjs')],
+		consumerDirectory,
+		true
+	);
+
+	console.log(
+		'Registry-only Vite SSR tree-shaking passed: chunk modules exclude SocialIcon geometry and runtime code.'
+	);
+
+	run(
+		process.execPath,
+		[
+			join(
+				consumerDirectory,
+				'node_modules',
+				'vite',
+				'bin',
+				'vite.js'
+			),
+			'build',
+			'--config',
+			'vite.config.mjs'
+		],
+		consumerDirectory,
+		true
+	);
+
+	run(
+		process.execPath,
+		[join('dist-ssr', 'index.mjs')],
 		consumerDirectory,
 		true
 	);
@@ -268,6 +623,7 @@ try {
 	);
 
 	for (const cssPath of [
+		'THIRD_PARTY_NOTICES.md',
 		'dist/styles.css',
 		'dist/visitor/styles.css',
 		'dist/studio/styles.css'
