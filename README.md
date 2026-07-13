@@ -26,8 +26,8 @@ The approved trial will contain exactly:
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
 
-- `giadaware-ui-components` exports `SocialIcon`, `SocialIconId` and
-  `SOCIAL_ICON_IDS`;
+- `giadaware-ui-components` exports `FormStatus`, `FormStatusTone`,
+  `SocialIcon`, `SocialIconId` and `SOCIAL_ICON_IDS`;
 - `giadaware-ui-components/visitor` remains empty and reserved;
 - `giadaware-ui-components/studio` remains empty and reserved.
 
@@ -114,13 +114,60 @@ Inc.
 
 See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the complete notices.
 
-## Requirements
+## FormStatus
 
-Node.js:
+The root entry point exports:
 
-    ^20.19.0 || >=22.12.0
+```ts
+import { FormStatus } from 'giadaware-ui-components';
 
-The repository currently uses Node 24 in CI.
+import type { FormStatusTone } from 'giadaware-ui-components';
+```
+
+`FormStatusTone` is the closed union `success | error | warning | info`.
+`message` is required and is rendered without package-provided labels or other
+localized text. An empty message renders no status. `tone` defaults to `info`.
+
+Statuses are persistent by default:
+
+```svelte
+<FormStatus
+	message="Impostazioni salvate"
+	tone="success"
+/>
+```
+
+Set `durationMs` to a positive finite number to dismiss the message
+automatically in the browser:
+
+```svelte
+<FormStatus
+	message="Bozza aggiornata"
+	tone="info"
+	durationMs={5000}
+/>
+```
+
+The default `null`, as well as zero, negative values, `NaN` and infinities,
+remain persistent. Changing `message` or `durationMs` makes the current message
+visible again and restarts the timing lifecycle. Durations beyond the browser's
+single-timer limit are scheduled in bounded consecutive chunks rather than
+overflowing. Timers are not created during server rendering and are cleaned up
+when props change or the component is destroyed.
+
+The accessibility policy is deterministic: `error` uses `role="alert"` with
+`aria-live="assertive"`; `success`, `warning` and `info` use `role="status"`
+with `aria-live="polite"`. Every rendered status uses `aria-atomic="true"`.
+There is no close button, animation, dismissal callback or toast manager.
+
+The component accepts `class` and `style` on its root element. Its scoped CSS
+uses only these public neutral custom properties, each with a readable fallback:
+
+- layout: `--giu-form-status-padding`, `--giu-form-status-border-width`,
+  `--giu-form-status-border-radius`, `--giu-form-status-line-height`;
+- per-tone colors: `--giu-form-status-<tone>-border`,
+  `--giu-form-status-<tone>-background` and
+  `--giu-form-status-<tone>-color`.
 
 ## Requirements
 
