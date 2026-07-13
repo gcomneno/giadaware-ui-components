@@ -73,8 +73,12 @@ try {
 		'LICENSE',
 		'README.md',
 		'THIRD_PARTY_NOTICES.md',
+		'dist/FormStatus.svelte',
+		'dist/FormStatus.svelte.d.ts',
 		'dist/SocialIcon.svelte',
 		'dist/SocialIcon.svelte.d.ts',
+		'dist/form-status.d.ts',
+		'dist/form-status.js',
 		'dist/index.d.ts',
 		'dist/index.js',
 		'dist/social-icon-paths.d.ts',
@@ -150,6 +154,10 @@ try {
 			"const root = await import('giadaware-ui-components');",
 			"const visitor = await import('giadaware-ui-components/visitor');",
 			"const studio = await import('giadaware-ui-components/studio');",
+			'',
+			"if (typeof root.FormStatus !== 'function') {",
+			"\tthrow new Error('FormStatus runtime export is missing.');",
+			'}',
 			'',
 			"if (typeof root.SocialIcon !== 'function') {",
 			"\tthrow new Error('SocialIcon runtime export is missing.');",
@@ -356,13 +364,23 @@ try {
 	await writeFile(
 		join(consumerDirectory, 'index.ts'),
 		[
-			"import { SOCIAL_ICON_IDS, SocialIcon } from 'giadaware-ui-components';",
-			"import type { SocialIconId } from 'giadaware-ui-components';",
+			"import { FormStatus, SOCIAL_ICON_IDS, SocialIcon } from 'giadaware-ui-components';",
+			"import type { FormStatusTone, SocialIconId } from 'giadaware-ui-components';",
 			"import type { ComponentProps } from 'svelte';",
 			"import 'giadaware-ui-components/visitor';",
 			"import 'giadaware-ui-components/studio';",
 			'',
 			"const id: SocialIconId = 'github-sponsors';",
+			"const tone: FormStatusTone = 'warning';",
+			'const formStatusProps: ComponentProps<typeof FormStatus> = {',
+			"\tmessage: 'Review required',",
+			'\ttone,',
+			'\tdurationMs: null',
+			'};',
+			'',
+			"// @ts-expect-error FormStatusTone is a closed union.",
+			"const invalidTone: FormStatusTone = 'neutral';",
+			'',
 			'const informativeProps: ComponentProps<typeof SocialIcon> = {',
 			"\tid: 'github',",
 			'\tdecorative: false,',
@@ -376,9 +394,13 @@ try {
 			'};',
 			'',
 			'void id;',
+			'void tone;',
+			'void formStatusProps;',
+			'void invalidTone;',
 			'void informativeProps;',
 			'void missingInformativeLabel;',
 			'void SOCIAL_ICON_IDS;',
+			'void FormStatus;',
 			'void SocialIcon;',
 			''
 		].join('\n')
@@ -397,6 +419,43 @@ try {
 					noEmit: true
 				},
 				include: ['index.ts']
+			},
+			null,
+			2
+		) + '\n'
+	);
+
+	await writeFile(
+		join(consumerDirectory, 'nodenext.ts'),
+		[
+			"import { FormStatus } from 'giadaware-ui-components';",
+			"import type { FormStatusTone } from 'giadaware-ui-components';",
+			"import 'giadaware-ui-components/visitor';",
+			"import 'giadaware-ui-components/studio';",
+			'',
+			"const tone: FormStatusTone = 'success';",
+			'// @ts-expect-error FormStatusTone is a closed union.',
+			"const invalidTone: FormStatusTone = 'neutral';",
+			'',
+			'void tone;',
+			'void invalidTone;',
+			'void FormStatus;',
+			''
+		].join('\n')
+	);
+
+	await writeFile(
+		join(consumerDirectory, 'tsconfig.nodenext.json'),
+		JSON.stringify(
+			{
+				compilerOptions: {
+					module: 'NodeNext',
+					moduleResolution: 'NodeNext',
+					strict: true,
+					skipLibCheck: true,
+					noEmit: true
+				},
+				include: ['nodenext.ts']
 			},
 			null,
 			2
@@ -461,6 +520,17 @@ try {
 	run(
 		process.execPath,
 		['verify-svelte.mjs'],
+		consumerDirectory,
+		true
+	);
+
+	run(
+		process.execPath,
+		[
+			join(root, 'node_modules', 'typescript', 'bin', 'tsc'),
+			'--project',
+			join(consumerDirectory, 'tsconfig.nodenext.json')
+		],
 		consumerDirectory,
 		true
 	);
