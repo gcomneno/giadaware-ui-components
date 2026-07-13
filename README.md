@@ -23,15 +23,96 @@ The approved trial will contain exactly:
 - `SocialIcon`
 - `FormStatus`
 
-During bootstrap, the following JavaScript entry graphs are intentionally
-empty and isolated:
+The three JavaScript entry graphs remain isolated. Their current public APIs
+are:
 
-- `giadaware-ui-components`
-- `giadaware-ui-components/visitor`
-- `giadaware-ui-components/studio`
+- `giadaware-ui-components` exports `SocialIcon`, `SocialIconId` and
+  `SOCIAL_ICON_IDS`;
+- `giadaware-ui-components/visitor` remains empty and reserved;
+- `giadaware-ui-components/studio` remains empty and reserved.
 
-The visitor and Studio entry points are reserved for future APIs that must be
-approved explicitly.
+## SocialIcon
+
+The root entry point exports:
+
+```ts
+import {
+	SOCIAL_ICON_IDS,
+	SocialIcon
+} from 'giadaware-ui-components';
+
+import type {
+	SocialIconId
+} from 'giadaware-ui-components';
+```
+
+The closed identifier registry is:
+
+- `instagram`;
+- `facebook`;
+- `x`;
+- `github`;
+- `github-sponsors`.
+
+`github` renders the GitHub brand mark. `github-sponsors` renders the filled
+heart used for GitHub Sponsors links. Unknown runtime identifiers render
+nothing; development builds emit one warning for each invalid condition.
+
+Decorative use is the default:
+
+```svelte
+<a href="/profile" aria-label="Profilo GitHub">
+	<SocialIcon id="github" />
+</a>
+```
+
+Informative use requires a non-empty accessible label:
+
+```svelte
+<SocialIcon
+	id="github"
+	decorative={false}
+	ariaLabel="Profilo GitHub"
+	title="GitHub"
+/>
+```
+
+Sizing defaults to `24px`. A numeric `size`, `width` or `height` becomes a CSS
+pixel value; strings are passed as CSS lengths. `width` and `height` override
+the corresponding axis set by `size`.
+
+The SVG uses:
+
+```text
+viewBox="0 0 24 24"
+fill="currentColor"
+```
+
+Color therefore inherits from the surrounding CSS context.
+
+### Tree-shaking contract
+
+`SocialIcon` selects its glyph dynamically from an identifier. Importing the
+component therefore legitimately includes all five approved geometries.
+
+The root export graph nevertheless keeps the public registry independent from
+the component implementation. The current gate demonstrates that importing
+only `SOCIAL_ICON_IDS` excludes `SocialIcon`, its runtime helpers and all five
+SVG geometries in the clean packed consumer compiled by the Vite SSR test. It
+does not claim a universal guarantee for every bundler.
+
+### Third-party geometry
+
+Brand geometries come from Simple Icons 16.26.0. The source package license is
+CC0-1.0, but the Simple Icons disclaimer states that the project license does
+not imply every individual icon is CC0. Trademark and individual icon terms
+may still apply, and CC0 does not grant trademark rights.
+
+The GitHub Sponsors heart comes from GitHub Primer Octicons v19.29.2,
+`icons/heart-fill-24.svg`, under the MIT License, Copyright (c) 2026 GitHub
+Inc.
+
+See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the complete notices.
 
 ## Requirements
 
