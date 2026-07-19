@@ -23,6 +23,18 @@ export type ImageAttachmentFileValidator = (
 	file: File
 ) => ImageAttachmentValidationError | null;
 
+export type ImageAttachmentControlLabels = {
+	input: string;
+	cancelReplacement: string;
+	remove: string;
+	cancelRemoval: string;
+	keepExistingStatus: string;
+	keepEmptyStatus: string;
+	replaceStatus: string;
+	removeStatus: string;
+	replacementPreviewAlt: string;
+};
+
 const KEEP_STATE: ImageAttachmentState = {
 	intent: 'keep',
 	file: null
