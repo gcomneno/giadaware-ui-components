@@ -4,7 +4,10 @@ const manifest = JSON.parse(
 	await readFile(new URL('../package.json', import.meta.url), 'utf8')
 );
 const formStatusSource = await readFile(
-	new URL('../src/lib/FormStatus.svelte', import.meta.url),
+	new URL(
+		'../src/lib/internal/FormStatusPresentation.svelte',
+		import.meta.url
+	),
 	'utf8'
 );
 
