@@ -22,6 +22,7 @@ The approved trial will contain exactly:
 
 - `SocialIcon`
 - `FormStatus`
+- `ImageAttachmentControl`
 
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
@@ -29,7 +30,10 @@ are:
 - `giadaware-ui-components` exports `FormStatus`, `FormStatusTone`,
   `SocialIcon`, `SocialIconId` and `SOCIAL_ICON_IDS`;
 - `giadaware-ui-components/visitor` remains empty and reserved;
-- `giadaware-ui-components/studio` remains empty and reserved.
+- `giadaware-ui-components/studio` exports `ImageAttachmentControl` and the
+  `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`,
+  `ImageAttachmentFileValidator`, `ImageAttachmentIntent`,
+  `ImageAttachmentState` and `ImageAttachmentValidationError` types.
 
 ## SocialIcon
 
@@ -168,6 +172,81 @@ uses only these public neutral custom properties, each with a readable fallback:
 - per-tone colors: `--giu-form-status-<tone>-border`,
   `--giu-form-status-<tone>-background` and
   `--giu-form-status-<tone>-color`.
+
+## ImageAttachmentControl
+
+Import the component and its consumer-facing types from the Studio entry point:
+
+```ts
+import { ImageAttachmentControl } from 'giadaware-ui-components/studio';
+import type {
+	ImageAttachmentControlLabels,
+	ImageAttachmentState
+} from 'giadaware-ui-components/studio';
+```
+
+`ImageAttachmentControl` is controlled through `value` and `onvaluechange`.
+Its final intent is `keep`, `replace` (with a native `File`) or `remove`.
+`currentImage` describes an existing image when one is available. Callers own
+all labels and validation messages, and can configure `accept`, `maxSizeBytes`,
+a custom `validator` and `disabled`.
+
+```svelte
+<script lang="ts">
+	import { ImageAttachmentControl } from 'giadaware-ui-components/studio';
+	import type {
+		ImageAttachmentControlLabels,
+		ImageAttachmentState
+	} from 'giadaware-ui-components/studio';
+
+	let value: ImageAttachmentState = $state({ intent: 'keep', file: null });
+
+	const labels: ImageAttachmentControlLabels = {
+		input: 'Choose image',
+		cancelReplacement: 'Cancel replacement',
+		remove: 'Remove image',
+		cancelRemoval: 'Cancel removal',
+		keepExistingStatus: 'Existing image kept',
+		keepEmptyStatus: 'No image selected',
+		replaceStatus: 'Replacement selected',
+		removeStatus: 'Image will be removed',
+		replacementPreviewAlt: 'Replacement preview'
+	};
+
+	function save(state: ImageAttachmentState): void {
+		switch (state.intent) {
+			case 'keep':
+				return;
+			case 'replace':
+				console.log('Selected file', state.file.name);
+				return;
+			case 'remove':
+				console.log('Removal selected');
+				return;
+			default: {
+				const exhaustive: never = state;
+				return exhaustive;
+			}
+		}
+	}
+</script>
+
+<ImageAttachmentControl
+	{value}
+	onvaluechange={(next) => value = next}
+	currentImage={{ src: '/current-image.jpg', alt: 'Current image' }}
+	invalidTypeMessage="Choose a supported image type"
+	tooLargeMessage="Choose a smaller image"
+	{labels}
+	accept="image/png,image/jpeg"
+	maxSizeBytes={5_000_000}
+/>
+
+<button type="button" onclick={() => save(value)}>Save</button>
+```
+
+The caller is responsible for interpreting and persisting the final intent.
+The component provides no hidden removal field and no built-in persistence.
 
 ## Requirements
 
