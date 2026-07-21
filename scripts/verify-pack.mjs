@@ -117,8 +117,12 @@ try {
 		'dist/studio/index.js',
 		'dist/studio/styles.css',
 		'dist/styles.css',
+		'dist/visitor/RelationshipGraph.svelte',
+		'dist/visitor/RelationshipGraph.svelte.d.ts',
 		'dist/visitor/index.d.ts',
 		'dist/visitor/index.js',
+		'dist/visitor/relationship-graph.d.ts',
+		'dist/visitor/relationship-graph.js',
 		'dist/visitor/styles.css',
 		'package.json'
 	];
@@ -192,8 +196,8 @@ try {
 			"\tthrow new Error('Root runtime exports are incorrect.');",
 			'}',
 			'',
-			'if (Object.keys(visitor).length !== 0) {',
-			"\tthrow new Error('Visitor runtime exports must remain empty.');",
+			"if (JSON.stringify(Object.keys(visitor).sort()) !== JSON.stringify(['RelationshipGraph'])) {",
+			"\tthrow new Error('Visitor runtime exports are incorrect.');",
 			'}',
 			'',
 			'if (JSON.stringify(Object.keys(studio).sort()) !== JSON.stringify(expectedStudioKeys)) {',
