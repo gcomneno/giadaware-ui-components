@@ -18,11 +18,12 @@ is required.
 Atelier-Kit is the first validation consumer. It is not a dependency of this
 package.
 
-The approved trial will contain exactly:
+The approved trial contains:
 
 - `SocialIcon`
 - `FormStatus`
 - `ImageAttachmentControl`
+- `AsyncOperationPanel`
 
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
@@ -33,7 +34,11 @@ are:
 - `giadaware-ui-components/studio` exports `ImageAttachmentControl` and the
   `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`,
   `ImageAttachmentFileValidator`, `ImageAttachmentIntent`,
-  `ImageAttachmentState` and `ImageAttachmentValidationError` types.
+  `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
+  `AsyncOperationPanel` and its public types.
+
+See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
+snippet contract, accessibility behavior, examples, and styling hooks.
 
 ## SocialIcon
 

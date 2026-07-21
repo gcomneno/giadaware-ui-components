@@ -10,6 +10,14 @@ const formStatusSource = await readFile(
 	),
 	'utf8'
 );
+const asyncOperationPanelSource = await readFile(
+	new URL('../src/lib/studio/AsyncOperationPanel.svelte', import.meta.url),
+	'utf8'
+);
+const asyncOperationPanelContract = await readFile(
+	new URL('../src/lib/studio/async-operation-panel.ts', import.meta.url),
+	'utf8'
+);
 
 const errors = [];
 
@@ -22,6 +30,21 @@ function requireValue(condition, message) {
 requireValue(
 	manifest.name === 'giadaware-ui-components',
 	'unexpected package name'
+);
+
+requireValue(
+	!asyncOperationPanelSource.includes('<button') &&
+		!asyncOperationPanelSource.includes('actionLabel') &&
+		!asyncOperationPanelSource.includes('onaction') &&
+		!asyncOperationPanelSource.includes('durationMs'),
+	'AsyncOperationPanel must compose the required consumer action and persistent status presentation'
+);
+
+requireValue(
+	asyncOperationPanelContract.includes('action: Snippet') &&
+		asyncOperationPanelContract.includes("state: 'running'; busyLabel: string") &&
+		asyncOperationPanelContract.includes("state: 'success' | 'warning' | 'error'; message: string"),
+	'AsyncOperationPanel discriminated state contract is missing required content'
 );
 
 requireValue(
@@ -102,6 +125,32 @@ requireValue(
 		([, value]) => value.includes(',')
 	),
 	'FormStatus custom-property uses must provide fallbacks'
+);
+
+const asyncOperationPanelCustomProperties = [
+	...asyncOperationPanelSource.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	asyncOperationPanelCustomProperties.length > 0 &&
+		asyncOperationPanelCustomProperties.every((property) =>
+			property.startsWith('--giu-async-operation-panel-')
+		),
+	'AsyncOperationPanel must use only --giu-async-operation-panel-* tokens'
+);
+
+requireValue(
+	!asyncOperationPanelSource.includes(':global') &&
+		!asyncOperationPanelSource.includes('--studio-') &&
+		!asyncOperationPanelSource.includes('--site-'),
+	'AsyncOperationPanel CSS must remain scoped and application-neutral'
+);
+
+requireValue(
+	[...asyncOperationPanelSource.matchAll(/var\(([^)]+)\)/g)].every(
+		([, value]) => value.includes(',')
+	),
+	'AsyncOperationPanel custom-property uses must provide fallbacks'
 );
 
 requireValue(
