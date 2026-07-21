@@ -31,7 +31,7 @@ are:
 
 - `giadaware-ui-components` exports `FormStatus`, `FormStatusTone`,
   `SocialIcon`, `SocialIconId` and `SOCIAL_ICON_IDS`;
-- `giadaware-ui-components/visitor` remains empty and reserved;
+- `giadaware-ui-components/visitor` exports `RelationshipGraph` and its public types;
 - `giadaware-ui-components/studio` exports `ImageAttachmentControl` and the
   `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`,
   `ImageAttachmentFileValidator`, `ImageAttachmentIntent`,
@@ -44,6 +44,10 @@ snippet contract, accessibility behavior, examples, and styling hooks.
 
 See [Button](docs/button.md) for native attribute forwarding, variants, sizes,
 accessibility responsibilities, examples, and CSS custom properties.
+
+See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
+deterministic layout, interactions, callback payloads, resilience policy, and
+CSS customization hooks.
 
 ## Button
 
