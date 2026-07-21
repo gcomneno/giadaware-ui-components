@@ -18,6 +18,14 @@ const asyncOperationPanelContract = await readFile(
 	new URL('../src/lib/studio/async-operation-panel.ts', import.meta.url),
 	'utf8'
 );
+const buttonSource = await readFile(
+	new URL('../src/lib/studio/Button.svelte', import.meta.url),
+	'utf8'
+);
+const buttonContract = await readFile(
+	new URL('../src/lib/studio/button.ts', import.meta.url),
+	'utf8'
+);
 
 const errors = [];
 
@@ -45,6 +53,36 @@ requireValue(
 		asyncOperationPanelContract.includes("state: 'running'; busyLabel: string") &&
 		asyncOperationPanelContract.includes("state: 'success' | 'warning' | 'error'; message: string"),
 	'AsyncOperationPanel discriminated state contract is missing required content'
+);
+
+requireValue(
+	buttonSource.includes('<button') &&
+		buttonSource.includes('{...nativeAttributes}') &&
+		buttonContract.includes("HTMLButtonAttributes") &&
+		buttonContract.includes("children: Snippet"),
+	'Button must remain a native button with required content and public native attribute forwarding'
+);
+
+const buttonCustomProperties = [
+	...buttonSource.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	buttonCustomProperties.length > 0 &&
+		buttonCustomProperties.every((property) => property.startsWith('--giu-button-')),
+	'Button must use only neutral --giu-button-* tokens'
+);
+
+requireValue(
+	!buttonSource.includes(':global') &&
+		!buttonSource.includes('--studio-') &&
+		!buttonSource.includes('--site-'),
+	'Button CSS must remain scoped and application-neutral'
+);
+
+requireValue(
+	[...buttonSource.matchAll(/var\(([^)]+)\)/g)].every(([, value]) => value.includes(',')),
+	'Button custom-property uses must provide fallbacks'
 );
 
 requireValue(

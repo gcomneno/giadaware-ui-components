@@ -24,6 +24,7 @@ The approved trial contains:
 - `FormStatus`
 - `ImageAttachmentControl`
 - `AsyncOperationPanel`
+- `Button`
 
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
@@ -35,10 +36,40 @@ are:
   `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`,
   `ImageAttachmentFileValidator`, `ImageAttachmentIntent`,
   `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
-  `AsyncOperationPanel` and its public types.
+  `AsyncOperationPanel` and its public types, plus `Button`, `ButtonProps`,
+  `ButtonVariant` and `ButtonSize`.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
 snippet contract, accessibility behavior, examples, and styling hooks.
+
+See [Button](docs/button.md) for native attribute forwarding, variants, sizes,
+accessibility responsibilities, examples, and CSS custom properties.
+
+## Button
+
+Import `Button` only from the Studio entry point:
+
+```svelte
+<script lang="ts">
+	import { Button } from 'giadaware-ui-components/studio';
+</script>
+
+<Button>Save changes</Button>
+<Button type="submit">Submit form</Button>
+<Button disabled>Unavailable</Button>
+<Button variant="danger">Remove item</Button>
+<Button variant="secondary" size="compact">Move up</Button>
+```
+
+The variants are `primary`, `secondary`, and `danger`; sizes are `default` and
+`compact`. `type` safely defaults to `button`. Applicable native button,
+form, ARIA, data, and event attributes are forwarded. Consumer content must
+provide the accessible name. Consumer classes and inline styles compose with
+the scoped component styles, including the documented `--giu-button-*` hooks.
+
+`Button` does not own pending, loading, result, or live-region behavior; use
+`AsyncOperationPanel` for asynchronous lifecycle presentation. Links,
+icon-only controls, and action-group layout remain separate future components.
 
 ## SocialIcon
 
