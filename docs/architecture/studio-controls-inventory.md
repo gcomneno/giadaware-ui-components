@@ -2,21 +2,21 @@
 
 ## Status and scope
 
-**Status:** proposed architecture decision, ready for review. This document becomes the canonical inventory for Giada UI epic #8 when merged.
+**Status:** current architectural inventory and decision record for Giada UI epic #8.
 
-This document consolidates the Studio control candidates demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and selects the next extraction target. It records component boundaries rather than an implementation specification. In particular, it does not define a final TypeScript API, migrate Atelier-Kit, or authorize creation of the follow-up implementation issue before this document is reviewed and merged.
+This document consolidates the Studio control families demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and records both completed Giada UI work and remaining extraction and adoption work. It preserves the architectural basis for `AsyncOperationPanel`; its final public contract is now documented here where it resolves the original design questions. This inventory does not migrate Atelier-Kit, decide package versioning or registry publication, or imply that consumer adoption has occurred.
 
-The inventory contains **six definitive control families**. `AsyncOperationPanel` is the next extraction candidate.
+The inventory contains **six definitive control families**. `ImageAttachmentControl` and `AsyncOperationPanel` are implemented in Giada UI; the other four families remain future extraction candidates. `Button` is also implemented in the Studio entry point but is not an additional family from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
 
 ## Inventory method
 
 The inventory was derived from source rather than inferred from epic labels:
 
-1. Inspect the public components and contracts already present in Giada UI: `src/lib/FormStatus.svelte`, `src/lib/form-status.ts`, `src/lib/studio/ImageAttachmentControl.svelte`, `src/lib/studio/image-attachment-control.ts`, and `src/lib/studio/index.ts`.
+1. Inspect the public components and contracts already present in Giada UI: `src/lib/FormStatus.svelte`, `src/lib/form-status.ts`, the Studio component implementations and contract modules, `src/lib/studio/index.ts`, and the component documentation under `docs/`.
 2. Inspect Atelier-Kit's concrete Studio controls and their route consumers, including `src/lib/components/MarkedTextField.svelte`, `src/lib/components/StudioImageMutationFields.svelte`, `src/lib/components/StudioItemGalleryFields.svelte`, `src/routes/studio/site/appearance/+page.svelte`, and `src/routes/studio/readiness/+page.svelte`.
 3. Trace non-visual state, parsing, domain, and server dependencies through `src/lib/studio-readiness-action-state.js`, `src/lib/editorial-markup.js`, `src/lib/marked-text.js`, `src/lib/site-appearance.js`, `src/lib/site-typography.js`, `src/lib/studio-item-gallery.js`, `src/routes/studio/readiness/+page.server.js`, `src/lib/server/studio-io.js`, and `src/lib/server/studio-publish-live-core.js` in Atelier-Kit.
 4. Treat a family as real only when the repositories contain an implementation or a concrete consumer whose interaction can be described. Similar prose labels were merged when they described one responsibility; superficially similar controls were kept separate when their state and behavior differ.
-5. Use existing tests as evidence of established behavior, notably Giada UI's `tests/browser/image-attachment-control.browser.test.ts` and `tests/ssr/image-attachment-control.ssr.test.ts`, plus Atelier-Kit's `src/lib/studio-readiness-action-state.test.js`, `src/routes/studio/readiness/readiness-page.test.js`, and `src/lib/server/studio-publish-live-core.test.js`.
+5. Use existing tests as evidence of established behavior, notably Giada UI's browser, SSR, hydration, accessibility, and type-contract tests for `ImageAttachmentControl` and `AsyncOperationPanel`, plus Atelier-Kit's `src/lib/studio-readiness-action-state.test.js`, `src/routes/studio/readiness/readiness-page.test.js`, and `src/lib/server/studio-publish-live-core.test.js`.
 
 Paths in this document are repository-relative. Unless explicitly identified as Giada UI, paths in consumer evidence refer to Atelier-Kit.
 
@@ -36,10 +36,10 @@ Extraction and adoption are separate work. A component can exist in Giada UI whi
 | 2 | Controlled marked-text field/editor | Atelier-Kit's `src/lib/components/MarkedTextField.svelte` is used across multiple Studio routes and depends on `src/lib/editorial-markup.js`, `src/lib/marked-text.js`, `src/lib/components/EditorialText.svelte`, `src/lib/site-typography.js`, and operator i18n. | Real family, but too coupled to Atelier Mark, parser and renderer semantics, typography presets, preview, selection APIs, and localization to be next. |
 | 3 | Color preset control | `src/routes/studio/site/appearance/+page.svelte` selects a preset, applies it across seven color fields, and renders a coordinated preview; definitions and normalization live in `src/lib/site-appearance.js`. | Distinct future family for selecting and editing a multi-value palette with preview. Do not collapse it into font selection. |
 | 4 | Font preset control | The same appearance route owns separate font selection and preview state, while `src/lib/site-typography.js` owns font families and external stylesheet URLs. | Distinct future family for font selection, loading, and preview. Do not create a color-font monolith. |
-| 5 | `AsyncOperationPanel` | Atelier-Kit's `src/routes/studio/readiness/+page.svelte` contains separate build-test (`runPublishPrep`) and live-publish (`publishLive`) operation panels with pending, result, and technical-output behavior. | **Next extraction candidate.** Unifies the former “async action panel” and “separate dry-run/publication feedback” entries. |
+| 5 | `AsyncOperationPanel` | Implemented and exported by Giada UI from `src/lib/studio/AsyncOperationPanel.svelte` and `src/lib/studio/index.ts`. Atelier-Kit's `src/routes/studio/readiness/+page.svelte` provides two consumer cases: build test (`runPublishPrep`) and live publication (`publishLive`). | Existing Giada UI component. It unifies the former “async action panel” and “separate dry-run/publication feedback” entries; Atelier-Kit adoption remains separate work. |
 | 6 | Ordered asset or record editor | `src/lib/components/StudioItemGalleryFields.svelte` adds, removes, and moves ordered rows; `src/lib/studio-item-gallery.js` maps those rows to Atelier-Kit's gallery and cover rules. | Real family distinct from a single image attachment. The gallery is a concrete consumer, but its fields, minimum-one rule, cover role, dirty tracking, form encoding, and upload flow remain domain-coupled. |
 
-The table count is six: one existing component, four future families not selected next, and one selected next.
+The table count remains six: two components implemented in Giada UI and four future candidate families not yet extracted.
 
 ## Removed overlaps and reclassifications
 
@@ -51,18 +51,20 @@ The table count is six: one existing component, four future families not selecte
 - `ValidationSummary` is not a real candidate yet. The inspected Atelier-Kit Studio code has no concrete consumer that presents a list of validation errors linked to fields. It must not be promoted to a component family until such a consumer exists.
 - Color presets and font presets are intentionally two families. Sharing one appearance page does not make their state, loading behavior, or preview responsibilities identical.
 
-## Priority
+## Current implementation and remaining priority
 
-`AsyncOperationPanel` is the highest-priority extraction because it has two concrete consumers on one Atelier-Kit page, repeats a coherent interaction rather than domain data editing, and has a clean dependency-inversion boundary. Its shared responsibility is visible state and accessible feedback for one consumer-owned operation. The server and workflow details can remain entirely outside Giada UI.
+`AsyncOperationPanel` was selected as the highest-priority extraction because it has two concrete consumers on one Atelier-Kit page, repeats a coherent interaction rather than domain data editing, and has a clean dependency-inversion boundary. That Giada UI extraction is complete: the component and public types are exported from `src/lib/studio/index.ts`. Its shared responsibility remains visible state and accessible feedback for one consumer-owned operation; server and workflow details remain outside Giada UI.
 
-The other candidates rank behind it:
+The currently exported Studio components are `ImageAttachmentControl`, `AsyncOperationPanel`, and `Button`. Their existence in Giada UI does not establish that Atelier-Kit has replaced its local controls. Based on the consumer evidence recorded here, adoption of `ImageAttachmentControl` and `AsyncOperationPanel` remains pending and must be validated in Atelier-Kit separately.
 
-1. `ImageAttachmentControl` needs adoption, not extraction.
-2. The color preset and font preset controls are credible but currently demonstrated together in only one consumer surface; their generic data and preview extension points need further design.
-3. The ordered editor has a useful generic interaction, but the concrete gallery consumer embeds Atelier-Kit field shapes, minimum-cardinality rules, dirty tracking, form naming, cover semantics, and a separate upload append flow.
-4. The marked-text editor has broad usage but the greatest architectural coupling. Extracting it now would either leak Atelier Mark and Atelier-Kit typography/i18n into Giada UI or prematurely design a plugin-style editor contract.
+The remaining work is classified as follows:
 
-## Decision: `AsyncOperationPanel`
+1. `ImageAttachmentControl` and `AsyncOperationPanel` need Atelier-Kit adoption, not Giada UI extraction.
+2. The color preset and font preset controls are credible future candidates but currently demonstrated together in only one consumer surface; their generic data and preview extension points need further design.
+3. The ordered editor is a future candidate with a useful generic interaction, but the concrete gallery consumer embeds Atelier-Kit field shapes, minimum-cardinality rules, dirty tracking, form naming, cover semantics, and a separate upload append flow.
+4. The marked-text editor is a future candidate with broad usage but the greatest architectural coupling. Extracting it now would either leak Atelier Mark and Atelier-Kit typography/i18n into Giada UI or prematurely design a plugin-style editor contract.
+
+## Implemented decision: `AsyncOperationPanel`
 
 ### Evidence and state model
 
@@ -128,29 +130,30 @@ The consumer is responsible for:
 9. SSR output is deterministic for the supplied state, and hydration does not start an operation or change disclosure state unexpectedly.
 10. Reuse of `FormStatus` must preserve its established tones (`success`, `warning`, `error`, `info`) and alert/live-region semantics without producing duplicate announcements.
 
-### Conceptual public API
+### Implemented public API
 
-The API should express the following concepts without committing yet to final Svelte or TypeScript syntax:
+The exported `AsyncOperationPanelProps` contract expresses these concepts:
 
 - `state`: required controlled value, one of `idle | running | success | warning | error`;
 - `title`: required visible operation name;
-- `description`: optional explanatory content;
-- `action`: consumer-provided renderable content for the button, form, or trigger region;
+- `description`: optional explanatory snippet;
+- `action`: required consumer-provided snippet for the button, form, or trigger region;
+- `headingLevel`: optional native heading level from 2 through 6, defaulting to 2;
 - `message`: optional primary status text for the current state;
 - `result`: optional rich, consumer-provided result content, for example a safe link;
-- `technicalDetails`: optional plain-text or consumer-rendered technical content;
+- `technicalDetails`: optional plain-text technical content;
 - `technicalDetailsLabel`: required when technical details exist;
-- `technicalDetailsInitiallyExpanded`: optional presentation hint, with a conservative default to be decided;
-- `busyLabel` or equivalent accessible content: required if the visible running presentation does not already name the activity;
+- `technicalDetailsInitiallyExpanded`: optional initial state for the native, uncontrolled disclosure, which defaults closed;
+- `busyLabel`: required in `running` state;
 - standard styling hooks such as `class`, `style`, and documented CSS custom properties.
 
-The implementation issue must decide whether renderable regions use snippets, children, named snippets, or a smaller structured-data contract. It must also decide whether the action region is mandatory in terminal states and how much disclosure state is controlled. Those are open API questions, not decisions made by this inventory.
+The state-discriminated contract accepts no status content in `idle`, requires `busyLabel` and rejects `message` and `result` in `running`, and requires `message` with an optional result snippet in terminal states. The action remains required in terminal states. Technical output is escaped text, and disclosure state is native and uncontrolled after its optional initial value.
 
-`FormStatus` composition should be preferred for a plain primary message. The panel may map `idle` and `running` to `info`, and terminal states to their same-named tone, but it must avoid rendering a second live region around `FormStatus`. Rich result content and technical details belong beside, not inside, a forced string-only status API.
+The implementation composes `FormStatus` without adding a second live region: `running` uses `info`, and terminal states use their same-named tone. Rich result content and technical details sit beside the primary string status.
 
-### Minimum test strategy
+### Implemented test strategy
 
-The future component issue should require, at minimum:
+The component has focused type, SSR, browser, accessibility, and hydration coverage for:
 
 - type-contract coverage for required state/content relationships and public exports;
 - SSR coverage for all five states, optional regions, escaped technical text, deterministic markup, and absence of browser-side work;
@@ -161,17 +164,18 @@ The future component issue should require, at minimum:
 
 No Git, build, deploy, network, SvelteKit form-action, or Promise execution belongs in component tests.
 
-## Risks and open questions
+## Residual risks and adoption questions
 
-- The final renderable-content mechanism is unresolved. Structured props are easier to type; snippets are more flexible for forms and result links.
-- Whether technical-detail expansion is controlled, uncontrolled with an initial value, or supports both modes remains open. Hydration and consumer reset behavior must guide the choice.
-- The default expansion policy is unresolved. Atelier-Kit currently opens failed build output but always provides a closed publication disclosure; a generic rule may depend on state or remain entirely consumer-controlled.
-- The exact running announcement and transitions need accessibility validation so state updates are timely without duplicate or noisy announcements.
-- `FormStatus` currently accepts a string message and optional duration. The panel must decide whether terminal messages should ever auto-dismiss; persistent results are likely safer, but this is not yet a final decision.
-- Cancellation and progress percentage have no concrete readiness consumer and are therefore out of scope unless a real consumer appears before implementation.
-- The component name is selected for the architectural candidate, but export path, CSS token names, and final prop names remain implementation decisions.
+- The snippet-based action and result contract is now fixed, but Atelier-Kit adapters must preserve native form behavior and localized accessible names.
+- Technical-detail disclosure is uncontrolled with a consumer-supplied initial value. Atelier-Kit must account for native disclosure state when replacing or resetting operation results.
+- Running and terminal announcement behavior is implemented and covered in Giada UI; consumer integration still needs validation to avoid duplicate surrounding live regions or unexpected focus changes.
+- Terminal messages are persistent. Atelier-Kit remains responsible for deciding when results are replaced or cleared.
+- Cancellation and progress percentage have no concrete readiness consumer and remain out of scope unless a real consumer motivates future API expansion.
+- The component name, Studio export path, CSS token names, and prop contract are implemented and documented public contracts.
 - Atelier-Kit does not currently map the publication service's `outcome: 'partial'` to a five-state presentation model. Adoption will need an explicit adapter and consumer tests.
 
-## Next step
+## Next steps and epic status
 
-Review and merge this document first. Only after merge, open one autonomous child issue for designing and implementing `AsyncOperationPanel` in Giada UI, including its tests and public export. Atelier-Kit adoption, including the two readiness instances and the `partial`-to-`warning` mapping, should remain separately scoped. Do not open either issue as part of this inventory work.
+Giada UI implementation work for `ImageAttachmentControl` and `AsyncOperationPanel` is complete. The next work for those families is separate Atelier-Kit adoption, including replacement of local controls, consumer integration tests, removal of duplicate implementations, and the readiness page's `partial`-to-`warning` mapping. The other four families remain candidates and require separately scoped design and extraction work before implementation.
+
+Epic #8 must remain open. Its architectural boundary and inventory can be marked complete, and the completed Giada UI component implementations and their library-side test coverage can be recorded. The epic-level items requiring Atelier-Kit adoption, removal of consumer duplicates, permanent consumer regression coverage, and any publication/versioning decision remain incomplete.
