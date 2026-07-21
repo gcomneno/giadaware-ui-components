@@ -59,6 +59,13 @@ function graphFor(path, root) {
 	const local = normalize(relative(root, path));
 
 	if (
+		local === 'internal' ||
+		local.startsWith('internal/')
+	) {
+		return 'internal';
+	}
+
+	if (
 		local === 'visitor' ||
 		local.startsWith('visitor/')
 	) {
@@ -74,6 +81,13 @@ function graphFor(path, root) {
 
 	return 'root';
 }
+
+const allowedDependencies = {
+	root: new Set(['root', 'internal']),
+	visitor: new Set(['visitor', 'internal']),
+	studio: new Set(['studio', 'internal']),
+	internal: new Set(['internal'])
+};
 
 function parseModuleSpecifiers(code, filename) {
 	const source = ts.createSourceFile(
@@ -232,7 +246,7 @@ function verifyGraph(directory, label) {
 				directory
 			);
 
-			if (sourceGraph !== targetGraph) {
+			if (!allowedDependencies[sourceGraph].has(targetGraph)) {
 				fail(
 					`${label}: cross-graph import forbidden: ` +
 					`${sourceGraph} -> ${targetGraph}: ` +
@@ -335,7 +349,7 @@ if (errors.length > 0) {
 }
 
 console.log(
-	'Entry graphs are isolated: root, visitor and studio.'
+	'Entry graphs follow the root, visitor, studio and internal dependency matrix.'
 );
 console.log(
 	'CSS entry points are explicit and not auto-imported.'
