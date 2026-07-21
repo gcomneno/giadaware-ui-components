@@ -1,8 +1,10 @@
 import ImageAttachmentControlImplementation from './ImageAttachmentControl.svelte';
 import AsyncOperationPanelImplementation from './AsyncOperationPanel.svelte';
+import ButtonImplementation from './Button.svelte';
 
 import type { Component, ComponentProps } from 'svelte';
 import type { AsyncOperationPanelProps } from './async-operation-panel.js';
+import type { ButtonProps } from './button.js';
 import type {
 	ImageAttachmentControlLabels,
 	ImageAttachmentCurrentImage,
@@ -42,9 +44,18 @@ type AsyncPropsAreEqual =
 			: false
 		: false;
 type _AsyncPropsAreSynchronized = Assert<AsyncPropsAreEqual>;
+type ButtonPropsAreEqual =
+	ButtonProps extends ComponentProps<typeof ButtonImplementation>
+		? ComponentProps<typeof ButtonImplementation> extends ButtonProps
+			? true
+			: false
+		: false;
+type _ButtonPropsAreSynchronized = Assert<ButtonPropsAreEqual>;
 
 export const AsyncOperationPanel: Component<AsyncOperationPanelProps, {}, ''> =
 	AsyncOperationPanelImplementation;
+
+export const Button: Component<ButtonProps, {}, ''> = ButtonImplementation;
 
 export const ImageAttachmentControl: Component<ImageAttachmentControlProps, {}, ''> =
 	ImageAttachmentControlImplementation;
@@ -59,3 +70,4 @@ export type {
 } from './image-attachment-control.js';
 
 export type { AsyncOperationHeadingLevel, AsyncOperationPanelProps, AsyncOperationState } from './async-operation-panel.js';
+export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
