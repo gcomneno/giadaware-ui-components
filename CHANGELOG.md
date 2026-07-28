@@ -4,6 +4,8 @@
 
 ### Added
 
+- `PageIntro` Studio component with semantic paragraph output, snippet-based
+  mixed content and scoped typography and link-color hooks.
 - `ImageAttachmentControl` Studio component with controlled `keep`, `replace`
   and `remove` intents, local file validation and consumer-provided labels.
 - `AsyncOperationPanel` Studio component for one consumer-controlled operation

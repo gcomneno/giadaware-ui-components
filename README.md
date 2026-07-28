@@ -25,6 +25,7 @@ The approved trial contains:
 - `ImageAttachmentControl`
 - `AsyncOperationPanel`
 - `Button`
+- `PageIntro`
 
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
@@ -37,7 +38,7 @@ are:
   `ImageAttachmentFileValidator`, `ImageAttachmentIntent`,
   `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
   `AsyncOperationPanel` and its public types, plus `Button`, `ButtonProps`,
-  `ButtonVariant` and `ButtonSize`.
+  `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
 snippet contract, accessibility behavior, examples, and styling hooks.
@@ -45,9 +46,35 @@ snippet contract, accessibility behavior, examples, and styling hooks.
 See [Button](docs/button.md) for native attribute forwarding, variants, sizes,
 accessibility responsibilities, examples, and CSS custom properties.
 
+See [PageIntro](docs/page-intro.md) for its paragraph and snippet contract,
+responsibility boundary, accessibility behavior and CSS custom properties.
+
 See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
 deterministic layout, interactions, callback payloads, resilience policy, and
 CSS customization hooks.
+
+## PageIntro
+
+Import `PageIntro` only from the Studio entry point:
+
+```svelte
+<script lang="ts">
+	import { PageIntro } from 'giadaware-ui-components/studio';
+</script>
+
+<PageIntro>Manage the current document.</PageIntro>
+
+<PageIntro>
+	Manage the current document and
+	<a href="/preview">open its preview</a>.
+</PageIntro>
+```
+
+`PageIntro` always renders a semantic paragraph. Its required snippet may contain
+plain or mixed inline content. Translations, links and page placement remain
+consumer-owned. Consumer classes and inline styles compose with the scoped
+component styles and documented `--giu-page-intro-*` hooks. It is not a
+heading, alert, live region or landmark.
 
 ## Button
 

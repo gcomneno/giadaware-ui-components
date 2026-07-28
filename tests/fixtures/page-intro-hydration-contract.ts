@@ -1,0 +1,1 @@
+export const PAGE_INTRO_HYDRATION_SSR_BODY = '<!--[--><div data-testid="page-intro-hydration-probe"><p class="giu-page-intro hydrated-intro svelte-15000eh"><!---->Hydrated introduction with <a href="/preview">a preview link</a>.<!----></p><!----> <p class="giu-page-intro svelte-15000eh"><!---->Plain hydrated introduction.<!----></p><!----></div><!--]-->';
