@@ -6,7 +6,7 @@
 
 This document consolidates the Studio control families demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and records both completed Giada UI work and remaining extraction and adoption work. It preserves the architectural basis for `AsyncOperationPanel`; its final public contract is now documented here where it resolves the original design questions. This inventory does not migrate Atelier-Kit, decide package versioning or registry publication, or imply that consumer adoption has occurred.
 
-The inventory contains **six definitive control families**. `ImageAttachmentControl` and `AsyncOperationPanel` are implemented in Giada UI; the other four families remain future extraction candidates. `Button` and `PageIntro` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
+The inventory contains **six definitive control families**. `ImageAttachmentControl` and `AsyncOperationPanel` are implemented in Giada UI; the other four families remain future extraction candidates. `Button`, `PageIntro`, and `FormActions` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
 
 ## Inventory method
 
@@ -55,7 +55,7 @@ The table count remains six: two components implemented in Giada UI and four fut
 
 `AsyncOperationPanel` was selected as the highest-priority extraction because it has two concrete consumers on one Atelier-Kit page, repeats a coherent interaction rather than domain data editing, and has a clean dependency-inversion boundary. That Giada UI extraction is complete: the component and public types are exported from `src/lib/studio/index.ts`. Its shared responsibility remains visible state and accessible feedback for one consumer-owned operation; server and workflow details remain outside Giada UI.
 
-The currently exported Studio components are `ImageAttachmentControl`, `AsyncOperationPanel`, `Button`, and `PageIntro`. Their existence in Giada UI does not establish that Atelier-Kit has replaced its local controls or introductory paragraphs. Based on the consumer evidence recorded here, adoption of `ImageAttachmentControl` and `AsyncOperationPanel` remains pending and must be validated in Atelier-Kit separately.
+The currently exported Studio components are `ImageAttachmentControl`, `AsyncOperationPanel`, `Button`, `PageIntro`, and `FormActions`. Their existence in Giada UI does not establish that Atelier-Kit has replaced its local controls, introductory paragraphs, or action layouts. Based on the consumer evidence recorded here, adoption of `ImageAttachmentControl` and `AsyncOperationPanel` remains pending and must be validated in Atelier-Kit separately.
 
 The remaining work is classified as follows:
 
@@ -69,6 +69,12 @@ The remaining work is classified as follows:
 `PageIntro` is implemented and exported from the Studio entry point. It owns one semantic introductory paragraph, required snippet content, neutral typography and documented `--giu-page-intro-*` style hooks. It does not own translations, links, routing, heading hierarchy, alerts or page placement.
 
 The component is supported by deterministic SSR, DOM-preserving hydration, browser rendering, mixed-content, type-contract and accessibility tests. Atelier-Kit adoption remains separate consumer work.
+
+## Implemented layout primitive: `FormActions`
+
+`FormActions` is implemented and exported from the Studio entry point as an additional layout primitive, not a seventh control family. It owns one horizontal flex container, required snippet content, main-axis alignment, wrapping, and the neutral `--giu-form-actions-gap` hook. `space-between` applies independently to each wrapped flex line; consumers that set `wrap={false}` explicitly accept possible overflow. Margins and page placement remain consumer-owned, as do all child semantics, accessible names, attributes, focus, keyboard, submission, navigation, and event behavior.
+
+The component is supported by deterministic SSR, DOM-preserving hydration, browser layout and interaction, arbitrary child-content, type-contract and Axe accessibility tests.
 
 ## Implemented decision: `AsyncOperationPanel`
 

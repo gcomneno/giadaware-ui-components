@@ -1,11 +1,13 @@
 import ImageAttachmentControlImplementation from './ImageAttachmentControl.svelte';
 import AsyncOperationPanelImplementation from './AsyncOperationPanel.svelte';
 import ButtonImplementation from './Button.svelte';
+import FormActionsImplementation from './FormActions.svelte';
 import PageIntroImplementation from './PageIntro.svelte';
 
 import type { Component, ComponentProps } from 'svelte';
 import type { AsyncOperationPanelProps } from './async-operation-panel.js';
 import type { ButtonProps } from './button.js';
+import type { FormActionsProps } from './form-actions.js';
 import type { PageIntroProps } from './page-intro.js';
 import type {
 	ImageAttachmentControlLabels,
@@ -53,6 +55,13 @@ type ButtonPropsAreEqual =
 			: false
 		: false;
 type _ButtonPropsAreSynchronized = Assert<ButtonPropsAreEqual>;
+type FormActionsPropsAreEqual =
+	FormActionsProps extends ComponentProps<typeof FormActionsImplementation>
+		? ComponentProps<typeof FormActionsImplementation> extends FormActionsProps
+			? true
+			: false
+		: false;
+type _FormActionsPropsAreSynchronized = Assert<FormActionsPropsAreEqual>;
 type PageIntroPropsAreEqual =
 	PageIntroProps extends ComponentProps<typeof PageIntroImplementation>
 		? ComponentProps<typeof PageIntroImplementation> extends PageIntroProps
@@ -65,6 +74,8 @@ export const AsyncOperationPanel: Component<AsyncOperationPanelProps, {}, ''> =
 	AsyncOperationPanelImplementation;
 
 export const Button: Component<ButtonProps, {}, ''> = ButtonImplementation;
+
+export const FormActions: Component<FormActionsProps, {}, ''> = FormActionsImplementation;
 
 export const PageIntro: Component<PageIntroProps, {}, ''> = PageIntroImplementation;
 
@@ -82,4 +93,5 @@ export type {
 
 export type { AsyncOperationHeadingLevel, AsyncOperationPanelProps, AsyncOperationState } from './async-operation-panel.js';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
+export type { FormActionsAlign, FormActionsProps } from './form-actions.js';
 export type { PageIntroProps } from './page-intro.js';
