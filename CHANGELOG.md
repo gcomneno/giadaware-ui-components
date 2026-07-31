@@ -4,6 +4,8 @@
 
 ### Added
 
+- `FormActions` Studio layout primitive with required snippet content, closed
+  main-axis alignment, configurable wrapping and a neutral gap hook.
 - `PageIntro` Studio component with semantic paragraph output, snippet-based
   mixed content and scoped typography and link-color hooks.
 - `ImageAttachmentControl` Studio component with controlled `keep`, `replace`

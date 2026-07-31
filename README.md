@@ -26,6 +26,7 @@ The approved trial contains:
 - `AsyncOperationPanel`
 - `Button`
 - `PageIntro`
+- `FormActions`
 
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
@@ -38,7 +39,8 @@ are:
   `ImageAttachmentFileValidator`, `ImageAttachmentIntent`,
   `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
   `AsyncOperationPanel` and its public types, plus `Button`, `ButtonProps`,
-  `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`.
+  `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`, plus
+  `FormActions`, `FormActionsProps` and `FormActionsAlign`.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
 snippet contract, accessibility behavior, examples, and styling hooks.
@@ -48,6 +50,9 @@ accessibility responsibilities, examples, and CSS custom properties.
 
 See [PageIntro](docs/page-intro.md) for its paragraph and snippet contract,
 responsibility boundary, accessibility behavior and CSS custom properties.
+
+See [FormActions](docs/form-actions.md) for its flex layout contract, wrapping
+behavior, ownership boundaries and gap customization.
 
 See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
 deterministic layout, interactions, callback payloads, resilience policy, and
@@ -99,8 +104,42 @@ provide the accessible name. Consumer classes and inline styles compose with
 the scoped component styles, including the documented `--giu-button-*` hooks.
 
 `Button` does not own pending, loading, result, or live-region behavior; use
-`AsyncOperationPanel` for asynchronous lifecycle presentation. Links,
-icon-only controls, and action-group layout remain separate future components.
+`AsyncOperationPanel` for asynchronous lifecycle presentation. Links and
+icon-only controls remain separate future components. Compose related
+consumer-owned controls with `FormActions`.
+
+## FormActions
+
+Import `FormActions` only from the Studio entry point:
+
+```svelte
+<script lang="ts">
+	import { Button, FormActions } from 'giadaware-ui-components/studio';
+</script>
+
+<FormActions align="end">
+	<Button type="submit">Save changes</Button>
+	<Button variant="secondary">Cancel</Button>
+</FormActions>
+```
+
+`align` controls main-axis alignment and accepts `start`, `center`, `end`, or
+`space-between`; it defaults to `start`. Wrapping defaults to `true`.
+`space-between` operates independently on each wrapped flex line. Setting
+`wrap={false}` may allow content to overflow and is an explicit consumer
+choice.
+
+The component renders its required snippet directly inside one native `div`.
+Child semantics, accessible names, attributes, handlers, focus, keyboard,
+submission, and navigation behavior remain consumer-owned. Margins and page
+placement also remain consumer-owned. Consumer classes and styles compose with
+the component, whose only public CSS custom property is
+`--giu-form-actions-gap` with a `0.75rem` fallback.
+
+Keep the primary action first in DOM order unless the consuming workflow has a
+documented reason to choose a different order. `FormActions` is not a toolbar:
+interfaces that require toolbar semantics or arrow-key navigation need a
+separate component.
 
 ## SocialIcon
 
