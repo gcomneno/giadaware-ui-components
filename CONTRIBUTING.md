@@ -18,6 +18,6 @@ Do not add:
 - npm scopes or organizations;
 - release workflows that publish the package.
 
-The initial component scope is limited to `SocialIcon` and `FormStatus`.
-
-Any additional component requires an explicit architecture decision.
+The component scope consists only of components approved through explicit
+architecture decisions. Every additional component still requires its own
+explicit architecture decision before implementation.

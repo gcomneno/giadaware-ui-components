@@ -26,6 +26,14 @@ const buttonContract = await readFile(
 	new URL('../src/lib/studio/button.ts', import.meta.url),
 	'utf8'
 );
+const formActionsSource = await readFile(
+	new URL('../src/lib/studio/FormActions.svelte', import.meta.url),
+	'utf8'
+);
+const formActionsContract = await readFile(
+	new URL('../src/lib/studio/form-actions.ts', import.meta.url),
+	'utf8'
+);
 
 const errors = [];
 
@@ -83,6 +91,82 @@ requireValue(
 requireValue(
 	[...buttonSource.matchAll(/var\(([^)]+)\)/g)].every(([, value]) => value.includes(',')),
 	'Button custom-property uses must provide fallbacks'
+);
+
+const formActionsStyleMatch = formActionsSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const formActionsStyle = formActionsStyleMatch?.[1] ?? '';
+const formActionsCustomProperties = [
+	...formActionsStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+const formActionsSelectors = [
+	...formActionsStyle.matchAll(/([^{}]+)\{/g)
+].flatMap(([, selectors]) =>
+	selectors.split(',').map((selector) => selector.trim())
+);
+const formActionsAlignContract =
+	formActionsContract.match(
+		/export type FormActionsAlign\s*=([\s\S]*?);/
+	)?.[1] ?? '';
+const formActionsAlignValues = [
+	...formActionsAlignContract.matchAll(/'([^']+)'/g)
+].map(([, value]) => value);
+
+requireValue(
+	formActionsContract.includes("import type { Snippet } from 'svelte'") &&
+		formActionsContract.includes('children: Snippet') &&
+		JSON.stringify(formActionsAlignValues) ===
+			JSON.stringify(['start', 'center', 'end', 'space-between']),
+	'FormActions must require a Snippet and expose the closed alignment contract'
+);
+
+requireValue(
+	(formActionsSource.match(/<div(?:\s|>)/g) ?? []).length === 1 &&
+		formActionsSource.includes("'giu-form-actions'"),
+	'FormActions must render one fixed div with the giu-form-actions base class'
+);
+
+requireValue(
+	formActionsCustomProperties.length === 1 &&
+		formActionsCustomProperties[0] === '--giu-form-actions-gap',
+	'FormActions must use only the neutral --giu-form-actions-gap token'
+);
+
+requireValue(
+	/gap:\s*var\(--giu-form-actions-gap,\s*0\.75rem\);/.test(
+		formActionsStyle
+	),
+	'FormActions gap token must retain the documented 0.75rem fallback'
+);
+
+requireValue(
+	[...formActionsStyle.matchAll(/var\(([^)]+)\)/g)].every(
+		([, value]) => value.includes(',')
+	),
+	'FormActions custom-property uses must provide fallbacks'
+);
+
+requireValue(
+	!formActionsStyle.includes(':global') &&
+		formActionsSelectors.every((selector) =>
+			/^\.giu-form-actions(?:--[a-z-]+)?$/.test(selector)
+		),
+	'FormActions CSS must remain scoped and must not select interactive descendants'
+);
+
+requireValue(
+	!/(?:role\s*=|aria-|on(?:click|keydown|keyup|input|change|submit|focus|blur)\s*=|href\s*=|\$effect|onMount)/i.test(
+		formActionsSource
+	) &&
+		!/\bon[a-z]+\??\s*:/i.test(formActionsContract),
+	'FormActions must not add role, ARIA, event, navigation or lifecycle behavior'
+);
+
+requireValue(
+	!formActionsSource.toLowerCase().includes('atelier') &&
+		!formActionsContract.toLowerCase().includes('atelier'),
+	'FormActions must not depend on Atelier-Kit'
 );
 
 requireValue(
