@@ -6,7 +6,7 @@
 
 This document consolidates the Studio control families demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and records both completed Giada UI work and remaining extraction and adoption work. It preserves the architectural basis for `AsyncOperationPanel`; its final public contract is now documented here where it resolves the original design questions. This inventory does not migrate Atelier-Kit, decide package versioning or registry publication, or imply that consumer adoption has occurred.
 
-The inventory contains **six definitive control families**. `ImageAttachmentControl` and `AsyncOperationPanel` are implemented in Giada UI; the other four families remain future extraction candidates. `Button`, `PageIntro`, `FormActions`, and `Panel` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
+The inventory contains **six definitive control families**. `ImageAttachmentControl` and `AsyncOperationPanel` are implemented in Giada UI; the other four families remain future extraction candidates. `Button`, `PageIntro`, `FormActions`, `Panel`, and `Surface` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
 
 ## Inventory method
 
@@ -55,7 +55,7 @@ The table count remains six: two components implemented in Giada UI and four fut
 
 `AsyncOperationPanel` was selected as the highest-priority extraction because it has two concrete consumers on one Atelier-Kit page, repeats a coherent interaction rather than domain data editing, and has a clean dependency-inversion boundary. That Giada UI extraction is complete: the component and public types are exported from `src/lib/studio/index.ts`. Its shared responsibility remains visible state and accessible feedback for one consumer-owned operation; server and workflow details remain outside Giada UI.
 
-The currently exported Studio components are `ImageAttachmentControl`, `AsyncOperationPanel`, `Button`, `PageIntro`, `FormActions`, and `Panel`. Their existence in Giada UI does not establish that Atelier-Kit has replaced its local controls, introductory paragraphs, action layouts, or section containers. Based on the consumer evidence recorded here, adoption of `ImageAttachmentControl` and `AsyncOperationPanel` remains pending and must be validated in Atelier-Kit separately.
+The currently exported Studio components are `ImageAttachmentControl`, `AsyncOperationPanel`, `Button`, `PageIntro`, `FormActions`, `Panel`, and `Surface`. Their existence in Giada UI does not establish that Atelier-Kit has replaced its local controls, introductory paragraphs, action layouts, or section containers. Based on the consumer evidence recorded here, adoption of `ImageAttachmentControl` and `AsyncOperationPanel` remains pending and must be validated in Atelier-Kit separately.
 
 The remaining work is classified as follows:
 
@@ -68,9 +68,26 @@ The remaining work is classified as follows:
 
 `Panel` is implemented and exported from the Studio entry point as an additional structural primitive, not a seventh control family. It owns one named semantic section, a required visible title and body snippet, optional description and action snippets, deterministic heading association, a closed native heading-level contract, and neutral `--giu-panel-*` style hooks.
 
-It does not own arbitrary section attributes, form behavior, events, focus, navigation, live regions, asynchronous state, operation results, or Atelier-Kit workflow. A future `Surface` remains distinct because generic visual containment does not necessarily justify a heading or section landmark. `AsyncOperationPanel` remains distinct because it presents one controlled operation lifecycle and its accessible status.
+It does not own arbitrary section attributes, form behavior, events, focus, navigation, live regions, asynchronous state, operation results, or Atelier-Kit workflow. `Surface` remains distinct because generic visual containment does not necessarily justify a heading or section landmark. `AsyncOperationPanel` remains distinct because it presents one controlled operation lifecycle and its accessible status.
 
 The component is supported by type-contract, deterministic SSR, DOM-preserving hydration, browser interaction, arbitrary snippet-content and Axe accessibility tests. Atelier-Kit adoption, where a matching consumer exists, remains separate consumer work.
+
+## Implemented presentation primitive: `Surface`
+
+`Surface` is implemented and exported from the Studio entry point as an
+additional presentation primitive, not a seventh control family. It owns one
+neutral native `div`, required snippet content, consumer class and style
+composition, and independent `--giu-surface-*` presentation hooks.
+
+It deliberately adds no heading, section, landmark, role, accessible name,
+interaction, event, state, form behavior or application semantics. Consumers
+must choose semantic wrappers and accessible relationships. `Panel` remains the
+component for named content sections, while `AsyncOperationPanel` remains the
+component for controlled asynchronous lifecycle presentation.
+
+The component is supported by type-contract, deterministic SSR, DOM-preserving
+hydration, browser interaction, arbitrary nested semantic content and Axe
+accessibility tests.
 
 ## Implemented presentation primitive: `PageIntro`
 

@@ -4,6 +4,7 @@ import ButtonImplementation from './Button.svelte';
 import FormActionsImplementation from './FormActions.svelte';
 import PageIntroImplementation from './PageIntro.svelte';
 import PanelImplementation from './Panel.svelte';
+import SurfaceImplementation from './Surface.svelte';
 
 import type { Component, ComponentProps } from 'svelte';
 import type { AsyncOperationPanelProps } from './async-operation-panel.js';
@@ -11,6 +12,7 @@ import type { ButtonProps } from './button.js';
 import type { FormActionsProps } from './form-actions.js';
 import type { PageIntroProps } from './page-intro.js';
 import type { PanelProps } from './panel.js';
+import type { SurfaceProps } from './surface.js';
 import type {
 	ImageAttachmentControlLabels,
 	ImageAttachmentCurrentImage,
@@ -78,6 +80,13 @@ type PanelPropsAreEqual =
 			: false
 		: false;
 type _PanelPropsAreSynchronized = Assert<PanelPropsAreEqual>;
+type SurfacePropsAreEqual =
+	SurfaceProps extends ComponentProps<typeof SurfaceImplementation>
+		? ComponentProps<typeof SurfaceImplementation> extends SurfaceProps
+			? true
+			: false
+		: false;
+type _SurfacePropsAreSynchronized = Assert<SurfacePropsAreEqual>;
 
 export const AsyncOperationPanel: Component<AsyncOperationPanelProps, {}, ''> =
 	AsyncOperationPanelImplementation;
@@ -89,6 +98,8 @@ export const FormActions: Component<FormActionsProps, {}, ''> = FormActionsImple
 export const PageIntro: Component<PageIntroProps, {}, ''> = PageIntroImplementation;
 
 export const Panel: Component<PanelProps, {}, ''> = PanelImplementation;
+
+export const Surface: Component<SurfaceProps, {}, ''> = SurfaceImplementation;
 
 export const ImageAttachmentControl: Component<ImageAttachmentControlProps, {}, ''> =
 	ImageAttachmentControlImplementation;
@@ -107,3 +118,4 @@ export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
 export type { FormActionsAlign, FormActionsProps } from './form-actions.js';
 export type { PageIntroProps } from './page-intro.js';
 export type { PanelHeadingLevel, PanelProps } from './panel.js';
+export type { SurfaceProps } from './surface.js';
