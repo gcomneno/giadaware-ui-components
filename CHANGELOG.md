@@ -4,6 +4,9 @@
 
 ### Added
 
+- `Panel` Studio structural primitive with a named semantic section, required
+  body content, optional description and actions, deterministic identifiers,
+  closed heading levels and neutral styling hooks.
 - `FormActions` Studio layout primitive with required snippet content, closed
   main-axis alignment, configurable wrapping and a neutral gap hook.
 - `PageIntro` Studio component with semantic paragraph output, snippet-based

@@ -34,6 +34,14 @@ const formActionsContract = await readFile(
 	new URL('../src/lib/studio/form-actions.ts', import.meta.url),
 	'utf8'
 );
+const panelSource = await readFile(
+	new URL('../src/lib/studio/Panel.svelte', import.meta.url),
+	'utf8'
+);
+const panelContract = await readFile(
+	new URL('../src/lib/studio/panel.ts', import.meta.url),
+	'utf8'
+);
 
 const errors = [];
 
@@ -167,6 +175,91 @@ requireValue(
 	!formActionsSource.toLowerCase().includes('atelier') &&
 		!formActionsContract.toLowerCase().includes('atelier'),
 	'FormActions must not depend on Atelier-Kit'
+);
+
+
+const panelStyleMatch = panelSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const panelStyle = panelStyleMatch?.[1] ?? '';
+const panelCustomProperties = [
+	...panelStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+const panelHeadingContract =
+	panelContract.match(
+		/export type PanelHeadingLevel\s*=([\s\S]*?);/
+	)?.[1] ?? '';
+const panelHeadingValues = [
+	...panelHeadingContract.matchAll(/\b([2-6])\b/g)
+].map(([, value]) => Number(value));
+
+requireValue(
+	panelContract.includes("import type { Snippet } from 'svelte'") &&
+		panelContract.includes('title: string') &&
+		panelContract.includes('description?: Snippet') &&
+		panelContract.includes('actions?: Snippet') &&
+		panelContract.includes('children: Snippet') &&
+		JSON.stringify(panelHeadingValues) ===
+			JSON.stringify([2, 3, 4, 5, 6]),
+	'Panel must require title and children and expose the closed heading-level contract'
+);
+
+requireValue(
+	panelSource.includes('<section') &&
+		panelSource.includes("class={['giu-panel', className]}") &&
+		panelSource.includes('aria-labelledby={titleId}') &&
+		panelSource.includes('<header class="giu-panel__header">') &&
+		panelSource.includes('class="giu-panel__title"') &&
+		panelSource.includes('class="giu-panel__body"'),
+	'Panel must render the named semantic section, header, heading and body structure'
+);
+
+requireValue(
+	panelSource.includes('const generatedId = $props.id()') &&
+		panelSource.includes('const panelId = $derived(id ?? generatedId)') &&
+		panelSource.includes("const titleId = $derived(`${panelId}-title`)") &&
+		panelSource.includes('normalizePanelHeadingLevel(headingLevel)'),
+	'Panel must provide deterministic IDs and normalize runtime heading levels'
+);
+
+requireValue(
+	panelCustomProperties.length > 0 &&
+		panelCustomProperties.every((property) =>
+			property.startsWith('--giu-panel-')
+		),
+	'Panel must use only neutral --giu-panel-* tokens'
+);
+
+requireValue(
+	!panelStyle.includes(':global') &&
+		!panelSource.includes('--studio-') &&
+		!panelSource.includes('--site-'),
+	'Panel CSS must remain scoped and application-neutral'
+);
+
+requireValue(
+	[...panelStyle.matchAll(/var\(([^)]+)\)/g)].every(
+		([, value]) => value.includes(',')
+	),
+	'Panel custom-property uses must provide fallbacks'
+);
+
+requireValue(
+	!panelSource.includes('aria-live') &&
+		!panelSource.includes('aria-busy') &&
+		!panelSource.includes('role=') &&
+		!/\bon(?:click|keydown|keyup|input|change|submit|focus|blur)\s*=/.test(
+			panelSource
+		) &&
+		!panelSource.includes('$effect') &&
+		!panelSource.includes('onMount'),
+	'Panel must not own live regions, async state, events, focus or lifecycle behavior'
+);
+
+requireValue(
+	!panelSource.toLowerCase().includes('atelier') &&
+		!panelContract.toLowerCase().includes('atelier'),
+	'Panel must not depend on Atelier-Kit'
 );
 
 requireValue(

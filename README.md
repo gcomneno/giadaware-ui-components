@@ -27,6 +27,7 @@ The approved trial contains:
 - `Button`
 - `PageIntro`
 - `FormActions`
+- `Panel`
 
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
@@ -40,7 +41,8 @@ are:
   `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
   `AsyncOperationPanel` and its public types, plus `Button`, `ButtonProps`,
   `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`, plus
-  `FormActions`, `FormActionsProps` and `FormActionsAlign`.
+  `FormActions`, `FormActionsProps` and `FormActionsAlign`, plus `Panel`,
+  `PanelProps` and `PanelHeadingLevel`.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
 snippet contract, accessibility behavior, examples, and styling hooks.
@@ -54,9 +56,32 @@ responsibility boundary, accessibility behavior and CSS custom properties.
 See [FormActions](docs/form-actions.md) for its flex layout contract, wrapping
 behavior, ownership boundaries and gap customization.
 
+See [Panel](docs/panel.md) for its semantic section contract, heading behavior,
+responsibility boundaries, examples and CSS custom properties.
+
 See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
 deterministic layout, interactions, callback payloads, resilience policy, and
 CSS customization hooks.
+
+## Panel
+
+Import `Panel` only from the Studio entry point:
+
+```svelte
+<script lang="ts">
+	import { Panel } from 'giadaware-ui-components/studio';
+</script>
+
+<Panel title="Publishing settings" headingLevel={3}>
+	<p>Configure how the current document is published.</p>
+</Panel>
+```
+
+`Panel` renders one named semantic section with a visible heading and required
+body content. Description and action snippets are optional and consumer-owned.
+It does not manage forms, events, asynchronous state, live regions or workflow.
+Use `AsyncOperationPanel` for operation lifecycle presentation; a generic
+title-free visual `Surface` remains a separate future primitive.
 
 ## PageIntro
 
