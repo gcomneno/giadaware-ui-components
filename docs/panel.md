@@ -79,9 +79,9 @@ from `Panel`; consumers must add semantics to their own controls when required.
 
 Use `Panel` when content forms a named document section with a visible heading.
 
-A future `Surface` primitive is separate: it may provide neutral visual
-containment without requiring a title, heading, or section landmark. `Panel`
-must not become a generic decorative wrapper merely to cover that use case.
+`Surface` is a separate implemented primitive for neutral visual containment
+without a title, heading, or section landmark. `Panel` must not become a
+generic decorative wrapper merely to cover that use case.
 
 Use `AsyncOperationPanel` when the content represents one controlled
 asynchronous lifecycle. That component owns busy and result presentation,
