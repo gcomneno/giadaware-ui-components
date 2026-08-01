@@ -4,6 +4,8 @@
 
 ### Added
 
+- `FieldLabel` Studio presentation primitive with deterministic required and
+  optional markers, consumer-resolved copy and optional hint IDs.
 - `Surface` Studio presentation primitive with a neutral native root,
   required snippet content, no implicit semantics and independent style hooks.
 - `Panel` Studio structural primitive with a named semantic section, required
