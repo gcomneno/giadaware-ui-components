@@ -26,6 +26,14 @@ const buttonContract = await readFile(
 	new URL('../src/lib/studio/button.ts', import.meta.url),
 	'utf8'
 );
+const fieldLabelSource = await readFile(
+	new URL('../src/lib/studio/FieldLabel.svelte', import.meta.url),
+	'utf8'
+);
+const fieldLabelContract = await readFile(
+	new URL('../src/lib/studio/field-label.ts', import.meta.url),
+	'utf8'
+);
 const formActionsSource = await readFile(
 	new URL('../src/lib/studio/FormActions.svelte', import.meta.url),
 	'utf8'
@@ -108,6 +116,127 @@ requireValue(
 	[...buttonSource.matchAll(/var\(([^)]+)\)/g)].every(([, value]) => value.includes(',')),
 	'Button custom-property uses must provide fallbacks'
 );
+
+const fieldLabelStyleMatch = fieldLabelSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const fieldLabelStyle = fieldLabelStyleMatch?.[1] ?? '';
+const fieldLabelCustomProperties = [
+	...fieldLabelStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+const fieldLabelSelectors = [
+	...fieldLabelStyle.matchAll(/([^{}]+)\{/g)
+].flatMap(([, selectors]) =>
+	selectors.split(',').map((selector) => selector.trim())
+);
+const expectedFieldLabelCustomProperties = [
+	'--giu-field-label-row-gap',
+	'--giu-field-label-color',
+	'--giu-field-label-weight',
+	'--giu-field-label-line-height',
+	'--giu-field-label-marker-size',
+	'--giu-field-label-marker-weight',
+	'--giu-field-label-required-color',
+	'--giu-field-label-optional-color',
+	'--giu-field-label-hint-gap',
+	'--giu-field-label-hint-color',
+	'--giu-field-label-hint-size',
+	'--giu-field-label-hint-line-height'
+];
+
+requireValue(
+	fieldLabelContract.includes('label: string') &&
+		fieldLabelContract.includes('hint?: string') &&
+		fieldLabelContract.includes('required?: boolean') &&
+		fieldLabelContract.includes('optional?: boolean') &&
+		fieldLabelContract.includes('requiredLabel?: string') &&
+		fieldLabelContract.includes('optionalLabel?: string') &&
+		fieldLabelContract.includes('hintId?: string') &&
+		fieldLabelContract.includes('class?: string') &&
+		fieldLabelContract.includes('style?: string'),
+	'FieldLabel must expose the closed presentation-only public contract'
+);
+
+requireValue(
+	fieldLabelSource.includes("'giu-field-label-row'") &&
+		fieldLabelSource.includes('`giu-field-label-row--${state}`') &&
+		fieldLabelSource.includes('class="giu-field-label"') &&
+		fieldLabelSource.includes("'giu-field-label-marker--required'") &&
+		fieldLabelSource.includes("'giu-field-label-marker--optional'") &&
+		fieldLabelSource.includes('class="giu-field-label-hint"'),
+	'FieldLabel must render the documented row, marker and hint presentation'
+);
+
+requireValue(
+	fieldLabelSource.includes(
+		"required ? 'required' : optional ? 'optional' : 'plain'"
+	) &&
+		fieldLabelSource.includes(
+			"state === 'required' && Boolean(requiredLabel?.trim())"
+		) &&
+		fieldLabelSource.includes(
+			"state === 'optional' && Boolean(optionalLabel?.trim())"
+		) &&
+		fieldLabelSource.includes('Boolean(hint?.trim())') &&
+		fieldLabelSource.includes(
+			'hasHint && hintId?.trim() ? hintId : undefined'
+		),
+	'FieldLabel must retain required precedence and omit unresolved marker or hint content'
+);
+
+requireValue(
+	fieldLabelSource.includes(
+		'class="giu-field-label-marker__symbol"'
+	) &&
+		fieldLabelSource.includes('aria-hidden="true"') &&
+		fieldLabelSource.includes(
+			'class="giu-field-label-marker__accessible"'
+		),
+	'FieldLabel required markers must hide the symbol and expose resolved accessible copy'
+);
+
+requireValue(
+	JSON.stringify(fieldLabelCustomProperties) ===
+		JSON.stringify(expectedFieldLabelCustomProperties),
+	'FieldLabel must expose exactly the documented --giu-field-label-* tokens'
+);
+
+requireValue(
+	[...fieldLabelStyle.matchAll(/var\(([^)]+)\)/g)].every(
+		([, value]) => value.includes(',')
+	),
+	'FieldLabel custom-property uses must provide fallbacks'
+);
+
+requireValue(
+	!fieldLabelStyle.includes(':global') &&
+		fieldLabelSelectors.every((selector) =>
+			/^\.giu-field-label(?:-(?:row|marker|hint))?(?:__[a-z-]+|--[a-z-]+)?$/.test(
+				selector
+			)
+		) &&
+		!fieldLabelSource.includes('--studio-') &&
+		!fieldLabelSource.includes('--site-'),
+	'FieldLabel CSS must remain scoped and application-neutral'
+);
+
+requireValue(
+	!/<label(?:\s|>)/i.test(fieldLabelSource) &&
+		!/<input(?:\s|>)/i.test(fieldLabelSource) &&
+		!/(?:\sfor=|aria-describedby|role=|on(?:click|keydown|keyup|input|change|submit|focus|blur)\s*=|href\s*=|\$effect|onMount)/i.test(
+			fieldLabelSource
+		) &&
+		!fieldLabelSource.includes('{...') &&
+		!/\bon[a-z]+\??\s*:/i.test(fieldLabelContract),
+	'FieldLabel must not own control association, native validation, events, navigation or lifecycle behavior'
+);
+
+requireValue(
+	!fieldLabelSource.toLowerCase().includes('atelier') &&
+		!fieldLabelContract.toLowerCase().includes('atelier'),
+	'FieldLabel must not depend on Atelier-Kit'
+);
+
 
 const formActionsStyleMatch = formActionsSource.match(
 	/<style>([\s\S]*?)<\/style>/
