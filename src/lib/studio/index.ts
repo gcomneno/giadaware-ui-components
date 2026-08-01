@@ -2,6 +2,7 @@ import ImageAttachmentControlImplementation from './ImageAttachmentControl.svelt
 import AsyncOperationPanelImplementation from './AsyncOperationPanel.svelte';
 import ButtonImplementation from './Button.svelte';
 import FormActionsImplementation from './FormActions.svelte';
+import FieldLabelImplementation from './FieldLabel.svelte';
 import PageIntroImplementation from './PageIntro.svelte';
 import PanelImplementation from './Panel.svelte';
 import SurfaceImplementation from './Surface.svelte';
@@ -10,6 +11,7 @@ import type { Component, ComponentProps } from 'svelte';
 import type { AsyncOperationPanelProps } from './async-operation-panel.js';
 import type { ButtonProps } from './button.js';
 import type { FormActionsProps } from './form-actions.js';
+import type { FieldLabelProps } from './field-label.js';
 import type { PageIntroProps } from './page-intro.js';
 import type { PanelProps } from './panel.js';
 import type { SurfaceProps } from './surface.js';
@@ -59,6 +61,13 @@ type ButtonPropsAreEqual =
 			: false
 		: false;
 type _ButtonPropsAreSynchronized = Assert<ButtonPropsAreEqual>;
+type FieldLabelPropsAreEqual =
+	FieldLabelProps extends ComponentProps<typeof FieldLabelImplementation>
+		? ComponentProps<typeof FieldLabelImplementation> extends FieldLabelProps
+			? true
+			: false
+		: false;
+type _FieldLabelPropsAreSynchronized = Assert<FieldLabelPropsAreEqual>;
 type FormActionsPropsAreEqual =
 	FormActionsProps extends ComponentProps<typeof FormActionsImplementation>
 		? ComponentProps<typeof FormActionsImplementation> extends FormActionsProps
@@ -93,6 +102,8 @@ export const AsyncOperationPanel: Component<AsyncOperationPanelProps, {}, ''> =
 
 export const Button: Component<ButtonProps, {}, ''> = ButtonImplementation;
 
+export const FieldLabel: Component<FieldLabelProps, {}, ''> = FieldLabelImplementation;
+
 export const FormActions: Component<FormActionsProps, {}, ''> = FormActionsImplementation;
 
 export const PageIntro: Component<PageIntroProps, {}, ''> = PageIntroImplementation;
@@ -115,6 +126,7 @@ export type {
 
 export type { AsyncOperationHeadingLevel, AsyncOperationPanelProps, AsyncOperationState } from './async-operation-panel.js';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
+export type { FieldLabelProps } from './field-label.js';
 export type { FormActionsAlign, FormActionsProps } from './form-actions.js';
 export type { PageIntroProps } from './page-intro.js';
 export type { PanelHeadingLevel, PanelProps } from './panel.js';

@@ -26,6 +26,7 @@ The approved trial contains:
 - `AsyncOperationPanel`
 - `Button`
 - `PageIntro`
+- `FieldLabel`
 - `FormActions`
 - `Panel`
 - `Surface`
@@ -42,7 +43,8 @@ are:
   `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
   `AsyncOperationPanel` and its public types, plus `Button`, `ButtonProps`,
   `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`, plus
-  `FormActions`, `FormActionsProps` and `FormActionsAlign`, plus `Panel`,
+  `FieldLabel` and `FieldLabelProps`, plus `FormActions`, `FormActionsProps`
+  and `FormActionsAlign`, plus `Panel`,
   `PanelProps` and `PanelHeadingLevel`, plus `Surface` and `SurfaceProps`.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
@@ -53,6 +55,10 @@ accessibility responsibilities, examples, and CSS custom properties.
 
 See [PageIntro](docs/page-intro.md) for its paragraph and snippet contract,
 responsibility boundary, accessibility behavior and CSS custom properties.
+
+See [FieldLabel](docs/field-label.md) for its presentation-only field-label
+contract, required and optional marker policy, hint association and styling
+hooks.
 
 See [FormActions](docs/form-actions.md) for its flex layout contract, wrapping
 behavior, ownership boundaries and gap customization.
@@ -66,6 +72,38 @@ boundaries, composition examples and CSS custom properties.
 See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
 deterministic layout, interactions, callback payloads, resilience policy, and
 CSS customization hooks.
+
+## FieldLabel
+
+Import `FieldLabel` only from the Studio entry point:
+
+```svelte
+<script lang="ts">
+	import { FieldLabel } from 'giadaware-ui-components/studio';
+</script>
+
+<label for="display-name">
+	<FieldLabel
+		label="Display name"
+		required
+		requiredLabel="Required"
+		hint="Shown on your public profile."
+		hintId="display-name-hint"
+	/>
+</label>
+
+<input
+	id="display-name"
+	name="displayName"
+	required
+	aria-describedby="display-name-hint"
+/>
+```
+
+`FieldLabel` renders presentation only. Consumers provide translated strings,
+the semantic `label` association, native `required`, stable control IDs and
+hint relationships. Required presentation takes precedence over optional
+presentation, and unresolved marker labels are omitted.
 
 ## Panel
 
