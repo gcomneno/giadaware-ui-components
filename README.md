@@ -28,6 +28,7 @@ The approved trial contains:
 - `PageIntro`
 - `FormActions`
 - `Panel`
+- `Surface`
 
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
@@ -42,7 +43,7 @@ are:
   `AsyncOperationPanel` and its public types, plus `Button`, `ButtonProps`,
   `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`, plus
   `FormActions`, `FormActionsProps` and `FormActionsAlign`, plus `Panel`,
-  `PanelProps` and `PanelHeadingLevel`.
+  `PanelProps` and `PanelHeadingLevel`, plus `Surface` and `SurfaceProps`.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
 snippet contract, accessibility behavior, examples, and styling hooks.
@@ -58,6 +59,9 @@ behavior, ownership boundaries and gap customization.
 
 See [Panel](docs/panel.md) for its semantic section contract, heading behavior,
 responsibility boundaries, examples and CSS custom properties.
+
+See [Surface](docs/surface.md) for its neutral container contract, semantic
+boundaries, composition examples and CSS custom properties.
 
 See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
 deterministic layout, interactions, callback payloads, resilience policy, and
@@ -80,8 +84,33 @@ Import `Panel` only from the Studio entry point:
 `Panel` renders one named semantic section with a visible heading and required
 body content. Description and action snippets are optional and consumer-owned.
 It does not manage forms, events, asynchronous state, live regions or workflow.
-Use `AsyncOperationPanel` for operation lifecycle presentation; a generic
-title-free visual `Surface` remains a separate future primitive.
+Use `AsyncOperationPanel` for operation lifecycle presentation. Use `Surface`
+for neutral visual containment without a heading or section landmark.
+
+## Surface
+
+Import `Surface` only from the Studio entry point:
+
+```svelte
+<script lang="ts">
+	import { Surface } from 'giadaware-ui-components/studio';
+</script>
+
+<nav aria-label="Resources">
+	<Surface>
+		<a href="/documentation">Documentation</a>
+	</Surface>
+</nav>
+```
+
+`Surface` renders required consumer content inside one neutral native `div`.
+It adds no heading, role, landmark, accessible name, interaction, event or
+application behavior. Consumers own any surrounding `nav`, `section`, `article`
+or form semantics.
+
+Consumer classes and inline styles compose with its scoped presentation through
+the documented `--giu-surface-*` custom properties. Use `Panel` instead when
+the content is a named section requiring a visible heading.
 
 ## PageIntro
 

@@ -42,6 +42,14 @@ const panelContract = await readFile(
 	new URL('../src/lib/studio/panel.ts', import.meta.url),
 	'utf8'
 );
+const surfaceSource = await readFile(
+	new URL('../src/lib/studio/Surface.svelte', import.meta.url),
+	'utf8'
+);
+const surfaceContract = await readFile(
+	new URL('../src/lib/studio/surface.ts', import.meta.url),
+	'utf8'
+);
 
 const errors = [];
 
@@ -260,6 +268,94 @@ requireValue(
 	!panelSource.toLowerCase().includes('atelier') &&
 		!panelContract.toLowerCase().includes('atelier'),
 	'Panel must not depend on Atelier-Kit'
+);
+
+
+const surfaceStyleMatch = surfaceSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const surfaceStyle = surfaceStyleMatch?.[1] ?? '';
+const surfaceCustomProperties = [
+	...surfaceStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+const surfaceSelectors = [
+	...surfaceStyle.matchAll(/([^{}]+)\{/g)
+].flatMap(([, selectors]) =>
+	selectors.split(',').map((selector) => selector.trim())
+);
+const expectedSurfaceCustomProperties = [
+	'--giu-surface-padding',
+	'--giu-surface-border-width',
+	'--giu-surface-border-color',
+	'--giu-surface-border-radius',
+	'--giu-surface-color',
+	'--giu-surface-background'
+];
+
+requireValue(
+	surfaceContract.includes("import type { Snippet } from 'svelte'") &&
+		surfaceContract.includes('children: Snippet') &&
+		surfaceContract.includes('class?: string') &&
+		surfaceContract.includes('style?: string'),
+	'Surface must require a Snippet and expose only class and style customization'
+);
+
+requireValue(
+	(surfaceSource.match(/<div(?:\s|>)/g) ?? []).length === 1 &&
+		surfaceSource.includes("class={['giu-surface', className]}") &&
+		surfaceSource.includes('{@render children()}'),
+	'Surface must render one fixed neutral div with the giu-surface base class'
+);
+
+requireValue(
+	JSON.stringify(surfaceCustomProperties) ===
+		JSON.stringify(expectedSurfaceCustomProperties),
+	'Surface must expose exactly the documented --giu-surface-* tokens'
+);
+
+requireValue(
+	/padding:\s*var\(--giu-surface-padding,\s*1rem\);/.test(surfaceStyle) &&
+		/border:\s*var\(--giu-surface-border-width,\s*1px\)\s*solid\s*var\(--giu-surface-border-color,\s*#767676\);/.test(
+			surfaceStyle
+		) &&
+		/border-radius:\s*var\(--giu-surface-border-radius,\s*0\.5rem\);/.test(
+			surfaceStyle
+		) &&
+		/color:\s*var\(--giu-surface-color,\s*#202020\);/.test(surfaceStyle) &&
+		/background:\s*var\(--giu-surface-background,\s*#ffffff\);/.test(
+			surfaceStyle
+		),
+	'Surface tokens must retain their documented neutral fallbacks'
+);
+
+requireValue(
+	[...surfaceStyle.matchAll(/var\(([^)]+)\)/g)].every(
+		([, value]) => value.includes(',')
+	),
+	'Surface custom-property uses must provide fallbacks'
+);
+
+requireValue(
+	!surfaceStyle.includes(':global') &&
+		surfaceSelectors.every((selector) => selector === '.giu-surface') &&
+		!surfaceSource.includes('--studio-') &&
+		!surfaceSource.includes('--site-'),
+	'Surface CSS must remain scoped, root-only and application-neutral'
+);
+
+requireValue(
+	!/(?:role\s*=|aria-|on(?:click|keydown|keyup|input|change|submit|focus|blur)\s*=|href\s*=|\$effect|onMount|<section(?:\s|>)|<header(?:\s|>)|<h[1-6](?:\s|>))/i.test(
+		surfaceSource
+	) &&
+		!surfaceSource.includes('{...') &&
+		!/\bon[a-z]+\??\s*:/i.test(surfaceContract),
+	'Surface must not add semantics, attribute forwarding, events, navigation or lifecycle behavior'
+);
+
+requireValue(
+	!surfaceSource.toLowerCase().includes('atelier') &&
+		!surfaceContract.toLowerCase().includes('atelier'),
+	'Surface must not depend on Atelier-Kit'
 );
 
 requireValue(

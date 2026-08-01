@@ -4,6 +4,8 @@
 
 ### Added
 
+- `Surface` Studio presentation primitive with a neutral native root,
+  required snippet content, no implicit semantics and independent style hooks.
 - `Panel` Studio structural primitive with a named semantic section, required
   body content, optional description and actions, deterministic identifiers,
   closed heading levels and neutral styling hooks.
