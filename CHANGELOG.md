@@ -4,6 +4,9 @@
 
 ### Added
 
+- `EditableList`, `EditableListRow` and `ReorderActions` Studio primitives for
+  composable ordered editors with consumer-owned `isEmpty` selection and native
+  disabled reorder controls.
 - `FieldLabel` Studio presentation primitive with deterministic required and
   optional markers, consumer-resolved copy and optional hint IDs.
 - `Surface` Studio presentation primitive with a neutral native root,
