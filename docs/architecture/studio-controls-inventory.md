@@ -4,9 +4,9 @@
 
 **Status:** current architectural inventory and decision record for Giada UI epic #8.
 
-This document consolidates the Studio control families demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and records both completed Giada UI work and remaining extraction and adoption work. It preserves the architectural basis for `AsyncOperationPanel`; its final public contract is now documented here where it resolves the original design questions. This inventory does not migrate Atelier-Kit, decide package versioning or registry publication, or imply that consumer adoption has occurred.
+This document consolidates the Studio control families demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and records both completed Giada UI work and remaining extraction work. It preserves the architectural basis for `AsyncOperationPanel`; its final public contract is now documented here where it resolves the original design questions. This inventory does not decide package versioning or registry publication.
 
-The inventory contains **six definitive control families**. `ImageAttachmentControl` and `AsyncOperationPanel` are implemented in Giada UI; the other four families remain future extraction candidates. `Button`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, and `Surface` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
+The inventory contains **six definitive control families**. `ImageAttachmentControl`, `AsyncOperationPanel`, and the shared structural subset of the ordered asset or record editor are implemented in Giada UI; the marked-text, color-preset, and font-preset families remain future extraction candidates. `Button`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, and `Surface` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
 
 ## Inventory method
 
@@ -32,14 +32,14 @@ Extraction and adoption are separate work. A component can exist in Giada UI whi
 
 | # | Family | Observed evidence | Classification and disposition |
 |---:|---|---|---|
-| 1 | `ImageAttachmentControl` | Implemented and exported by Giada UI from `src/lib/studio/ImageAttachmentControl.svelte` and `src/lib/studio/index.ts`; Atelier-Kit still uses `src/lib/components/StudioImageMutationFields.svelte` in the identity, hero, and appearance Studio routes. | Existing Giada UI component. Atelier-Kit adoption is separate work, not a new extraction. |
+| 1 | `ImageAttachmentControl` | Implemented and exported by Giada UI from `src/lib/studio/ImageAttachmentControl.svelte` and `src/lib/studio/index.ts`; adopted in Atelier-Kit through #217. | Existing Giada UI component. |
 | 2 | Controlled marked-text field/editor | Atelier-Kit's `src/lib/components/MarkedTextField.svelte` is used across multiple Studio routes and depends on `src/lib/editorial-markup.js`, `src/lib/marked-text.js`, `src/lib/components/EditorialText.svelte`, `src/lib/site-typography.js`, and operator i18n. | Real family, but too coupled to Atelier Mark, parser and renderer semantics, typography presets, preview, selection APIs, and localization to be next. |
 | 3 | Color preset control | `src/routes/studio/site/appearance/+page.svelte` selects a preset, applies it across seven color fields, and renders a coordinated preview; definitions and normalization live in `src/lib/site-appearance.js`. | Distinct future family for selecting and editing a multi-value palette with preview. Do not collapse it into font selection. |
 | 4 | Font preset control | The same appearance route owns separate font selection and preview state, while `src/lib/site-typography.js` owns font families and external stylesheet URLs. | Distinct future family for font selection, loading, and preview. Do not create a color-font monolith. |
-| 5 | `AsyncOperationPanel` | Implemented and exported by Giada UI from `src/lib/studio/AsyncOperationPanel.svelte` and `src/lib/studio/index.ts`. Atelier-Kit's `src/routes/studio/readiness/+page.svelte` provides two consumer cases: build test (`runPublishPrep`) and live publication (`publishLive`). | Existing Giada UI component. It unifies the former “async action panel” and “separate dry-run/publication feedback” entries; Atelier-Kit adoption remains separate work. |
-| 6 | Ordered asset or record editor | `src/lib/components/StudioItemGalleryFields.svelte` adds, removes, and moves ordered rows; `src/lib/studio-item-gallery.js` maps those rows to Atelier-Kit's gallery and cover rules. | Real family distinct from a single image attachment. The gallery is a concrete consumer, but its fields, minimum-one rule, cover role, dirty tracking, form encoding, and upload flow remain domain-coupled. |
+| 5 | `AsyncOperationPanel` | Implemented and exported by Giada UI from `src/lib/studio/AsyncOperationPanel.svelte` and `src/lib/studio/index.ts`; adopted in Atelier-Kit through #221. | Existing Giada UI component. It unifies the former “async action panel” and “separate dry-run/publication feedback” entries. |
+| 6 | Ordered asset or record editor | Atelier-Kit #225 characterizes Gallery and Meta ordered rows; Giada UI #30 introduces `EditableList`, `EditableListRow`, and `ReorderActions`. | Shared structure and reorder presentation are implemented. Row schemas, identity, cardinality, dirty tracking, focus, form encoding, defaults, validation, and persistence remain consumer-owned; Atelier-Kit adoption is separate work. |
 
-The table count remains six: two components implemented in Giada UI and four future candidate families not yet extracted.
+The table count remains six: two complete shared control families, one extracted structural subset for ordered editors, and three future candidate families.
 
 ## Removed overlaps and reclassifications
 
@@ -55,14 +55,13 @@ The table count remains six: two components implemented in Giada UI and four fut
 
 `AsyncOperationPanel` was selected as the highest-priority extraction because it has two concrete consumers on one Atelier-Kit page, repeats a coherent interaction rather than domain data editing, and has a clean dependency-inversion boundary. That Giada UI extraction is complete: the component and public types are exported from `src/lib/studio/index.ts`. Its shared responsibility remains visible state and accessible feedback for one consumer-owned operation; server and workflow details remain outside Giada UI.
 
-The currently exported Studio components are `ImageAttachmentControl`, `AsyncOperationPanel`, `Button`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, and `Surface`. Their existence in Giada UI does not establish that Atelier-Kit has replaced its local controls, introductory paragraphs, action layouts, or section containers. Based on the consumer evidence recorded here, adoption of `ImageAttachmentControl` and `AsyncOperationPanel` remains pending and must be validated in Atelier-Kit separately.
+The currently exported Studio components are `ImageAttachmentControl`, `AsyncOperationPanel`, `Button`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, `Surface`, `EditableList`, `EditableListRow`, and `ReorderActions`. Atelier-Kit adopted `ImageAttachmentControl` through #217, `Button` through #220, `AsyncOperationPanel` through #221, `PageIntro` and `FormActions` through #222, `Panel` and `Surface` through #223, and `FieldLabel` through #224. Gallery and Meta characterization is recorded through #225; editable-list adoption remains a future separate consumer issue.
 
 The remaining work is classified as follows:
 
-1. `ImageAttachmentControl` and `AsyncOperationPanel` need Atelier-Kit adoption, not Giada UI extraction.
-2. The color preset and font preset controls are credible future candidates but currently demonstrated together in only one consumer surface; their generic data and preview extension points need further design.
-3. The ordered editor is a future candidate with a useful generic interaction, but the concrete gallery consumer embeds Atelier-Kit field shapes, minimum-cardinality rules, dirty tracking, form naming, cover semantics, and a separate upload append flow.
-4. The marked-text editor is a future candidate with broad usage but the greatest architectural coupling. Extracting it now would either leak Atelier Mark and Atelier-Kit typography/i18n into Giada UI or prematurely design a plugin-style editor contract.
+1. The color preset and font preset controls are credible future candidates but currently demonstrated together in only one consumer surface; their generic data and preview extension points need further design.
+2. The ordered editor's shared structure and reorder presentation are implemented through #30. Gallery and Meta adoption remains separate consumer work, while their schemas, cardinality, dirty tracking, focus, form naming, defaults, validation, and persistence remain outside Giada UI.
+3. The marked-text editor is a future candidate with broad usage but the greatest architectural coupling. Extracting it now would either leak Atelier Mark and Atelier-Kit typography/i18n into Giada UI or prematurely design a plugin-style editor contract.
 
 ## Implemented presentation primitive: `FieldLabel`
 
