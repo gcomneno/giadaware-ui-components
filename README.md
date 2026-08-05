@@ -30,6 +30,7 @@ The approved trial contains:
 - `FormActions`
 - `Panel`
 - `Surface`
+- `EditableList`, `EditableListRow` and `ReorderActions`
 
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
@@ -45,7 +46,8 @@ are:
   `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`, plus
   `FieldLabel` and `FieldLabelProps`, plus `FormActions`, `FormActionsProps`
   and `FormActionsAlign`, plus `Panel`,
-  `PanelProps` and `PanelHeadingLevel`, plus `Surface` and `SurfaceProps`.
+  `PanelProps` and `PanelHeadingLevel`, plus `Surface` and `SurfaceProps`, plus
+  `EditableList`, `EditableListRow`, `ReorderActions` and their public props.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
 snippet contract, accessibility behavior, examples, and styling hooks.
@@ -68,6 +70,10 @@ responsibility boundaries, examples and CSS custom properties.
 
 See [Surface](docs/surface.md) for its neutral container contract, semantic
 boundaries, composition examples and CSS custom properties.
+
+See [EditableList](docs/editable-list.md) for composable ordered-row structure,
+native reorder controls, the consumer-owned `isEmpty` selection contract,
+ownership boundaries and isolated CSS properties.
 
 See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
 deterministic layout, interactions, callback payloads, resilience policy, and

@@ -21,7 +21,13 @@ function run(command, args, cwd, inherit = false) {
 	const result = spawnSync(command, args, {
 		cwd,
 		encoding: 'utf8',
-		stdio: inherit ? 'inherit' : 'pipe'
+		// npm pack's file manifest can exceed spawnSync's default 1 MiB buffer.
+		maxBuffer: 10 * 1024 * 1024,
+		stdio: inherit ? 'inherit' : 'pipe',
+		env: {
+			...process.env,
+			npm_config_cache: join(temporaryRoot, 'npm-cache')
+		}
 	});
 
 	if (result.status !== 0) {
@@ -57,7 +63,24 @@ try {
 		root
 	);
 
-	const metadata = JSON.parse(packed.stdout);
+	// npm 10 may print the local prepare lifecycle before its JSON payload even
+	// with --ignore-scripts. The JSON array starts on its own line.
+	const packedOutput = packed.stdout.includes('[\n')
+		? packed.stdout
+		: packed.stderr;
+	const jsonStart = packedOutput.indexOf('[\n');
+	const jsonPayload = jsonStart === -1
+		? packedOutput
+		: packedOutput.slice(jsonStart);
+	let metadata;
+
+	try {
+		metadata = JSON.parse(jsonPayload);
+	} catch (error) {
+		throw new Error(
+			`npm pack returned invalid JSON (stdout ${packed.stdout.length}, stderr ${packed.stderr.length}): ${error.message}`
+		);
+	}
 
 	if (!Array.isArray(metadata) || metadata.length !== 1) {
 		throw new Error('npm pack returned unexpected metadata');
@@ -105,6 +128,10 @@ try {
 		'dist/studio/AsyncOperationPanel.svelte.d.ts',
 		'dist/studio/Button.svelte',
 		'dist/studio/Button.svelte.d.ts',
+		'dist/studio/EditableList.svelte',
+		'dist/studio/EditableList.svelte.d.ts',
+		'dist/studio/EditableListRow.svelte',
+		'dist/studio/EditableListRow.svelte.d.ts',
 		'dist/studio/FieldLabel.svelte',
 		'dist/studio/FieldLabel.svelte.d.ts',
 		'dist/studio/FormActions.svelte',
@@ -115,12 +142,18 @@ try {
 		'dist/studio/PageIntro.svelte.d.ts',
 		'dist/studio/Panel.svelte',
 		'dist/studio/Panel.svelte.d.ts',
+		'dist/studio/ReorderActions.svelte',
+		'dist/studio/ReorderActions.svelte.d.ts',
 		'dist/studio/Surface.svelte',
 		'dist/studio/Surface.svelte.d.ts',
 		'dist/studio/async-operation-panel.d.ts',
 		'dist/studio/async-operation-panel.js',
 		'dist/studio/button.d.ts',
 		'dist/studio/button.js',
+		'dist/studio/editable-list-row.d.ts',
+		'dist/studio/editable-list-row.js',
+		'dist/studio/editable-list.d.ts',
+		'dist/studio/editable-list.js',
 		'dist/studio/field-label.d.ts',
 		'dist/studio/field-label.js',
 		'dist/studio/form-actions.d.ts',
@@ -133,6 +166,8 @@ try {
 		'dist/studio/page-intro.js',
 		'dist/studio/panel.d.ts',
 		'dist/studio/panel.js',
+		'dist/studio/reorder-actions.d.ts',
+		'dist/studio/reorder-actions.js',
 		'dist/studio/styles.css',
 		'dist/studio/surface.d.ts',
 		'dist/studio/surface.js',
@@ -189,8 +224,36 @@ try {
 	);
 
 	await writeFile(
+		join(consumerDirectory, 'EditableListConsumer.svelte'),
+		[
+			'<script lang="ts">',
+			"\timport { EditableList, EditableListRow, ReorderActions } from 'giadaware-ui-components/studio';",
+			'</script>',
+			'',
+			'{#snippet empty()}<p>No images yet.</p>{/snippet}',
+			'{#snippet fields()}<label>Hero image <input name="hero" /></label>{/snippet}',
+			'{#snippet actions()}',
+			'\t<ReorderActions',
+			'\t\tmoveUpLabel="Move hero image up"',
+			'\t\tmoveDownLabel="Move hero image down"',
+			'\t\tcanMoveUp={false}',
+			'\t\tonMoveUp={() => {}}',
+			'\t\tonMoveDown={() => {}}',
+			'\t/>',
+			'{/snippet}',
+			'',
+			'<EditableList legend="Gallery" isEmpty={false} {empty}>',
+			'\t<EditableListRow position={1} {fields} {actions} />',
+			'</EditableList>',
+			''
+		].join('\n')
+	);
+
+	await writeFile(
 		join(consumerDirectory, 'index.mjs'),
 		[
+			"import { render } from 'svelte/server';",
+			"import EditableListConsumer from './EditableListConsumer.svelte';",
 			"const root = await import('giadaware-ui-components');",
 			"const visitor = await import('giadaware-ui-components/visitor');",
 			"const studio = await import('giadaware-ui-components/studio');",
@@ -210,7 +273,7 @@ try {
 			'}',
 			'',
 			"const expectedRootKeys = ['FormStatus', 'SOCIAL_ICON_IDS', 'SocialIcon'].sort();",
-			"const expectedStudioKeys = ['AsyncOperationPanel', 'Button', 'FieldLabel', 'FormActions', 'ImageAttachmentControl', 'PageIntro', 'Panel', 'Surface'].sort();",
+			"const expectedStudioKeys = ['AsyncOperationPanel', 'Button', 'EditableList', 'EditableListRow', 'FieldLabel', 'FormActions', 'ImageAttachmentControl', 'PageIntro', 'Panel', 'ReorderActions', 'Surface'].sort();",
 			'',
 			'if (JSON.stringify(Object.keys(root).sort()) !== JSON.stringify(expectedRootKeys)) {',
 			"\tthrow new Error('Root runtime exports are incorrect.');",
@@ -236,6 +299,10 @@ try {
 			"\tthrow new Error('Button runtime export is missing.');",
 			'}',
 			'',
+			"if (typeof studio.EditableList !== 'function' || typeof studio.EditableListRow !== 'function' || typeof studio.ReorderActions !== 'function') {",
+			"\tthrow new Error('Editable-list runtime exports are missing.');",
+			'}',
+			'',
 			"if (typeof studio.FieldLabel !== 'function') {",
 			"\tthrow new Error('FieldLabel runtime export is missing.');",
 			'}',
@@ -256,9 +323,29 @@ try {
 			"\tthrow new Error('Surface runtime export is missing.');",
 			'}',
 			'',
-			"const prohibitedHelpers = ['createImageAttachmentState', 'selectImageAttachmentFile', 'cancelImageAttachmentReplacement', 'chooseImageAttachmentRemoval', 'cancelImageAttachmentRemoval', 'normalizeImageAttachmentState', 'validateImageAttachmentFile', 'normalizeFormActionsAlign', 'normalizePanelHeadingLevel'];",
+			"const prohibitedHelpers = ['createImageAttachmentState', 'selectImageAttachmentFile', 'cancelImageAttachmentReplacement', 'chooseImageAttachmentRemoval', 'cancelImageAttachmentRemoval', 'normalizeImageAttachmentState', 'validateImageAttachmentFile', 'normalizeFormActionsAlign', 'normalizePanelHeadingLevel', 'normalizeEditableListPosition', 'normalizeReorderActionsSize'];",
 			'if (prohibitedHelpers.some((name) => name in studio)) {',
 			"\tthrow new Error('Studio runtime unexpectedly exposes an internal helper.');",
+			'}',
+			'',
+			'const editableListMarkup = render(EditableListConsumer).body;',
+			'const requiredEditableListMarkup = [',
+			"\t'<fieldset',",
+			"\t'<legend',",
+			"\t'Gallery',",
+			"\t'<ol',",
+			"\t'<li',",
+			"\t'aria-label=\"Move hero image up\"',",
+			"\t'aria-label=\"Move hero image down\"',",
+			"\t'disabled=\"\"'",
+			'];',
+			'',
+			'if (',
+			'\trequiredEditableListMarkup.some((fragment) => !editableListMarkup.includes(fragment)) ||',
+			"\teditableListMarkup.includes('No images yet.') ||",
+			'\t(editableListMarkup.match(/type="button"/g) ?? []).length !== 2',
+			') {',
+			"\tthrow new Error('Packed EditableList composition server render is incorrect.');",
 			'}',
 			'',
 			"console.log('Clean consumer runtime imports passed.');",
@@ -456,8 +543,8 @@ try {
 			"import type { FormStatusTone, SocialIconId } from 'giadaware-ui-components';",
 			"import type { ComponentProps, Snippet } from 'svelte';",
 			"import 'giadaware-ui-components/visitor';",
-			"import { AsyncOperationPanel, Button, FieldLabel, FormActions, ImageAttachmentControl, PageIntro, Panel, Surface } from 'giadaware-ui-components/studio';",
-			"import type { AsyncOperationPanelProps, AsyncOperationState, ButtonProps, ButtonSize, ButtonVariant, FieldLabelProps, FormActionsAlign, FormActionsProps, ImageAttachmentControlLabels, ImageAttachmentCurrentImage, ImageAttachmentFileValidator, ImageAttachmentIntent, ImageAttachmentState, ImageAttachmentValidationError, PageIntroProps, PanelHeadingLevel, PanelProps, SurfaceProps } from 'giadaware-ui-components/studio';",
+			"import { AsyncOperationPanel, Button, EditableList, EditableListRow, FieldLabel, FormActions, ImageAttachmentControl, PageIntro, Panel, ReorderActions, Surface } from 'giadaware-ui-components/studio';",
+			"import type { AsyncOperationPanelProps, AsyncOperationState, ButtonProps, ButtonSize, ButtonVariant, EditableListProps, EditableListRowProps, FieldLabelProps, FormActionsAlign, FormActionsProps, ImageAttachmentControlLabels, ImageAttachmentCurrentImage, ImageAttachmentFileValidator, ImageAttachmentIntent, ImageAttachmentState, ImageAttachmentValidationError, PageIntroProps, PanelHeadingLevel, PanelProps, ReorderActionsProps, ReorderActionsSize, SurfaceProps } from 'giadaware-ui-components/studio';",
 			'',
 			"const id: SocialIconId = 'github-sponsors';",
 			"const tone: FormStatusTone = 'warning';",
@@ -505,6 +592,15 @@ try {
 			"const formActionsAlign: FormActionsAlign = 'space-between';",
 			"const formActionsProps: FormActionsProps = { children: formActionsChildren, align: formActionsAlign, wrap: false, class: 'actions', style: '--giu-form-actions-gap: 1rem' };",
 			'const formActionsComponentProps: ComponentProps<typeof FormActions> = formActionsProps;',
+			'declare const listChildren: Snippet;',
+			'declare const rowFields: Snippet;',
+			'const editableListProps: EditableListProps = { legend: \'Gallery\', children: listChildren, isEmpty: false };',
+			'const editableListRowProps: EditableListRowProps = { position: 1, fields: rowFields };',
+			"const reorderSize: ReorderActionsSize = 'compact';",
+			"const reorderActionsProps: ReorderActionsProps = { moveUpLabel: 'Move up', moveDownLabel: 'Move down', onMoveUp: () => {}, onMoveDown: () => {}, size: reorderSize };",
+			'const editableListComponentProps: ComponentProps<typeof EditableList> = editableListProps;',
+			'const editableListRowComponentProps: ComponentProps<typeof EditableListRow> = editableListRowProps;',
+			'const reorderActionsComponentProps: ComponentProps<typeof ReorderActions> = reorderActionsProps;',
 			'declare const pageIntroChildren: Snippet;',
 			"const pageIntroProps: PageIntroProps = { children: pageIntroChildren, class: 'intro', style: '--giu-page-intro-margin: 0' };",
 			'const pageIntroComponentProps: ComponentProps<typeof PageIntro> = pageIntroProps;',
@@ -578,6 +674,9 @@ try {
 			'void buttonComponentProps;',
 			'void fieldLabelComponentProps;',
 			'void formActionsComponentProps;',
+			'void editableListComponentProps;',
+			'void editableListRowComponentProps;',
+			'void reorderActionsComponentProps;',
 			'void pageIntroComponentProps;',
 			'void panelComponentProps;',
 			'void surfaceComponentProps;',

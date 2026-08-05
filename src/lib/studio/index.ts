@@ -3,6 +3,9 @@ import AsyncOperationPanelImplementation from './AsyncOperationPanel.svelte';
 import ButtonImplementation from './Button.svelte';
 import FormActionsImplementation from './FormActions.svelte';
 import FieldLabelImplementation from './FieldLabel.svelte';
+import EditableListImplementation from './EditableList.svelte';
+import EditableListRowImplementation from './EditableListRow.svelte';
+import ReorderActionsImplementation from './ReorderActions.svelte';
 import PageIntroImplementation from './PageIntro.svelte';
 import PanelImplementation from './Panel.svelte';
 import SurfaceImplementation from './Surface.svelte';
@@ -12,6 +15,9 @@ import type { AsyncOperationPanelProps } from './async-operation-panel.js';
 import type { ButtonProps } from './button.js';
 import type { FormActionsProps } from './form-actions.js';
 import type { FieldLabelProps } from './field-label.js';
+import type { EditableListProps } from './editable-list.js';
+import type { EditableListRowProps } from './editable-list-row.js';
+import type { ReorderActionsProps } from './reorder-actions.js';
 import type { PageIntroProps } from './page-intro.js';
 import type { PanelProps } from './panel.js';
 import type { SurfaceProps } from './surface.js';
@@ -68,6 +74,29 @@ type FieldLabelPropsAreEqual =
 			: false
 		: false;
 type _FieldLabelPropsAreSynchronized = Assert<FieldLabelPropsAreEqual>;
+type EditableListPropsAreEqual =
+	EditableListProps extends ComponentProps<typeof EditableListImplementation>
+		? ComponentProps<typeof EditableListImplementation> extends EditableListProps
+			? true
+			: false
+		: false;
+type _EditableListPropsAreSynchronized = Assert<EditableListPropsAreEqual>;
+type EditableListRowPropsAreEqual =
+	EditableListRowProps extends ComponentProps<
+		typeof EditableListRowImplementation
+	>
+		? ComponentProps<typeof EditableListRowImplementation> extends EditableListRowProps
+			? true
+			: false
+		: false;
+type _EditableListRowPropsAreSynchronized = Assert<EditableListRowPropsAreEqual>;
+type ReorderActionsPropsAreEqual =
+	ReorderActionsProps extends ComponentProps<typeof ReorderActionsImplementation>
+		? ComponentProps<typeof ReorderActionsImplementation> extends ReorderActionsProps
+			? true
+			: false
+		: false;
+type _ReorderActionsPropsAreSynchronized = Assert<ReorderActionsPropsAreEqual>;
 type FormActionsPropsAreEqual =
 	FormActionsProps extends ComponentProps<typeof FormActionsImplementation>
 		? ComponentProps<typeof FormActionsImplementation> extends FormActionsProps
@@ -103,6 +132,9 @@ export const AsyncOperationPanel: Component<AsyncOperationPanelProps, {}, ''> =
 export const Button: Component<ButtonProps, {}, ''> = ButtonImplementation;
 
 export const FieldLabel: Component<FieldLabelProps, {}, ''> = FieldLabelImplementation;
+export const EditableList: Component<EditableListProps, {}, ''> = EditableListImplementation;
+export const EditableListRow: Component<EditableListRowProps, {}, ''> = EditableListRowImplementation;
+export const ReorderActions: Component<ReorderActionsProps, {}, ''> = ReorderActionsImplementation;
 
 export const FormActions: Component<FormActionsProps, {}, ''> = FormActionsImplementation;
 
@@ -127,6 +159,9 @@ export type {
 export type { AsyncOperationHeadingLevel, AsyncOperationPanelProps, AsyncOperationState } from './async-operation-panel.js';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
 export type { FieldLabelProps } from './field-label.js';
+export type { EditableListProps } from './editable-list.js';
+export type { EditableListRowProps } from './editable-list-row.js';
+export type { ReorderActionsProps, ReorderActionsSize } from './reorder-actions.js';
 export type { FormActionsAlign, FormActionsProps } from './form-actions.js';
 export type { PageIntroProps } from './page-intro.js';
 export type { PanelHeadingLevel, PanelProps } from './panel.js';
