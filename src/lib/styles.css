@@ -1,1 +1,89 @@
-/* Reserved root CSS entry point. */
+/* Canonical GIADA UI theme contract.
+ * Consumers choose a preset with data-giu-theme on an ancestor and compose
+ * their own domain-specific colors on top of these semantic tokens.
+ */
+
+:root,
+[data-giu-theme='neutral'] {
+  --giu-theme-base: #f4f2ee;
+  --giu-theme-accent: #c8c2b8;
+  --giu-theme-text: #1f1f1f;
+  --giu-theme-heading: #1f1f1f;
+  --giu-theme-muted: #5f5b55;
+  --giu-theme-surface: #faf9f7;
+  --giu-theme-card: #fefdfd;
+  --giu-theme-border: #9b968e;
+  --giu-theme-color-scheme: light;
+}
+
+[data-giu-theme='warm'] {
+  --giu-theme-base: #f8f0e4;
+  --giu-theme-accent: #d6be9a;
+  --giu-theme-text: #2f281f;
+  --giu-theme-heading: #2f281f;
+  --giu-theme-muted: #6b6258;
+  --giu-theme-surface: #fdf9f3;
+  --giu-theme-card: #fefdfc;
+  --giu-theme-border: #aaa092;
+  --giu-theme-color-scheme: light;
+}
+
+[data-giu-theme='dark'] {
+  --giu-theme-base: #13110f;
+  --giu-theme-accent: #e4c4a0;
+  --giu-theme-text: #f8f4ec;
+  --giu-theme-heading: #f8f4ec;
+  --giu-theme-muted: #c8c0b6;
+  --giu-theme-surface: #302e2c;
+  --giu-theme-card: #42413f;
+  --giu-theme-border: #77736f;
+  --giu-theme-color-scheme: dark;
+}
+
+[data-giu-theme='noir'] {
+  --giu-theme-base: #0f0e0d;
+  --giu-theme-accent: #8c3a44;
+  --giu-theme-text: #e8e0d4;
+  --giu-theme-heading: #f5efe6;
+  --giu-theme-muted: #bdb4a8;
+  --giu-theme-surface: #211f1d;
+  --giu-theme-card: #1c1a18;
+  --giu-theme-border: #6f6962;
+  --giu-theme-color-scheme: dark;
+}
+
+[data-giu-theme='intimate'] {
+  --giu-theme-base: #f4eee8;
+  --giu-theme-accent: #8d4f5b;
+  --giu-theme-text: #3f3234;
+  --giu-theme-heading: #2f2428;
+  --giu-theme-muted: #746467;
+  --giu-theme-surface: #faf6f2;
+  --giu-theme-card: #fffaf7;
+  --giu-theme-border: #aa999b;
+  --giu-theme-color-scheme: light;
+}
+
+[data-giu-theme='space'] {
+  --giu-theme-base: #090b1a;
+  --giu-theme-accent: #6f8cff;
+  --giu-theme-text: #e8ecff;
+  --giu-theme-heading: #ffffff;
+  --giu-theme-muted: #b8c0e0;
+  --giu-theme-surface: #11162b;
+  --giu-theme-card: #151a33;
+  --giu-theme-border: #596489;
+  --giu-theme-color-scheme: dark;
+}
+
+[data-giu-theme='funny-coloured'] {
+  --giu-theme-base: #fff7e8;
+  --giu-theme-accent: #087f7b;
+  --giu-theme-text: #2d2a32;
+  --giu-theme-heading: #31265a;
+  --giu-theme-muted: #625e68;
+  --giu-theme-surface: #fffbf3;
+  --giu-theme-card: #ffffff;
+  --giu-theme-border: #9e989f;
+  --giu-theme-color-scheme: light;
+}
