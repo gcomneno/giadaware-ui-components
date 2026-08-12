@@ -10,6 +10,7 @@
   controls complete keyboard viewport operation.
 
 ### Added
+- `ImageLightbox` adds a controlled, consumer-labeled native modal image viewer with uncropped viewport fitting, close/Escape/backdrop handling, focus restoration and reference-counted scroll locking.
 
 - `EditableList`, `EditableListRow` and `ReorderActions` Studio primitives for
   composable ordered editors with consumer-owned `isEmpty` selection and native
