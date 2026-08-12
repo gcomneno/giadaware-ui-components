@@ -1,2 +1,2 @@
 export { default as RelationshipGraph } from './RelationshipGraph.svelte';
-export type { RelationshipGraphActivation, RelationshipGraphEdge, RelationshipGraphNode, RelationshipGraphProps, RelationshipGraphSelection } from './relationship-graph.js';
+export type { RelationshipGraphActivation, RelationshipGraphEdge, RelationshipGraphLabels, RelationshipGraphNode, RelationshipGraphProps, RelationshipGraphRelationshipDetail, RelationshipGraphSelection, RelationshipGraphSummaryDetail } from './relationship-graph.js';
