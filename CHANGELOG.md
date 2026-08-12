@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed
+
+- `RelationshipGraph` now requires a consumer-owned `labels` contract for all
+  graph-facing and accessibility copy, including count and relationship
+  formatters; node arrow-key navigation and explicit keyboard-operable pan
+  controls complete keyboard viewport operation.
+
 ### Added
 
 - `EditableList`, `EditableListRow` and `ReorderActions` Studio primitives for

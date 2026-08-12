@@ -4,13 +4,35 @@ export type RelationshipGraphNode = { id: string; label: string; image?: string;
 export type RelationshipGraphEdge = { source: string; target: string; type?: string; label?: string };
 export type RelationshipGraphSelection = { node: RelationshipGraphNode };
 export type RelationshipGraphActivation = { node: RelationshipGraphNode; source: 'pointer' | 'keyboard' };
+export type RelationshipGraphSummaryDetail = { nodeCount: number; edgeCount: number };
+export type RelationshipGraphRelationshipDetail = {
+	edge: RelationshipGraphEdge;
+	sourceLabel: string;
+	targetLabel: string;
+	relationship?: string;
+};
+export type RelationshipGraphLabels = {
+	region: string;
+	controls: string;
+	zoomIn: string;
+	zoomOut: string;
+	resetView: string;
+	fitGraph: string;
+	panUp: string;
+	panDown: string;
+	panLeft: string;
+	panRight: string;
+	empty: string;
+	summary: (detail: RelationshipGraphSummaryDetail) => string;
+	relationship: (detail: RelationshipGraphRelationshipDetail) => string;
+};
+export type RelationshipGraphDirection = 'up' | 'down' | 'left' | 'right';
 export type RelationshipGraphProps = {
 	nodes?: readonly RelationshipGraphNode[];
 	edges?: readonly RelationshipGraphEdge[];
+	labels: RelationshipGraphLabels;
 	onnodeselect?: (detail: RelationshipGraphSelection) => void;
 	onnodeactivate?: (detail: RelationshipGraphActivation) => void;
-	emptyLabel?: string;
-	ariaLabel?: string;
 	class?: HTMLAttributes<HTMLDivElement>['class'];
 	style?: HTMLAttributes<HTMLDivElement>['style'];
 };
@@ -181,11 +203,57 @@ export function layoutRelationshipGraph(graph: NormalizedRelationshipGraph): Rel
 	return { nodes, edges: graph.edges, edgeGeometry, pointsById, width, height };
 }
 
-export function relationshipDescription(edge: RelationshipGraphEdge, nodesById: ReadonlyMap<string, RelationshipGraphNode>): string {
-	const source = nodesById.get(edge.source)?.label ?? edge.source;
-	const target = nodesById.get(edge.target)?.label ?? edge.target;
+export function findRelationshipGraphDirectionalNode(
+	nodes: readonly RelationshipGraphPoint[],
+	currentId: string,
+	direction: RelationshipGraphDirection
+): RelationshipGraphPoint | undefined {
+	const current = nodes.find((node) => node.id === currentId);
+	if (!current) return undefined;
+
+	const candidates = nodes.filter((node) => {
+		if (node.id === current.id) return false;
+		if (direction === 'left') return node.x < current.x;
+		if (direction === 'right') return node.x > current.x;
+		if (direction === 'up') return node.y < current.y;
+		return node.y > current.y;
+	});
+
+	candidates.sort((a, b) => {
+		const distanceA = (a.x - current.x) ** 2 + (a.y - current.y) ** 2;
+		const distanceB = (b.x - current.x) ** 2 + (b.y - current.y) ** 2;
+		if (distanceA !== distanceB) return distanceA - distanceB;
+
+		const secondaryA =
+			direction === 'left' || direction === 'right'
+				? Math.abs(a.y - current.y)
+				: Math.abs(a.x - current.x);
+		const secondaryB =
+			direction === 'left' || direction === 'right'
+				? Math.abs(b.y - current.y)
+				: Math.abs(b.x - current.x);
+		if (secondaryA !== secondaryB) return secondaryA - secondaryB;
+
+		return compareLexically(a.id, b.id);
+	});
+
+	return candidates[0];
+}
+
+export function relationshipDescription(
+	edge: RelationshipGraphEdge,
+	nodesById: ReadonlyMap<string, RelationshipGraphNode>,
+	format: (detail: RelationshipGraphRelationshipDetail) => string
+): string {
+	const sourceLabel = nodesById.get(edge.source)?.label ?? edge.source;
+	const targetLabel = nodesById.get(edge.target)?.label ?? edge.target;
 	const relationship = edge.label ?? edge.type;
-	return relationship ? `${source} to ${target}: ${relationship}` : `${source} to ${target}`;
+	return format({
+		edge,
+		sourceLabel,
+		targetLabel,
+		...(relationship ? { relationship } : {})
+	});
 }
 
 export function clampRelationshipGraphViewport(viewport: RelationshipGraphViewport): RelationshipGraphViewport {

@@ -2,8 +2,15 @@ import { render } from 'svelte/server';
 import { describe, expect, test } from 'vitest';
 import RelationshipGraph from '../../src/lib/visitor/RelationshipGraph.svelte';
 import RelationshipGraphHydrationProbe from '../fixtures/RelationshipGraphHydrationProbe.svelte';
+import { relationshipGraphLabels } from '../fixtures/relationship-graph-labels.js';
 import { RELATIONSHIP_GRAPH_HYDRATION_SSR_BODY } from '../fixtures/relationship-graph-hydration-contract.js';
-import { fitRelationshipGraphViewport, layoutRelationshipGraph, normalizeRelationshipGraph, relationshipDescription } from '../../src/lib/visitor/relationship-graph.js';
+import {
+	findRelationshipGraphDirectionalNode,
+	fitRelationshipGraphViewport,
+	layoutRelationshipGraph,
+	normalizeRelationshipGraph,
+	relationshipDescription
+} from '../../src/lib/visitor/relationship-graph.js';
 
 describe('RelationshipGraph pure graph behavior', () => {
 	test('normalizes deterministically without mutating caller input', () => {
@@ -82,6 +89,32 @@ describe('RelationshipGraph pure graph behavior', () => {
 		expect(layout).toEqual(layoutRelationshipGraph(graph));
 	});
 
+	test('selects directional nodes deterministically within the requested half-plane', () => {
+		const nodes = [
+			{ id: 'origin', label: 'Origin', x: 0, y: 0, rank: 0 },
+			{ id: 'right-near', label: 'Right near', x: 10, y: 0, rank: 0 },
+			{ id: 'right-far', label: 'Right far', x: 30, y: 0, rank: 0 },
+			{ id: 'left', label: 'Left', x: -2, y: 0, rank: 0 },
+			{ id: 'up', label: 'Up', x: 0, y: -8, rank: 0 },
+			{ id: 'down', label: 'Down', x: 0, y: 12, rank: 0 }
+		];
+
+		expect(findRelationshipGraphDirectionalNode(nodes, 'origin', 'right')?.id).toBe('right-near');
+		expect(findRelationshipGraphDirectionalNode(nodes, 'origin', 'left')?.id).toBe('left');
+		expect(findRelationshipGraphDirectionalNode(nodes, 'origin', 'up')?.id).toBe('up');
+		expect(findRelationshipGraphDirectionalNode(nodes, 'origin', 'down')?.id).toBe('down');
+		expect(findRelationshipGraphDirectionalNode(nodes, 'right-far', 'right')).toBeUndefined();
+
+		const tied = [
+			{ id: 'origin', label: 'Origin', x: 0, y: 0, rank: 0 },
+			{ id: 'beta', label: 'Beta', x: 10, y: -10, rank: 0 },
+			{ id: 'alpha', label: 'Alpha', x: 10, y: 10, rank: 0 }
+		];
+
+		expect(findRelationshipGraphDirectionalNode(tied, 'origin', 'right')?.id).toBe('alpha');
+		expect(findRelationshipGraphDirectionalNode(tied, 'missing', 'right')).toBeUndefined();
+	});
+
 	test('handles empty and single-node graphs and safe viewport fitting', () => {
 		expect(layoutRelationshipGraph(normalizeRelationshipGraph([], []))).toMatchObject({ nodes: [], width: 0, height: 0 });
 		expect(layoutRelationshipGraph(normalizeRelationshipGraph([{id:'only',label:'Only'}], [])).nodes).toHaveLength(1);
@@ -96,14 +129,14 @@ describe('RelationshipGraph SSR', () => {
 		expect(first.body).toBe(RELATIONSHIP_GRAPH_HYDRATION_SSR_BODY);
 	});
 	test('renders deterministic empty state with safe runtime defaults', () => {
-		const first = render(RelationshipGraph, { props: { nodes: 'bad' as never, edges: null as never } });
-		expect(first).toEqual(render(RelationshipGraph, { props: { nodes: 'bad' as never, edges: null as never } }));
+		const first = render(RelationshipGraph, { props: { labels: relationshipGraphLabels, nodes: 'bad' as never, edges: null as never } });
+		expect(first).toEqual(render(RelationshipGraph, { props: { labels: relationshipGraphLabels, nodes: 'bad' as never, edges: null as never } }));
 		expect(first.body).toContain('No relationships to display.');
 		expect(first.body).toContain('data-giu-empty="true"');
 	});
 
 	test('preserves link and button semantics and accessible edge summary', () => {
-		const body = render(RelationshipGraph, { props: { nodes: [{id:'a',label:'Alpha',href:'/alpha'},{id:'b',label:'Beta'}], edges: [{source:'a',target:'b',label:'supports'}] } }).body;
+		const body = render(RelationshipGraph, { props: { labels: relationshipGraphLabels, nodes: [{id:'a',label:'Alpha',href:'/alpha'},{id:'b',label:'Beta'}], edges: [{source:'a',target:'b',label:'supports'}] } }).body;
 		expect(body).toContain('<a href="/alpha"');
 		expect(body).toContain('<button type="button"');
 		expect(body).toContain('2 nodes, 1 directed relationships');
@@ -112,7 +145,7 @@ describe('RelationshipGraph SSR', () => {
 	});
 
 	test('renders multiple instances without SVG fragment IDs or marker references', () => {
-		const props = { nodes: [{id:'a',label:'Alpha'},{id:'b',label:'Beta'}], edges: [{source:'a',target:'b'}] };
+		const props = { labels: relationshipGraphLabels, nodes: [{id:'a',label:'Alpha'},{id:'b',label:'Beta'}], edges: [{source:'a',target:'b'}] };
 		const body = `${render(RelationshipGraph, { props }).body}${render(RelationshipGraph, { props }).body}`;
 		expect(body).not.toMatch(/<marker|marker-end=|url\(#|id="giu-relationship/);
 		expect(body.match(/data-giu-edge-kind="forward"/g)).toHaveLength(2);
@@ -120,7 +153,7 @@ describe('RelationshipGraph SSR', () => {
 
 	test('describes relationships using labels and label-before-type precedence', () => {
 		const nodes = new Map([['a',{id:'a',label:'Alpha'}],['b',{id:'b',label:'Beta'}]]);
-		expect(relationshipDescription({source:'a',target:'b',type:'peer'}, nodes)).toBe('Alpha to Beta: peer');
-		expect(relationshipDescription({source:'a',target:'b',type:'peer',label:'Supports'}, nodes)).toBe('Alpha to Beta: Supports');
+		expect(relationshipDescription({source:'a',target:'b',type:'peer'}, nodes, relationshipGraphLabels.relationship)).toBe('Alpha to Beta: peer');
+		expect(relationshipDescription({source:'a',target:'b',type:'peer',label:'Supports'}, nodes, relationshipGraphLabels.relationship)).toBe('Alpha to Beta: Supports');
 	});
 });
