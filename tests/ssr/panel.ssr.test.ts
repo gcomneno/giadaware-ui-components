@@ -13,6 +13,9 @@ const description = createRawSnippet(() => ({
 const actions = createRawSnippet(() => ({
 	render: () => '<a href="/edit">Edit</a>',
 }));
+const footer = createRawSnippet(() => ({
+	render: () => '<div><button type="button">Footer action</button></div>',
+}));
 
 describe('Panel SSR', () => {
 	test('renders a deterministically named section with the default heading', () => {
@@ -43,6 +46,7 @@ describe('Panel SSR', () => {
 		);
 		expect(first.body).not.toContain('aria-live');
 		expect(first.body).not.toContain('role=');
+		expect(first.body).not.toContain('giu-panel__footer');
 	});
 
 	test('renders supplied ID, heading level and optional snippets in reading order', () => {
@@ -52,6 +56,7 @@ describe('Panel SSR', () => {
 				title: 'Settings',
 				description,
 				actions,
+				footer,
 				children,
 				headingLevel: 4,
 				class: 'consumer-panel',
@@ -72,10 +77,13 @@ describe('Panel SSR', () => {
 		const descriptionIndex = body.indexOf('Consumer description');
 		const actionsIndex = body.indexOf('>Edit<');
 		const childrenIndex = body.indexOf('>Save<');
+		const footerIndex = body.indexOf('>Footer action<');
 
 		expect(titleIndex).toBeGreaterThanOrEqual(0);
 		expect(descriptionIndex).toBeGreaterThan(titleIndex);
 		expect(actionsIndex).toBeGreaterThan(descriptionIndex);
 		expect(childrenIndex).toBeGreaterThan(actionsIndex);
+		expect(footerIndex).toBeGreaterThan(childrenIndex);
+		expect(body).toContain('class="giu-panel__footer');
 	});
 });

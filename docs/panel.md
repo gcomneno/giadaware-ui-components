@@ -14,7 +14,8 @@ The exported `PanelProps` contract contains:
 - `title`: required visible section title;
 - `children`: required body snippet;
 - `description`: optional explanatory snippet rendered below the title;
-- `actions`: optional consumer-provided action region;
+- `actions`: optional consumer-provided header action region;
+- `footer`: optional consumer-provided content rendered after the body;
 - `headingLevel`: optional native heading level from `2` through `6`, defaulting
   to `2`;
 - `id`: optional section identifier;
@@ -47,6 +48,12 @@ surface expansion.
 		<Button variant="secondary">Open preview</Button>
 	{/snippet}
 
+	{#snippet footer()}
+		<nav aria-label="Publishing actions">
+			<Button variant="secondary">Save draft</Button>
+		</nav>
+	{/snippet}
+
 	<label>
 		Publication channel
 		<select>
@@ -74,6 +81,11 @@ alter visual importance automatically.
 The optional description is explanatory content, not a live region. The
 optional actions snippet receives no toolbar, group, or navigation semantics
 from `Panel`; consumers must add semantics to their own controls when required.
+
+The optional footer is rendered after the body in DOM and reading order inside
+a semantically neutral wrapper. `Panel` does not manufacture a native `footer`,
+navigation landmark, group, role, accessible label, divider, or workflow
+semantics. Consumers own all semantics and interaction inside the footer.
 
 ## Responsibility boundaries
 
@@ -106,8 +118,12 @@ The supported neutral custom properties are:
 - `--giu-panel-description-gap`;
 - `--giu-panel-description-color`.
 
-Margins, page placement, responsive layout around the panel, action-control
-styling, and body-content styling remain consumer-owned.
+The footer participates in the existing `--giu-panel-gap`; no footer-specific
+spacing, border, divider, or padding token is introduced. The wrapper only
+provides `min-width: 0` so consumer content can participate in narrow layouts.
+
+Margins, page placement, responsive layout around the panel, action-control,
+footer-content, and body-content styling remain consumer-owned.
 
 ## Determinism
 

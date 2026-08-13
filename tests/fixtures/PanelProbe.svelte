@@ -32,6 +32,21 @@
 			</button>
 		{/snippet}
 
+		{#snippet footer()}
+			<div data-testid="panel-footer">
+				<span>
+					Consumer-owned footer content remains usable when the panel becomes narrow.
+				</span>
+				<button
+					type="button"
+					data-testid="panel-footer-action"
+					onclick={() => actionCount += 1}
+				>
+					Footer action
+				</button>
+			</div>
+		{/snippet}
+
 		<form
 			data-testid="panel-body"
 			onsubmit={(event) => {

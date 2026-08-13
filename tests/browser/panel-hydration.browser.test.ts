@@ -16,6 +16,7 @@ test('hydrates Panel without replacing its semantic nodes', async () => {
 	const serverHeaders = [...container.querySelectorAll('header')];
 	const serverHeadings = [...container.querySelectorAll('h2, h3, h4, h5, h6')];
 	const serverBodies = [...container.querySelectorAll('.giu-panel__body')];
+	const serverFooters = [...container.querySelectorAll('.giu-panel__footer')];
 
 	if (!(serverRoot instanceof HTMLElement)) {
 		throw new TypeError('Server Panel hydration root missing');
@@ -44,6 +45,9 @@ test('hydrates Panel without replacing its semantic nodes', async () => {
 		expect([...container.querySelectorAll('.giu-panel__body')]).toEqual(
 			serverBodies,
 		);
+		expect([...container.querySelectorAll('.giu-panel__footer')]).toEqual(
+			serverFooters,
+		);
 
 		expect(serverPanels[0]).toHaveAttribute('aria-labelledby', 's1-title');
 		expect(serverPanels[1]).toHaveAttribute(
@@ -53,11 +57,17 @@ test('hydrates Panel without replacing its semantic nodes', async () => {
 		expect(serverHeadings[0]).toHaveAttribute('id', 's1-title');
 		expect(serverHeadings[1]).toHaveAttribute('id', 'fixed-panel-title');
 
-		const generatedAction = serverPanels[0].querySelector('button');
+		const generatedAction = serverPanels[0].querySelector(
+			'.giu-panel__actions button',
+		);
+		const generatedFooterAction = serverPanels[0].querySelector(
+			'.giu-panel__footer button',
+		);
 		const fixedForm = serverPanels[1].querySelector('form');
 
 		if (
 			!(generatedAction instanceof HTMLButtonElement) ||
+			!(generatedFooterAction instanceof HTMLButtonElement) ||
 			!(fixedForm instanceof HTMLFormElement)
 		) {
 			throw new TypeError('Hydrated Panel controls missing');
@@ -69,10 +79,16 @@ test('hydrates Panel without replacing its semantic nodes', async () => {
 			expect(serverRoot).toHaveAttribute('data-action-count', '1'),
 		);
 
-		fixedForm.requestSubmit();
+		generatedFooterAction.click();
 
 		await vi.waitFor(() =>
 			expect(serverRoot).toHaveAttribute('data-action-count', '2'),
+		);
+
+		fixedForm.requestSubmit();
+
+		await vi.waitFor(() =>
+			expect(serverRoot).toHaveAttribute('data-action-count', '3'),
 		);
 
 		expect(warn).not.toHaveBeenCalled();

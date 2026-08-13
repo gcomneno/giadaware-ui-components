@@ -6,6 +6,7 @@ export type PanelProps = {
 	title: string;
 	description?: Snippet;
 	actions?: Snippet;
+	footer?: Snippet;
 	children: Snippet;
 	headingLevel?: PanelHeadingLevel;
 	id?: string;

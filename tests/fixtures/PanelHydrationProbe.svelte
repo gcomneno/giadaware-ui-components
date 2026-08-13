@@ -22,6 +22,15 @@
 			</button>
 		{/snippet}
 
+		{#snippet footer()}
+			<button
+				type="button"
+				onclick={() => actionCount += 1}
+			>
+				Generated footer action
+			</button>
+		{/snippet}
+
 		<p>Generated body</p>
 	</Panel>
 

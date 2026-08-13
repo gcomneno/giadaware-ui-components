@@ -166,8 +166,10 @@ Import `Panel` only from the Studio entry point:
 ```
 
 `Panel` renders one named semantic section with a visible heading and required
-body content. Description and action snippets are optional and consumer-owned.
-It does not manage forms, events, asynchronous state, live regions or workflow.
+body content. Description, header-action and footer snippets are optional and
+consumer-owned. The footer follows the body and receives no implied navigation,
+group, workflow or landmark semantics from Giada UI. `Panel` does not manage
+forms, events, asynchronous state, live regions or workflow.
 Use `AsyncOperationPanel` for operation lifecycle presentation. Use `Surface`
 for neutral visual containment without a heading or section landmark.
 
