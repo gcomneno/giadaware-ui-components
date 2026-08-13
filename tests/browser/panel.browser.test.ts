@@ -41,12 +41,18 @@ test('renders semantic panels and preserves consumer-owned behavior', async () =
 	);
 	const action = complete.querySelector('[data-testid="panel-action"]');
 	const body = complete.querySelector('[data-testid="panel-body"]');
+	const footer = complete.querySelector('.giu-panel__footer');
+	const footerAction = complete.querySelector(
+		'[data-testid="panel-footer-action"]',
+	);
 
 	if (
 		!(header instanceof HTMLElement) ||
 		!(description instanceof HTMLElement) ||
 		!(action instanceof HTMLButtonElement) ||
-		!(body instanceof HTMLFormElement)
+		!(body instanceof HTMLFormElement) ||
+		!(footer instanceof HTMLElement) ||
+		!(footerAction instanceof HTMLButtonElement)
 	) {
 		throw new TypeError('Complete panel content missing');
 	}
@@ -62,6 +68,19 @@ test('renders semantic panels and preserves consumer-owned behavior', async () =
 	expect(
 		action.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING,
 	).toBeTruthy();
+	expect(
+		body.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING,
+	).toBeTruthy();
+	expect(footer.querySelector('[role]')).toBeNull();
+	expect(footer.querySelector('[aria-live]')).toBeNull();
+	expect(getComputedStyle(footer).minWidth).toBe('0px');
+
+	complete.style.width = '10rem';
+
+	expect(complete).toHaveStyle('width: 10rem');
+	expect(footer.getBoundingClientRect().width).toBeLessThanOrEqual(
+		complete.getBoundingClientRect().width,
+	);
 
 	action.click();
 	await vi.waitFor(() =>
@@ -71,6 +90,11 @@ test('renders semantic panels and preserves consumer-owned behavior', async () =
 	body.requestSubmit();
 	await vi.waitFor(() =>
 		expect(root).toHaveAttribute('data-action-count', '2'),
+	);
+
+	footerAction.click();
+	await vi.waitFor(() =>
+		expect(root).toHaveAttribute('data-action-count', '3'),
 	);
 
 	for (const level of [2, 3, 4, 5, 6]) {

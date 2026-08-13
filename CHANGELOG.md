@@ -25,8 +25,8 @@
 - `Surface` Studio presentation primitive with a neutral native root,
   required snippet content, no implicit semantics and independent style hooks.
 - `Panel` Studio structural primitive with a named semantic section, required
-  body content, optional description and actions, deterministic identifiers,
-  closed heading levels and neutral styling hooks.
+  body content, optional description, header actions and consumer-owned footer,
+  deterministic identifiers, closed heading levels and neutral styling hooks.
 - `FormActions` Studio layout primitive with required snippet content, closed
   main-axis alignment, configurable wrapping and a neutral gap hook.
 - `PageIntro` Studio component with semantic paragraph output, snippet-based

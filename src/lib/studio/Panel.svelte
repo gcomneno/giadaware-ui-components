@@ -8,6 +8,7 @@
 		title,
 		description,
 		actions,
+		footer,
 		children,
 		headingLevel = 2,
 		id,
@@ -57,6 +58,12 @@
 	<div class="giu-panel__body">
 		{@render children()}
 	</div>
+
+	{#if footer}
+		<div class="giu-panel__footer">
+			{@render footer()}
+		</div>
+	{/if}
 </section>
 
 <style>
@@ -86,6 +93,7 @@
 	.giu-panel__heading,
 	.giu-panel__actions,
 	.giu-panel__body,
+	.giu-panel__footer,
 	.giu-panel__description {
 		min-width: 0;
 	}

@@ -12,6 +12,11 @@ test('produces deterministic Panel hydration markup', () => {
 	expect(first.body.match(/<section/g)).toHaveLength(2);
 	expect(first.body).toContain('aria-labelledby="s1-title"');
 	expect(first.body).toContain('<h2 id="s1-title"');
+	expect(first.body).toContain('class="giu-panel__footer');
+	expect(first.body).toContain('Generated footer action');
+	expect(first.body.indexOf('Generated footer action')).toBeGreaterThan(
+		first.body.indexOf('Generated body'),
+	);
 	expect(first.body).toContain('id="fixed-panel"');
 	expect(first.body).toContain('aria-labelledby="fixed-panel-title"');
 	expect(first.body).toContain('<h4 id="fixed-panel-title"');

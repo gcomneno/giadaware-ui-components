@@ -8,6 +8,7 @@ import type { Snippet } from 'svelte';
 declare const children: Snippet;
 declare const description: Snippet;
 declare const actions: Snippet;
+declare const footer: Snippet;
 
 const headingLevels: PanelHeadingLevel[] = [2, 3, 4, 5, 6];
 
@@ -20,6 +21,7 @@ const completeProps: PanelProps = {
 	title: 'Panel title',
 	description,
 	actions,
+	footer,
 	children,
 	headingLevel: 4,
 	id: 'settings-panel',
