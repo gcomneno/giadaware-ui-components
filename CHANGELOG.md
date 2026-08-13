@@ -10,6 +10,9 @@
   controls complete keyboard viewport operation.
 
 ### Added
+- `ImageAttachmentControl` supports an optional consumer-labeled dropzone as a
+  progressive enhancement while preserving the native file input, controlled
+  `keep | replace | remove` model, shared validation path and native `FormData`.
 - `ImageLightbox` adds a controlled, consumer-labeled native modal image viewer with uncropped viewport fitting, close/Escape/backdrop handling, focus restoration and reference-counted scroll locking.
 
 - `EditableList`, `EditableListRow` and `ReorderActions` Studio primitives for

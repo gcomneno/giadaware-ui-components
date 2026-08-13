@@ -19,6 +19,11 @@ export type ImageAttachmentValidationError = {
 	message: string;
 };
 
+export type ImageAttachmentDropzoneOptions = {
+	instructions: string;
+	activeInstructions?: string;
+};
+
 export type ImageAttachmentFileValidator = (
 	file: File
 ) => ImageAttachmentValidationError | null;

@@ -13,6 +13,7 @@
 	import type {
 		ImageAttachmentControlLabels,
 		ImageAttachmentCurrentImage,
+		ImageAttachmentDropzoneOptions,
 		ImageAttachmentFileValidator,
 		ImageAttachmentState
 	} from './image-attachment-control.js';
@@ -22,6 +23,7 @@
 		onvaluechange: (value: ImageAttachmentState) => void;
 		currentImage?: ImageAttachmentCurrentImage | null;
 		disabled?: boolean;
+		dropzone?: ImageAttachmentDropzoneOptions;
 		accept?: string;
 		maxSizeBytes?: number;
 		validator?: ImageAttachmentFileValidator;
@@ -39,6 +41,7 @@
 		onvaluechange,
 		currentImage = null,
 		disabled = false,
+		dropzone = undefined,
 		accept = 'image/*',
 		maxSizeBytes = undefined,
 		validator = undefined,
@@ -54,12 +57,25 @@
 	const generatedId = $props.id();
 	const inputId = $derived(id ?? `${generatedId}-input`);
 	const errorId = $derived(`${inputId}-error`);
+	const dropzoneInstructionsId = $derived(`${inputId}-dropzone-instructions`);
 	const rendered = $derived(normalizeImageAttachmentState(value, currentImage));
 
 	let input: HTMLInputElement;
 	let cancelRemovalButton = $state<HTMLButtonElement>();
 	let validationError = $state<string | null>(null);
+	let dropActive = $state(false);
+	let dropRejected = $state(false);
+	let dragDepth = 0;
 	let replacementPreviewUrl = $state<string | null>(null);
+
+	const inputDescribedBy = $derived(
+		[
+			dropzone ? dropzoneInstructionsId : undefined,
+			validationError ? errorId : undefined
+		]
+			.filter((value): value is string => Boolean(value))
+			.join(' ') || undefined
+	);
 	let normalizationContextInitialized = false;
 	let lastNormalizationIntent: unknown;
 	let lastNormalizationFile: unknown;
@@ -113,28 +129,92 @@
 		}
 	}
 
+	function validateSelection(file: File): string | null {
+		return validateImageAttachmentFile(file, {
+			accept,
+			maxSizeBytes,
+			validator,
+			messages: { invalidType: invalidTypeMessage, tooLarge: tooLargeMessage }
+		})?.message ?? null;
+	}
+
+	function syncDroppedFileToInput(file: File): void {
+		const transfer = new DataTransfer();
+		transfer.items.add(file);
+		input.files = transfer.files;
+	}
+
+	function handleSelectedFile(file: File, source: 'native' | 'drop'): void {
+		const error = validateSelection(file);
+		if (error) {
+			validationError = error;
+			dropRejected = source === 'drop';
+			if (source === 'native') input.value = '';
+			input.focus();
+			return;
+		}
+
+		validationError = null;
+		dropRejected = false;
+		if (source === 'drop') syncDroppedFileToInput(file);
+		void requestTransition(selectImageAttachmentFile(rendered, file, disabled));
+	}
+
 	function handleFileChange(event: Event): void {
 		if (disabled) return;
 		const target = event.currentTarget as HTMLInputElement;
 		const file = target.files?.[0];
 		if (!file) {
 			validationError = null;
+			dropRejected = false;
 			return;
 		}
-		const error = validateImageAttachmentFile(file, {
-			accept,
-			maxSizeBytes,
-			validator,
-			messages: { invalidType: invalidTypeMessage, tooLarge: tooLargeMessage }
-		});
-		if (error) {
-			validationError = error.message;
-			target.value = '';
-			target.focus();
-			return;
-		}
-		validationError = null;
-		void requestTransition(selectImageAttachmentFile(rendered, file, disabled));
+		handleSelectedFile(file, 'native');
+	}
+
+	function isFileDrag(event: DragEvent): boolean {
+		return event.dataTransfer?.types.includes('Files') ?? false;
+	}
+
+	function resetDragState(): void {
+		dragDepth = 0;
+		dropActive = false;
+	}
+
+	function handleDragEnter(event: DragEvent): void {
+		if (!dropzone || !isFileDrag(event)) return;
+		event.preventDefault();
+		if (disabled) return;
+		dropRejected = false;
+		dragDepth += 1;
+		dropActive = true;
+	}
+
+	function handleDragOver(event: DragEvent): void {
+		if (!dropzone || !isFileDrag(event)) return;
+		event.preventDefault();
+		if (!event.dataTransfer) return;
+		event.dataTransfer.dropEffect = disabled ? 'none' : 'copy';
+		if (!disabled) dropActive = true;
+	}
+
+	function handleDragLeave(event: DragEvent): void {
+		if (!dropzone || !isFileDrag(event)) return;
+		event.preventDefault();
+		if (disabled) return;
+		dragDepth = Math.max(0, dragDepth - 1);
+		if (dragDepth === 0) dropActive = false;
+	}
+
+	function handleDrop(event: DragEvent): void {
+		if (!dropzone || !isFileDrag(event)) return;
+		event.preventDefault();
+		resetDragState();
+		if (disabled) return;
+
+		const file = event.dataTransfer?.files?.[0];
+		if (!file) return;
+		handleSelectedFile(file, 'drop');
 	}
 
 	function cancelReplacement(): void {
@@ -188,7 +268,17 @@
 		errorCurrentSrc = currentImage?.src;
 		errorCurrentAlt = currentImage?.alt;
 		errorCurrentName = currentImage?.name;
-		if (meaningfullyChanged) validationError = null;
+		if (meaningfullyChanged) {
+			validationError = null;
+			dropRejected = false;
+		}
+	});
+
+	$effect(() => {
+		if (!dropzone || disabled) {
+			resetDragState();
+			dropRejected = false;
+		}
 	});
 
 	$effect(() => {
@@ -247,7 +337,30 @@
 		{:else}{labels.keepEmptyStatus}{/if}
 	</p>
 
-	<div class="image-attachment-control__field">
+	<div
+		class={[
+			'image-attachment-control__field',
+			dropzone && 'image-attachment-control__dropzone'
+		]}
+		role={dropzone ? 'group' : undefined}
+		data-dropzone={dropzone ? 'true' : undefined}
+		data-drop-active={dropzone ? String(dropActive) : undefined}
+		data-drop-rejected={dropzone ? String(dropRejected) : undefined}
+		ondragenter={handleDragEnter}
+		ondragover={handleDragOver}
+		ondragleave={handleDragLeave}
+		ondrop={handleDrop}
+	>
+		{#if dropzone}
+			<p
+				id={dropzoneInstructionsId}
+				class="image-attachment-control__drop-instructions"
+			>
+				{dropActive && dropzone.activeInstructions
+					? dropzone.activeInstructions
+					: dropzone.instructions}
+			</p>
+		{/if}
 		<label for={inputId}>{labels.input}</label>
 		<input
 			bind:this={input}
@@ -257,7 +370,7 @@
 			{accept}
 			{disabled}
 			aria-invalid={validationError ? 'true' : undefined}
-			aria-describedby={validationError ? errorId : undefined}
+			aria-describedby={inputDescribedBy}
 			onchange={handleFileChange}
 		/>
 	</div>
@@ -332,6 +445,28 @@
 		gap: var(--giu-image-attachment-control-gap, 0.5rem);
 		min-width: 0;
 	}
+
+	.image-attachment-control__dropzone {
+		align-items: flex-start;
+		flex-direction: column;
+		padding: var(--giu-image-attachment-dropzone-padding, 0.75rem);
+		border: var(--giu-image-attachment-dropzone-border-width, 1px) dashed
+			var(--giu-image-attachment-dropzone-border-color, #767676);
+		border-radius: var(--giu-image-attachment-dropzone-radius, 0.375rem);
+		background: var(--giu-image-attachment-dropzone-background, transparent);
+	}
+
+	.image-attachment-control__dropzone[data-drop-active='true'] {
+		border-color: var(--giu-image-attachment-dropzone-active-border-color, #1559a6);
+		background: var(--giu-image-attachment-dropzone-active-background, transparent);
+	}
+
+	.image-attachment-control__dropzone[data-drop-rejected='true'] {
+		border-color: var(--giu-image-attachment-dropzone-rejected-border-color, #9d2020);
+		background: var(--giu-image-attachment-dropzone-rejected-background, transparent);
+	}
+
+	.image-attachment-control__drop-instructions { margin: 0; }
 
 	.image-attachment-control input { max-width: 100%; }
 

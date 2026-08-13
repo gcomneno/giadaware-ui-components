@@ -24,6 +24,7 @@ import type { SurfaceProps } from './surface.js';
 import type {
 	ImageAttachmentControlLabels,
 	ImageAttachmentCurrentImage,
+	ImageAttachmentDropzoneOptions,
 	ImageAttachmentFileValidator,
 	ImageAttachmentState
 } from './image-attachment-control.js';
@@ -33,6 +34,7 @@ type ImageAttachmentControlProps = {
 	onvaluechange: (value: ImageAttachmentState) => void;
 	currentImage?: ImageAttachmentCurrentImage | null;
 	disabled?: boolean;
+	dropzone?: ImageAttachmentDropzoneOptions;
 	accept?: string;
 	maxSizeBytes?: number;
 	validator?: ImageAttachmentFileValidator;
@@ -150,6 +152,7 @@ export const ImageAttachmentControl: Component<ImageAttachmentControlProps, {}, 
 export type {
 	ImageAttachmentControlLabels,
 	ImageAttachmentCurrentImage,
+	ImageAttachmentDropzoneOptions,
 	ImageAttachmentFileValidator,
 	ImageAttachmentIntent,
 	ImageAttachmentState,

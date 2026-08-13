@@ -26,6 +26,34 @@ function select(file?: File): void {
 	input().dispatchEvent(new Event('change', { bubbles: true }));
 }
 
+function dropzone(): HTMLElement {
+	const element = document.querySelector('[data-dropzone="true"]');
+	if (!(element instanceof HTMLElement)) {
+		throw new TypeError('The image attachment dropzone was not rendered.');
+	}
+	return element;
+}
+
+function fileTransfer(file?: File): DataTransfer {
+	const transfer = new DataTransfer();
+	if (file) transfer.items.add(file);
+	return transfer;
+}
+
+function dispatchDrag(
+	target: Element,
+	type: 'dragenter' | 'dragover' | 'dragleave' | 'drop',
+	transfer: DataTransfer
+): DragEvent {
+	const event = new DragEvent(type, {
+		bubbles: true,
+		cancelable: true,
+		dataTransfer: transfer
+	});
+	target.dispatchEvent(event);
+	return event;
+}
+
 async function expectFormFile(form: HTMLFormElement, name: string, expected: File): Promise<void> {
 	const entry = new FormData(form).get(name);
 	expect(entry).toBeInstanceOf(File);
@@ -306,4 +334,233 @@ describe('ImageAttachmentControl controlled browser behavior', () => {
 			expect(document.querySelector('.image-attachment-control__placeholder')).toBeTruthy();
 		} finally { Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: original }); }
 	});
+
+	test('accepts a dropped image through the same controlled replacement path and native FormData', async () => {
+		vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:dropped');
+		const form = document.createElement('form');
+		document.body.append(form);
+		let harness: Awaited<ReturnType<typeof controlled>> | undefined;
+		try {
+			harness = await controlled({
+				name: 'avatar',
+				dropzone: {
+					instructions: 'Drop an image here',
+					activeInstructions: 'Release the image'
+				}
+			}, { baseElement: form });
+
+			const zone = dropzone();
+			const file = new File(['dropped contents'], 'dropped.png', {
+				type: 'image/png'
+			});
+			const transfer = fileTransfer(file);
+
+			const event = dispatchDrag(zone, 'drop', transfer);
+
+			expect(event.defaultPrevented).toBe(true);
+			await vi.waitFor(() => expect(harness?.value()).toEqual({
+				intent: 'replace',
+				file
+			}));
+			expect(harness.calls).toEqual([{ intent: 'replace', file }]);
+			expect(zone).toHaveAttribute('data-drop-active', 'false');
+			expect(zone).toHaveAttribute('data-drop-rejected', 'false');
+			expect(input().files).toHaveLength(1);
+			expect(input().files?.[0]?.name).toBe(file.name);
+			expect(input().files?.[0]?.type).toBe(file.type);
+			expect(input().files?.[0]?.size).toBe(file.size);
+			await expectFormFile(form, 'avatar', file);
+
+			const descriptionIds = input().getAttribute('aria-describedby')?.split(/\s+/);
+			expect(descriptionIds).toHaveLength(1);
+			expect(descriptionIds?.[0]).toMatch(/-dropzone-instructions$/);
+			expect(document.getElementById(descriptionIds![0])).toHaveTextContent('Drop an image here');
+		} finally {
+			await harness?.screen.unmount();
+			form.remove();
+		}
+	});
+
+	test('keeps drag-active feedback stable across nested drag enter and leave events', async () => {
+		const harness = await controlled({
+			dropzone: {
+				instructions: 'Drop an image here',
+				activeInstructions: 'Release the image'
+			}
+		});
+		const zone = dropzone();
+		const label = zone.querySelector('label');
+		if (!(label instanceof HTMLLabelElement)) {
+			throw new TypeError('The dropzone label was not rendered.');
+		}
+		const transfer = fileTransfer(new File(['x'], 'nested.png', { type: 'image/png' }));
+
+		dispatchDrag(zone, 'dragenter', transfer);
+		await vi.waitFor(() => {
+			expect(zone).toHaveAttribute('data-drop-active', 'true');
+			expect(zone).toHaveTextContent('Release the image');
+		});
+
+		dispatchDrag(label, 'dragenter', transfer);
+		await vi.waitFor(() => expect(zone).toHaveAttribute('data-drop-active', 'true'));
+
+		dispatchDrag(label, 'dragleave', transfer);
+		await vi.waitFor(() => expect(zone).toHaveAttribute('data-drop-active', 'true'));
+
+		dispatchDrag(zone, 'dragleave', transfer);
+		await vi.waitFor(() => {
+			expect(zone).toHaveAttribute('data-drop-active', 'false');
+			expect(zone).toHaveTextContent('Drop an image here');
+		});
+		expect(harness.calls).toHaveLength(0);
+	});
+
+	test('rejects an invalid drop without discarding the previously accepted native file', async () => {
+		vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:preserved-drop');
+		const form = document.createElement('form');
+		document.body.append(form);
+		let harness: Awaited<ReturnType<typeof controlled>> | undefined;
+		try {
+			harness = await controlled({
+				name: 'avatar',
+				accept: '.png',
+				dropzone: { instructions: 'Drop a PNG image' }
+			}, { baseElement: form });
+
+			const accepted = new File(['accepted'], 'accepted.png', { type: 'image/png' });
+			await harness.screen.getByLabelText(labels.input).upload(accepted);
+			await vi.waitFor(() => expect(harness?.value()).toEqual({
+				intent: 'replace',
+				file: accepted
+			}));
+
+			const selectedBeforeDrop = input().files?.[0];
+			expect(selectedBeforeDrop?.name).toBe('accepted.png');
+
+			const rejected = new File(['rejected'], 'rejected.txt', { type: 'text/plain' });
+			dispatchDrag(dropzone(), 'drop', fileTransfer(rejected));
+
+			await vi.waitFor(() => {
+				expect(dropzone()).toHaveAttribute('data-drop-rejected', 'true');
+				expect(document.querySelector('[role="alert"]')).toHaveTextContent('Wrong type');
+			});
+
+			expect(harness.calls).toHaveLength(1);
+			expect(harness.value()).toEqual({ intent: 'replace', file: accepted });
+			expect(input().files?.[0]).toBe(selectedBeforeDrop);
+			expect(document.activeElement).toBe(input());
+			expect(input()).toHaveAttribute('aria-invalid', 'true');
+
+			const describedBy = input().getAttribute('aria-describedby')?.split(/\s+/);
+			expect(describedBy).toHaveLength(2);
+			expect(describedBy?.[0]).toMatch(/-dropzone-instructions$/);
+			expect(describedBy?.[1]).toMatch(/-error$/);
+			await expectFormFile(form, 'avatar', accepted);
+		} finally {
+			await harness?.screen.unmount();
+			form.remove();
+		}
+	});
+
+	test('clears stale rejection feedback on a new drag session and when disabled', async () => {
+		const dropzoneOptions = {
+			instructions: 'Drop a PNG image',
+			activeInstructions: 'Release the PNG image'
+		};
+		const value: ImageAttachmentState = { intent: 'keep', file: null };
+		const onvaluechange = vi.fn();
+		const screen = await render(ImageAttachmentControl, {
+			...baseProps,
+			accept: '.png',
+			dropzone: dropzoneOptions,
+			value,
+			onvaluechange
+		});
+		const zone = dropzone();
+
+		dispatchDrag(
+			zone,
+			'drop',
+			fileTransfer(new File(['bad'], 'bad.txt', { type: 'text/plain' }))
+		);
+		await vi.waitFor(() =>
+			expect(zone).toHaveAttribute('data-drop-rejected', 'true')
+		);
+
+		dispatchDrag(
+			zone,
+			'dragenter',
+			fileTransfer(new File(['good'], 'good.png', { type: 'image/png' }))
+		);
+		await vi.waitFor(() => {
+			expect(zone).toHaveAttribute('data-drop-active', 'true');
+			expect(zone).toHaveAttribute('data-drop-rejected', 'false');
+		});
+
+		await screen.rerender({
+			...baseProps,
+			accept: '.png',
+			dropzone: dropzoneOptions,
+			disabled: true,
+			value,
+			onvaluechange
+		});
+		await vi.waitFor(() => {
+			expect(zone).toHaveAttribute('data-drop-active', 'false');
+			expect(zone).toHaveAttribute('data-drop-rejected', 'false');
+		});
+	});
+
+	test('disabled dropzone blocks drag/drop transitions and remains inactive', async () => {
+		const harness = await controlled({
+			disabled: true,
+			dropzone: {
+				instructions: 'Drop an image here',
+				activeInstructions: 'Release the image'
+			}
+		});
+		const zone = dropzone();
+		const transfer = fileTransfer(new File(['x'], 'disabled.png', {
+			type: 'image/png'
+		}));
+
+		const enter = dispatchDrag(zone, 'dragenter', transfer);
+		const over = dispatchDrag(zone, 'dragover', transfer);
+		const dropped = dispatchDrag(zone, 'drop', transfer);
+
+		expect(enter.defaultPrevented).toBe(true);
+		expect(over.defaultPrevented).toBe(true);
+		expect(dropped.defaultPrevented).toBe(true);
+		expect(transfer.dropEffect).toBe('none');
+		expect(zone).toHaveAttribute('data-drop-active', 'false');
+		expect(zone).toHaveAttribute('data-drop-rejected', 'false');
+		expect(input()).toBeDisabled();
+		expect(input().files).toHaveLength(0);
+		expect(harness.calls).toHaveLength(0);
+		expect(harness.value()).toEqual({ intent: 'keep', file: null });
+	});
+
+	test('reconciles the native input when the consumer rejects a valid dropped replacement', async () => {
+		const onvaluechange = vi.fn();
+		await render(ImageAttachmentControl, {
+			...baseProps,
+			dropzone: { instructions: 'Drop an image here' },
+			value: { intent: 'keep', file: null },
+			onvaluechange
+		});
+
+		const file = new File(['rejected transition'], 'rejected.png', {
+			type: 'image/png'
+		});
+		dispatchDrag(dropzone(), 'drop', fileTransfer(file));
+
+		await vi.waitFor(() => expect(onvaluechange).toHaveBeenCalledTimes(1));
+		expect(onvaluechange).toHaveBeenCalledWith({ intent: 'replace', file });
+
+		await vi.waitFor(() => expect(input().value).toBe(''));
+		expect(input().files).toHaveLength(0);
+		expect(document.querySelector('[data-intent]')).toHaveAttribute('data-intent', 'keep');
+		expect(dropzone()).toHaveAttribute('data-drop-rejected', 'false');
+	});
+
 });
