@@ -1,3 +1,4 @@
+import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { expect, test, vi } from 'vitest';
 import ImageLightbox from '../../src/lib/visitor/ImageLightbox.svelte';
@@ -27,6 +28,30 @@ test('renders deterministic closed dialog markup for controlled false state', ()
 	expect(first.body).toContain('Close image');
 	expect(first.body).not.toMatch(/<dialog[^>]*\sopen(?:=|\s|>)/);
 	expect(props.onopenchange).not.toHaveBeenCalled();
+});
+
+test('renders consumer-owned actions after the figure', () => {
+	const actions = createRawSnippet(() => ({
+		render: () => '<button type="button">Consumer action</button>'
+	}));
+
+	const body = render(ImageLightbox, {
+		props: {
+			open: false,
+			onopenchange: vi.fn(),
+			src: '/actions.jpg',
+			alt: 'Actions sample',
+			labels,
+			actions
+		}
+	}).body;
+
+	const figureEnd = body.indexOf('</figure>');
+	const actionsStart = body.indexOf('giu-image-lightbox__actions');
+
+	expect(body).toContain('Consumer action');
+	expect(figureEnd).toBeGreaterThan(-1);
+	expect(actionsStart).toBeGreaterThan(figureEnd);
 });
 
 test('does not manufacture an SSR open attribute or run controlled callbacks', () => {

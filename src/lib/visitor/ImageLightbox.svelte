@@ -12,6 +12,7 @@
 		alt,
 		labels,
 		caption,
+		actions,
 		class: className,
 		style
 	}: Props = $props();
@@ -125,6 +126,12 @@
 				</figcaption>
 			{/if}
 		</figure>
+
+		{#if actions}
+			<div class="giu-image-lightbox__actions">
+				{@render actions()}
+			</div>
+		{/if}
 	</div>
 </dialog>
 

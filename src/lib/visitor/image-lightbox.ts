@@ -13,6 +13,7 @@ export type ImageLightboxProps = {
 	alt: string;
 	labels: ImageLightboxLabels;
 	caption?: Snippet;
+	actions?: Snippet;
 	class?: HTMLDialogAttributes['class'];
 	style?: HTMLDialogAttributes['style'];
 };

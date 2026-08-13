@@ -3,6 +3,7 @@
 
 	let open = $state(false);
 	let requests = $state(0);
+	let actionClicks = $state(0);
 	let rejectNextClose = $state(false);
 
 	const labels = {
@@ -28,6 +29,7 @@
 	data-testid="image-lightbox-probe"
 	data-open={open}
 	data-requests={requests}
+	data-action-clicks={actionClicks}
 >
 	<button
 		type="button"
@@ -48,6 +50,12 @@
 		<span>Consumer-owned caption</span>
 	{/snippet}
 
+	{#snippet actions()}
+		<button type="button" onclick={() => actionClicks += 1}>
+			Next image
+		</button>
+	{/snippet}
+
 	<ImageLightbox
 		{open}
 		onopenchange={handleOpenChange}
@@ -55,5 +63,6 @@
 		alt="Sample landscape"
 		{labels}
 		{caption}
+		{actions}
 	/>
 </div>
