@@ -12,6 +12,14 @@ test('produces deterministic ImageLightbox hydration markup', () => {
 	expect(first.body).toBe(IMAGE_LIGHTBOX_HYDRATION_SSR_BODY);
 	expect(first.body).toContain('<dialog');
 	expect(first.body).toContain('aria-label="Hydration image preview"');
+	expect(first.body).toContain('giu-image-lightbox__actions');
+	expect(first.body).toContain('Hydration action');
+
+	const figureEnd = first.body.indexOf('</figure>');
+	const actionsStart = first.body.indexOf('giu-image-lightbox__actions');
+
+	expect(figureEnd).toBeGreaterThan(-1);
+	expect(actionsStart).toBeGreaterThan(figureEnd);
 	expect(first.body).not.toMatch(/<dialog[^>]*\sopen(?:=|\s|>)/);
 });
 

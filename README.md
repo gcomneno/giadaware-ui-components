@@ -37,7 +37,9 @@ are:
 
 - `giadaware-ui-components` exports `FormStatus`, `FormStatusTone`,
   `SocialIcon`, `SocialIconId` and `SOCIAL_ICON_IDS`;
-- `giadaware-ui-components/visitor` exports `RelationshipGraph` and its public types;
+- `giadaware-ui-components/visitor` exports `ImageLightbox`,
+  `ImageLightboxLabels`, `ImageLightboxProps`, `RelationshipGraph` and its
+  public types;
 - `giadaware-ui-components/studio` exports `ImageAttachmentControl` and the
   `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`,
   `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`,
@@ -79,6 +81,43 @@ ownership boundaries and isolated CSS properties.
 See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
 deterministic layout, interactions, callback payloads, resilience policy, and
 CSS customization hooks.
+
+## ImageLightbox
+
+Import the controlled modal primitive from the Visitor entry point:
+
+```svelte
+<script lang="ts">
+	import { ImageLightbox } from 'giadaware-ui-components/visitor';
+</script>
+
+{#snippet caption()}
+	<p>Descriptive figure caption.</p>
+{/snippet}
+
+{#snippet actions()}
+	<nav aria-label="Image navigation">
+		<button type="button">Previous</button>
+		<button type="button">Next</button>
+	</nav>
+{/snippet}
+
+<ImageLightbox
+	open={previewOpen}
+	onopenchange={(open) => previewOpen = open}
+	src={currentImage.src}
+	alt={currentImage.alt}
+	labels={{ dialog: 'Image preview', close: 'Close image' }}
+	{caption}
+	{actions}
+/>
+```
+
+`caption` remains descriptive figure content and is rendered inside `<figcaption>`. Interactive controls belong in the optional `actions` snippet, rendered inside the native modal after the figure. The actions wrapper is semantically neutral: Giada UI adds no toolbar, navigation, footer or gallery semantics.
+
+Consumers own the controls and relationships inside `actions`, including accessible names, grouping, keyboard behavior, gallery arrays, current index, previous/next logic, counters and translations. Giada UI continues to own the native-dialog lifecycle, close/Escape/backdrop behavior, focus restoration, scroll locking, SSR/hydration safety and contained single-image presentation.
+
+The component does not infer gallery state, add ArrowLeft/ArrowRight behavior, or reinterpret `caption` as an action area.
 
 ## FieldLabel
 

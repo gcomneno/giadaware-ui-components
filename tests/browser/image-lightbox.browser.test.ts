@@ -111,6 +111,28 @@ test('closes from backdrop interaction and preserves an uncropped contained imag
 	await vi.waitFor(() => expect(dialog.open).toBe(false));
 });
 
+test('keeps consumer-owned actions interactive inside the open modal', async () => {
+	const screen = await render(Probe);
+	await screen.getByRole('button', { name: 'Open sample image' }).click();
+
+	const dialog = screen.getByRole('dialog', { name: 'Image preview' }).element() as HTMLDialogElement;
+	const action = screen.getByRole('button', { name: 'Next image' }).element() as HTMLButtonElement;
+	const root = screen.getByTestId('image-lightbox-probe');
+
+	await vi.waitFor(() => expect(dialog.open).toBe(true));
+
+	expect(dialog.contains(action)).toBe(true);
+	expect(action.closest('figcaption')).toBeNull();
+	expect(action.closest('.giu-image-lightbox__actions')).not.toBeNull();
+
+	await action.click();
+
+	await vi.waitFor(() =>
+		expect(root).toHaveAttribute('data-action-clicks', '1')
+	);
+	expect(dialog.open).toBe(true);
+});
+
 test('reference-counts scroll locks and restores exact previous inline values', () => {
 	const htmlOverflow = document.documentElement.style.overflow;
 	const bodyOverflow = document.body.style.overflow;

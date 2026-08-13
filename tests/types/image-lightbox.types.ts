@@ -1,3 +1,4 @@
+import type { Snippet } from 'svelte';
 import { ImageLightbox } from '../../src/lib/visitor/index.js';
 import type {
 	ImageLightboxLabels,
@@ -9,12 +10,15 @@ const labels: ImageLightboxLabels = {
 	close: 'Close'
 };
 
+declare const actions: Snippet;
+
 const props: ImageLightboxProps = {
 	open: false,
 	onopenchange: (open) => open,
 	src: '/image.jpg',
 	alt: 'Example',
 	labels,
+	actions,
 	class: 'consumer',
 	style: 'background:black'
 };
