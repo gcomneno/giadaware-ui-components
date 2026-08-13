@@ -44,6 +44,19 @@ test('provides deterministic image attachment semantics and has no Axe violation
 	const emptyControl = controls.get('accessibility-empty-image');
 	expect(emptyControl?.querySelectorAll('button')).toHaveLength(0);
 
+	const emptyDropzone = emptyControl?.querySelector('[data-dropzone="true"]');
+	expect(emptyDropzone).toHaveAttribute('role', 'group');
+	expect(emptyDropzone).toHaveAttribute('data-drop-active', 'false');
+	expect(emptyDropzone).toHaveAttribute('data-drop-rejected', 'false');
+	expect(emptyDropzone).not.toHaveAttribute('tabindex');
+	expect(emptyDropzone).toHaveTextContent('Drop a PNG image here');
+
+	const disabledDropzone = disabledControl?.querySelector('[data-dropzone="true"]');
+	expect(disabledDropzone).toHaveAttribute('role', 'group');
+	expect(disabledDropzone).toHaveAttribute('data-drop-active', 'false');
+	expect(disabledDropzone).toHaveAttribute('data-drop-rejected', 'false');
+	expect(disabledDropzone).not.toHaveAttribute('tabindex');
+
 	const emptyInput = root.querySelector('#accessibility-empty-image');
 	if (!(emptyInput instanceof HTMLInputElement)) throw new TypeError('The PNG input was not rendered.');
 	const transfer = new DataTransfer();
@@ -54,9 +67,12 @@ test('provides deterministic image attachment semantics and has no Axe violation
 	expect(emptyControl).toHaveAttribute('data-intent', 'keep');
 	expect(emptyInput.value).toBe('');
 	expect(document.activeElement).toBe(emptyInput);
-	const errorId = emptyInput.getAttribute('aria-describedby');
-	expect(errorId).toBe('accessibility-empty-image-error');
-	const error = root.querySelector(`#${errorId}`);
+	const describedBy = emptyInput.getAttribute('aria-describedby')?.split(/\s+/);
+	expect(describedBy).toEqual([
+		'accessibility-empty-image-dropzone-instructions',
+		'accessibility-empty-image-error'
+	]);
+	const error = root.querySelector('#accessibility-empty-image-error');
 	expect(error).toHaveAttribute('role', 'alert');
 	expect(error).toHaveAttribute('aria-live', 'assertive');
 	expect(error).toHaveAttribute('aria-atomic', 'true');

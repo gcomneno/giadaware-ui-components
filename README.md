@@ -40,7 +40,8 @@ are:
 - `giadaware-ui-components/visitor` exports `RelationshipGraph` and its public types;
 - `giadaware-ui-components/studio` exports `ImageAttachmentControl` and the
   `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`,
-  `ImageAttachmentFileValidator`, `ImageAttachmentIntent`,
+  `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`,
+  `ImageAttachmentIntent`,
   `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
   `AsyncOperationPanel` and its public types, plus `Button`, `ButtonProps`,
   `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`, plus
@@ -385,6 +386,7 @@ Import the component and its consumer-facing types from the Studio entry point:
 import { ImageAttachmentControl } from 'giadaware-ui-components/studio';
 import type {
 	ImageAttachmentControlLabels,
+	ImageAttachmentDropzoneOptions,
 	ImageAttachmentState
 } from 'giadaware-ui-components/studio';
 ```
@@ -395,15 +397,27 @@ Its final intent is `keep`, `replace` (with a native `File`) or `remove`.
 all labels and validation messages, and can configure `accept`, `maxSizeBytes`,
 a custom `validator` and `disabled`.
 
+Drag-and-drop selection is an optional progressive enhancement through the
+`dropzone` prop. The native file input remains visible and is the canonical
+keyboard and fallback interaction. Dropped files reuse the same validation,
+controlled `onvaluechange` transition and native `FormData` path as files
+selected through the picker. Consumers provide all resolved drop instructions.
+
 ```svelte
 <script lang="ts">
 	import { ImageAttachmentControl } from 'giadaware-ui-components/studio';
 	import type {
 		ImageAttachmentControlLabels,
+		ImageAttachmentDropzoneOptions,
 		ImageAttachmentState
 	} from 'giadaware-ui-components/studio';
 
 	let value: ImageAttachmentState = $state({ intent: 'keep', file: null });
+
+	const dropzone: ImageAttachmentDropzoneOptions = {
+		instructions: 'Drop an image here',
+		activeInstructions: 'Release the image'
+	};
 
 	const labels: ImageAttachmentControlLabels = {
 		input: 'Choose image',
@@ -444,6 +458,7 @@ a custom `validator` and `disabled`.
 	{labels}
 	accept="image/png,image/jpeg"
 	maxSizeBytes={5_000_000}
+	{dropzone}
 />
 
 <button type="button" onclick={() => save(value)}>Save</button>
@@ -451,6 +466,25 @@ a custom `validator` and `disabled`.
 
 The caller is responsible for interpreting and persisting the final intent.
 The component provides no hidden removal field and no built-in persistence.
+
+When `dropzone` is enabled:
+
+- file drags expose `data-drop-active="true"` while the target is active;
+- rejected drops expose `data-drop-rejected="true"` and reuse the existing
+  accessible validation error;
+- nested drag enter/leave events are normalized to avoid feedback flicker;
+- disabled state blocks both native and dropped selection;
+- consumer-owned drop instructions are associated with the native input through
+  `aria-describedby`;
+- the drop target is a semantic group, not a synthetic button, so keyboard
+  interaction continues through the native file input.
+
+Dropzone presentation is customizable through the
+`--giu-image-attachment-dropzone-*` token family, including base, active and
+rejected border/background hooks.
+
+The enhancement adds no upload transport, progress tracking, persistence,
+multiple-file support, paste handling or drag-and-drop dependency.
 
 ## Requirements
 

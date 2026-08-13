@@ -2,6 +2,7 @@ import { ImageAttachmentControl } from '../../src/lib/studio/index.js';
 import type {
 	ImageAttachmentControlLabels,
 	ImageAttachmentCurrentImage,
+	ImageAttachmentDropzoneOptions,
 	ImageAttachmentFileValidator,
 	ImageAttachmentIntent,
 	ImageAttachmentState,
@@ -35,6 +36,10 @@ const labels: ImageAttachmentControlLabels = {
 	removeStatus: 'Image will be removed',
 	replacementPreviewAlt: 'Replacement preview'
 };
+const dropzone: ImageAttachmentDropzoneOptions = {
+	instructions: 'Drop an image here',
+	activeInstructions: 'Release the image'
+};
 const validator: ImageAttachmentFileValidator = (candidate: File) =>
 	candidate.size === 0 ? { code: 'custom', message: 'Empty image' } : null;
 const errors: ImageAttachmentValidationError[] = [
@@ -53,6 +58,7 @@ const completeProps: ComponentProps<typeof ImageAttachmentControl> = {
 	...requiredProps,
 	currentImage,
 	disabled: false,
+	dropzone,
 	accept: 'image/*',
 	maxSizeBytes: 1_000_000,
 	validator,
@@ -60,6 +66,11 @@ const completeProps: ComponentProps<typeof ImageAttachmentControl> = {
 	id: 'image-input',
 	class: 'attachment',
 	style: 'max-width: 20rem'
+};
+
+// @ts-expect-error Dropzone instructions are consumer-owned and required when enabled.
+const incompleteDropzone: ImageAttachmentDropzoneOptions = {
+	activeInstructions: 'Release the image'
 };
 
 // @ts-expect-error ImageAttachmentIntent is closed.
@@ -110,6 +121,7 @@ void replace;
 void remove;
 void errors;
 void completeProps;
+void incompleteDropzone;
 void invalidIntent;
 void replaceWithNull;
 void keepWithFile;

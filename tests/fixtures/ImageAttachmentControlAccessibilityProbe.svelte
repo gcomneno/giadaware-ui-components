@@ -24,9 +24,31 @@
 </script>
 
 <div data-testid="image-attachment-control-accessibility-probe">
-	<ImageAttachmentControl value={emptyValue} onvaluechange={updateEmpty} id="accessibility-empty-image" accept=".png" invalidTypeMessage={messages.invalidType} tooLargeMessage={messages.tooLarge} labels={labels('Choose an empty-state image')} />
+	<ImageAttachmentControl
+		value={emptyValue}
+		onvaluechange={updateEmpty}
+		id="accessibility-empty-image"
+		accept=".png"
+		dropzone={{
+			instructions: 'Drop a PNG image here',
+			activeInstructions: 'Release the PNG image'
+		}}
+		invalidTypeMessage={messages.invalidType}
+		tooLargeMessage={messages.tooLarge}
+		labels={labels('Choose an empty-state image')}
+	/>
 	<ImageAttachmentControl value={{ intent: 'keep', file: null }} onvaluechange={noop} {currentImage} id="accessibility-current-image" invalidTypeMessage={messages.invalidType} tooLargeMessage={messages.tooLarge} labels={labels('Choose a current-image replacement')} />
 	<ImageAttachmentControl value={{ intent: 'replace', file: replacementFile }} onvaluechange={noop} id="accessibility-replacement-image" invalidTypeMessage={messages.invalidType} tooLargeMessage={messages.tooLarge} labels={labels('Choose another replacement image')} />
 	<ImageAttachmentControl value={{ intent: 'remove', file: null }} onvaluechange={noop} {currentImage} id="accessibility-removed-image" invalidTypeMessage={messages.invalidType} tooLargeMessage={messages.tooLarge} labels={labels('Choose an image after removal')} />
-	<ImageAttachmentControl value={{ intent: 'keep', file: null }} onvaluechange={noop} {currentImage} disabled id="accessibility-disabled-image" invalidTypeMessage={messages.invalidType} tooLargeMessage={messages.tooLarge} labels={labels('Choose a disabled image')} />
+	<ImageAttachmentControl
+		value={{ intent: 'keep', file: null }}
+		onvaluechange={noop}
+		{currentImage}
+		disabled
+		id="accessibility-disabled-image"
+		dropzone={{ instructions: 'Drop an image here' }}
+		invalidTypeMessage={messages.invalidType}
+		tooLargeMessage={messages.tooLarge}
+		labels={labels('Choose a disabled image')}
+	/>
 </div>
