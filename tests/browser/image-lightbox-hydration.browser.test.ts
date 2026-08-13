@@ -17,6 +17,9 @@ test('hydrates deterministic dialog markup and becomes interactive without repla
 	const serverDialog = container.querySelector(
 		'[data-giu-image-lightbox]'
 	) as HTMLDialogElement;
+	const serverAction = [...container.querySelectorAll('button')].find(
+		(button) => button.textContent === 'Hydration action'
+	) as HTMLButtonElement;
 
 	const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 	const error = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -34,6 +37,14 @@ test('hydrates deterministic dialog markup and becomes interactive without repla
 			container.querySelector('[data-testid="image-lightbox-hydration"]')
 		).toBe(serverRoot);
 		expect(container.querySelector('[data-giu-image-lightbox]')).toBe(serverDialog);
+		expect(
+			[...container.querySelectorAll('button')].find(
+				(button) => button.textContent === 'Hydration action'
+			)
+		).toBe(serverAction);
+		expect(serverDialog.contains(serverAction)).toBe(true);
+		expect(serverAction.closest('figcaption')).toBeNull();
+		expect(serverAction.closest('.giu-image-lightbox__actions')).not.toBeNull();
 		expect(serverDialog.open).toBe(false);
 		expect(warn).not.toHaveBeenCalled();
 		expect(error).not.toHaveBeenCalled();
@@ -51,6 +62,13 @@ test('hydrates deterministic dialog markup and becomes interactive without repla
 		) as HTMLButtonElement;
 
 		await vi.waitFor(() => expect(document.activeElement).toBe(close));
+
+		serverAction.click();
+
+		await vi.waitFor(() =>
+			expect(serverRoot).toHaveAttribute('data-action-count', '1')
+		);
+		expect(serverDialog.open).toBe(true);
 
 		await userEvent.keyboard('{Escape}');
 

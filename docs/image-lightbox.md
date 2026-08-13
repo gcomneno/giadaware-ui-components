@@ -39,6 +39,12 @@ The consumer owns the trigger and the `open` state.
   <span>Optional consumer-owned caption.</span>
 {/snippet}
 
+{#snippet actions()}
+  <div role="group" aria-label="Image actions">
+    <button type="button">Consumer action</button>
+  </div>
+{/snippet}
+
 <ImageLightbox
   {open}
   onopenchange={(next) => open = next}
@@ -46,6 +52,7 @@ The consumer owns the trigger and the `open` state.
   alt="Example landscape"
   {labels}
   {caption}
+  {actions}
 />
 ```
 
@@ -56,8 +63,14 @@ The consumer owns the trigger and the `open` state.
 `labels.dialog` names the modal dialog and `labels.close` is the visible close
 control text. All translated or domain-facing copy remains consumer-owned.
 
-`caption` is an optional Svelte snippet. `class` and `style` customize the
-dialog root.
+`caption` is an optional Svelte snippet for descriptive figure content.
+
+`actions` is an optional Svelte snippet rendered inside the modal after the
+figure. It is intended for consumer-owned interactive content without changing
+the semantics of `caption`. Giada UI does not add grouping, toolbar, navigation
+or gallery semantics to action content.
+
+`class` and `style` customize the dialog root.
 
 ## Interaction model
 
@@ -102,7 +115,9 @@ Consumers must:
 - use an accessible trigger;
 - provide meaningful `labels.dialog` and `labels.close`;
 - provide appropriate image alternative text;
-- provide caption content only when it adds useful information.
+- provide caption content only when it adds useful descriptive information;
+- provide semantics, accessible names, keyboard behavior and state management
+  for any controls supplied through `actions`.
 
 Giada UI owns the native modal semantics, initial close-control focus, controlled
 Escape handling, backdrop handling, and scroll restoration.
@@ -136,5 +151,6 @@ Internal descendant classes are not public DOM hooks.
 
 ## Non-goals
 
-`ImageLightbox` does not own galleries, indexes, fit-mode selectors, application
-routing, application i18n, persistence, or Nero Quotidiano domain models.
+`ImageLightbox` does not own galleries, indexes, previous/next behavior,
+counters, keyboard gallery navigation, fit-mode selectors, application routing,
+application i18n, persistence, or consumer domain models.

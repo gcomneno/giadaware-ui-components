@@ -10,6 +10,8 @@
   controls complete keyboard viewport operation.
 
 ### Added
+- `ImageLightbox` accepts an optional consumer-owned `actions` snippet inside
+  the modal after the figure without adding gallery, index or navigation state.
 - `ImageAttachmentControl` supports an optional consumer-labeled dropzone as a
   progressive enhancement while preserving the native file input, controlled
   `keep | replace | remove` model, shared validation path and native `FormData`.
