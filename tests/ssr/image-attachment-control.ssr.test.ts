@@ -80,6 +80,34 @@ describe('ImageAttachmentControl SSR', () => {
 		expect(body.match(/disabled/g)?.length).toBe(2);
 	});
 
+	test('renders the opt-in dropzone deterministically without browser drag state', () => {
+		const options = {
+			props: {
+				...props(),
+				id: 'drop-image',
+				dropzone: {
+					instructions: 'Drop an image here',
+					activeInstructions: 'Release the image'
+				}
+			}
+		};
+
+		const first = render(ImageAttachmentControl, options);
+		const second = render(ImageAttachmentControl, options);
+
+		expect(first).toEqual(second);
+		expect(first.body).toContain('role="group"');
+		expect(first.body).toContain('data-dropzone="true"');
+		expect(first.body).toContain('data-drop-active="false"');
+		expect(first.body).toContain('data-drop-rejected="false"');
+		expect(first.body).toContain('id="drop-image-dropzone-instructions"');
+		expect(first.body).toContain('Drop an image here');
+		expect(first.body).not.toContain('Release the image');
+		expect(first.body).toContain(
+			'aria-describedby="drop-image-dropzone-instructions"'
+		);
+	});
+
 	test('does not validate, emit, or touch browser APIs while rendering', () => {
 		const validator = vi.fn();
 		const onvaluechange = vi.fn();

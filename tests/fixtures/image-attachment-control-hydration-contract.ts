@@ -1,4 +1,7 @@
-import type { ImageAttachmentControlLabels } from '../../src/lib/studio/image-attachment-control.js';
+import type {
+	ImageAttachmentControlLabels,
+	ImageAttachmentDropzoneOptions
+} from '../../src/lib/studio/image-attachment-control.js';
 
 export const IMAGE_ATTACHMENT_CONTROL_HYDRATION_ID = 'hydration-image-input';
 
@@ -14,6 +17,11 @@ export const IMAGE_ATTACHMENT_CONTROL_HYDRATION_LABELS = {
 	replacementPreviewAlt: 'Replacement image preview'
 } satisfies ImageAttachmentControlLabels;
 
+export const IMAGE_ATTACHMENT_CONTROL_HYDRATION_DROPZONE = {
+	instructions: 'Drop an image here',
+	activeInstructions: 'Release the image'
+} satisfies ImageAttachmentDropzoneOptions;
+
 export const IMAGE_ATTACHMENT_CONTROL_HYDRATION_CURRENT_IMAGE = {
 	src: '/images/current-image.png',
 	alt: 'Current image preview',
@@ -26,4 +34,4 @@ export const IMAGE_ATTACHMENT_CONTROL_HYDRATION_MESSAGES = {
 } as const;
 
 export const IMAGE_ATTACHMENT_CONTROL_HYDRATION_SSR_BODY =
-	'<!--[--><div data-testid="image-attachment-control-hydration-probe" data-change-count="0"><!--$s1--><div class="image-attachment-control image-attachment-control--keep svelte-d8wee9" data-intent="keep"><!--[1--><div class="image-attachment-control__preview svelte-d8wee9"><img src="/images/current-image.png" alt="Current image preview" class="svelte-d8wee9"/></div> <!--[0--><p class="image-attachment-control__filename svelte-d8wee9">current-image.png</p><!--]--><!--]--> <p class="image-attachment-control__status svelte-d8wee9" role="status" aria-live="polite" aria-atomic="true"><!--[2-->Current image will be kept<!--]--></p> <div class="image-attachment-control__field svelte-d8wee9"><label for="hydration-image-input">Choose an image</label> <input type="file" id="hydration-image-input" accept="image/*" class="svelte-d8wee9"/></div> <!--[-1--><!--]--> <div class="image-attachment-control__actions svelte-d8wee9"><!--[-1--><!--]--> <!--[0--><button type="button" class="svelte-d8wee9">Remove current image</button><!--]--></div></div><!----></div><!--]-->';
+	"<!--[--><div data-testid=\"image-attachment-control-hydration-probe\" data-change-count=\"0\"><!--$s1--><div class=\"image-attachment-control image-attachment-control--keep svelte-d8wee9\" data-intent=\"keep\"><!--[1--><div class=\"image-attachment-control__preview svelte-d8wee9\"><img src=\"/images/current-image.png\" alt=\"Current image preview\" class=\"svelte-d8wee9\"/></div> <!--[0--><p class=\"image-attachment-control__filename svelte-d8wee9\">current-image.png</p><!--]--><!--]--> <p class=\"image-attachment-control__status svelte-d8wee9\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\"><!--[2-->Current image will be kept<!--]--></p> <div class=\"image-attachment-control__field image-attachment-control__dropzone svelte-d8wee9\" role=\"group\" data-dropzone=\"true\" data-drop-active=\"false\" data-drop-rejected=\"false\"><!--[0--><p id=\"hydration-image-input-dropzone-instructions\" class=\"image-attachment-control__drop-instructions svelte-d8wee9\">Drop an image here</p><!--]--> <label for=\"hydration-image-input\">Choose an image</label> <input type=\"file\" id=\"hydration-image-input\" accept=\"image/*\" aria-describedby=\"hydration-image-input-dropzone-instructions\" class=\"svelte-d8wee9\"/></div> <!--[-1--><!--]--> <div class=\"image-attachment-control__actions svelte-d8wee9\"><!--[-1--><!--]--> <!--[0--><button type=\"button\" class=\"svelte-d8wee9\">Remove current image</button><!--]--></div></div><!----></div><!--]-->";
