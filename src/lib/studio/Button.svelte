@@ -5,6 +5,8 @@
 
 	let {
 		children,
+		leading,
+		trailing,
 		variant = 'primary',
 		size = 'default',
 		type = 'button',
@@ -30,7 +32,21 @@
 	data-giu-variant={normalizedVariant}
 	data-giu-size={normalizedSize}
 >
-	{@render children()}
+	{#if leading}
+		<span class="giu-button__leading" aria-hidden="true">
+			{@render leading()}
+		</span>
+	{/if}
+
+	<span class="giu-button__label">
+		{@render children()}
+	</span>
+
+	{#if trailing}
+		<span class="giu-button__trailing" aria-hidden="true">
+			{@render trailing()}
+		</span>
+	{/if}
 </button>
 
 <style>
@@ -42,6 +58,7 @@
 		max-width: 100%;
 		min-width: 0;
 		min-height: 2.75rem;
+		gap: var(--giu-button-content-gap, 0.5rem);
 		padding: var(--giu-button-padding, 0.625rem 1rem);
 		border: var(--giu-button-border-width, 1px) solid var(--giu-button-border-color, #303030);
 		border-radius: var(--giu-button-border-radius, 0.5rem);
@@ -54,6 +71,20 @@
 		white-space: normal;
 		overflow-wrap: anywhere;
 		cursor: pointer;
+	}
+
+	.giu-button__leading,
+	.giu-button__trailing {
+		display: inline-flex;
+		flex: 0 0 auto;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.giu-button__label {
+		flex: 0 1 auto;
+		min-width: 0;
+		overflow-wrap: anywhere;
 	}
 
 	.giu-button--compact {

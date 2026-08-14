@@ -36,7 +36,8 @@
 - `AsyncOperationPanel` Studio component for one consumer-controlled operation
   with `idle`, `running`, `success`, `warning` and `error` states.
 - `Button` Studio component with native button behavior, forwarded attributes,
-  closed variant and size contracts, and scoped style hooks.
+  closed variant and size contracts, optional presentation-only leading/trailing
+  regions, and scoped style hooks.
 - `RelationshipGraph` Visitor component with deterministic graph normalization
   and layout, accessible node controls, pan/zoom controls and selection and
   activation callbacks.

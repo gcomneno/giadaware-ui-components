@@ -9,6 +9,11 @@ test('hydrates without mismatch or activation and remains interactive afterward'
 	document.body.append(container);
 	const serverRoot = container.querySelector('[data-testid="button-hydration-probe"]');
 	const serverButtons = [...container.querySelectorAll('button')];
+	const serverRegions = [
+		...container.querySelectorAll(
+			'.giu-button__leading, .giu-button__label, .giu-button__trailing',
+		),
+	];
 	let component: Record<string, unknown> | undefined;
 	const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 	const error = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -17,6 +22,11 @@ test('hydrates without mismatch or activation and remains interactive afterward'
 		await tick();
 		expect(container.querySelector('[data-testid="button-hydration-probe"]')).toBe(serverRoot);
 		expect([...container.querySelectorAll('button')]).toEqual(serverButtons);
+		expect([
+			...container.querySelectorAll(
+				'.giu-button__leading, .giu-button__label, .giu-button__trailing',
+			),
+		]).toEqual(serverRegions);
 		expect(serverRoot).toHaveAttribute('data-count', '0');
 		expect(warn).not.toHaveBeenCalled();
 		expect(error).not.toHaveBeenCalled();

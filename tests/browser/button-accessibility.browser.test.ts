@@ -11,6 +11,9 @@ test('uses native accessible names, focus and disabled semantics without live re
 	(enabled.element() as HTMLButtonElement).focus();
 	expect(enabled).toHaveFocus();
 	expect(disabled).toBeDisabled();
+	expect(enabled).not.toHaveAttribute('aria-busy');
+	expect(root.querySelectorAll('.giu-button__leading[aria-hidden="true"]')).not.toHaveLength(0);
+	expect(root.querySelectorAll('.giu-button__trailing[aria-hidden="true"]')).not.toHaveLength(0);
 	expect(root.querySelector('[role="status"], [role="alert"], [aria-live], [role="tooltip"]')).toBeNull();
 	expect((await axe.run(root)).violations).toHaveLength(0);
 });

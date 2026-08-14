@@ -9,6 +9,8 @@ export type ButtonProps = Omit<
 	'children' | 'class' | 'style' | 'type'
 > & {
 	children: Snippet;
+	leading?: Snippet;
+	trailing?: Snippet;
 	variant?: ButtonVariant;
 	size?: ButtonSize;
 	type?: HTMLButtonAttributes['type'];
