@@ -4,6 +4,12 @@ import { describe, expect, test, vi } from 'vitest';
 import { Button } from '../../src/lib/studio/index.js';
 
 const children = createRawSnippet(() => ({ render: () => 'Save changes' }));
+const leading = createRawSnippet(() => ({
+	render: () => '<span data-slot="leading">Leading decoration</span>',
+}));
+const trailing = createRawSnippet(() => ({
+	render: () => '<span data-slot="trailing">Trailing decoration</span>',
+}));
 
 describe('Button SSR', () => {
 	test('renders deterministic native button markup with a safe default type', () => {
@@ -14,6 +20,8 @@ describe('Button SSR', () => {
 		expect(first.body).toContain('data-giu-variant="primary"');
 		expect(first.body).toContain('data-giu-size="default"');
 		expect(first.body).toContain('Save changes');
+		expect(first.body).not.toContain('giu-button__leading');
+		expect(first.body).not.toContain('giu-button__trailing');
 	});
 
 	test.each(['button', 'submit', 'reset'] as const)('renders explicit native type %s', (type) => {
@@ -22,10 +30,29 @@ describe('Button SSR', () => {
 
 	test.each(['primary', 'secondary', 'danger'] as const)('renders %s in both sizes', (variant) => {
 		for (const size of ['default', 'compact'] as const) {
-			const { body } = render(Button, { props: { children, variant, size } });
+			const { body } = render(Button, {
+				props: { children, leading, trailing, variant, size },
+			});
 			expect(body).toContain(`giu-button--${variant}`);
 			expect(body).toContain(`giu-button--${size}`);
+			expect(body).toContain('giu-button__leading');
+			expect(body).toContain('giu-button__trailing');
 		}
+	});
+
+	test('renders presentation-only regions around the required label in stable order', () => {
+		const { body } = render(Button, { props: { children, leading, trailing } });
+		const leadingIndex = body.indexOf('Leading decoration');
+		const labelIndex = body.indexOf('Save changes');
+		const trailingIndex = body.indexOf('Trailing decoration');
+
+		expect(leadingIndex).toBeGreaterThanOrEqual(0);
+		expect(labelIndex).toBeGreaterThan(leadingIndex);
+		expect(trailingIndex).toBeGreaterThan(labelIndex);
+		expect(body).toContain('class="giu-button__leading');
+		expect(body).toContain('class="giu-button__label');
+		expect(body).toContain('class="giu-button__trailing');
+		expect(body.match(/aria-hidden="true"/g)).toHaveLength(2);
 	});
 
 	test('forwards native, form, ARIA, data, class and style attributes without executing handlers', () => {

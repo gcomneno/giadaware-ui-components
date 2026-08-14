@@ -239,13 +239,17 @@ Import `Button` only from the Studio entry point:
 
 The variants are `primary`, `secondary`, and `danger`; sizes are `default` and
 `compact`. `type` safely defaults to `button`. Applicable native button,
-form, ARIA, data, and event attributes are forwarded. Consumer content must
-provide the accessible name. Consumer classes and inline styles compose with
-the scoped component styles, including the documented `--giu-button-*` hooks.
+form, ARIA, data, and event attributes are forwarded. Required child content
+provides the accessible name. Optional `leading` and `trailing` snippets add
+presentation-only content around that label without changing its accessible
+name. Consumer classes and inline styles compose with the scoped component
+styles, including the documented `--giu-button-*` hooks.
 
-`Button` does not own pending, loading, result, or live-region behavior; use
+`Button` does not own pending, loading, result, or live-region behavior; a
+consumer may place a visual pending indicator in a leading/trailing region while
+owning `aria-busy`, disabled state and announcements itself. Use
 `AsyncOperationPanel` for asynchronous lifecycle presentation. Links and
-icon-only controls remain separate future components. Compose related
+icon-only controls remain separate components/contracts. Compose related
 consumer-owned controls with `FormActions`.
 
 ## FormActions
