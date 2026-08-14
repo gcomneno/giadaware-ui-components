@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Add the Studio `IconButton` primitive with a required accessible label, consumer-owned decorative icon content, Button-aligned variants/sizes, native button behavior and explicit target-size styling hooks.
+
 ### Changed
 
 - `RelationshipGraph` now requires a consumer-owned `labels` contract for all

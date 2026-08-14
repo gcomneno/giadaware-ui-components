@@ -55,13 +55,33 @@ The table count remains six: two complete shared control families, one extracted
 
 `AsyncOperationPanel` was selected as the highest-priority extraction because it has two concrete consumers on one Atelier-Kit page, repeats a coherent interaction rather than domain data editing, and has a clean dependency-inversion boundary. That Giada UI extraction is complete: the component and public types are exported from `src/lib/studio/index.ts`. Its shared responsibility remains visible state and accessible feedback for one consumer-owned operation; server and workflow details remain outside Giada UI.
 
-The currently exported Studio components are `ImageAttachmentControl`, `AsyncOperationPanel`, `Button`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, `Surface`, `EditableList`, `EditableListRow`, and `ReorderActions`. Atelier-Kit adopted `ImageAttachmentControl` through #217, `Button` through #220, `AsyncOperationPanel` through #221, `PageIntro` and `FormActions` through #222, `Panel` and `Surface` through #223, and `FieldLabel` through #224. Gallery and Meta characterization is recorded through #225; editable-list adoption remains a future separate consumer issue.
+The currently exported Studio components are `ImageAttachmentControl`, `AsyncOperationPanel`, `Button`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, `Surface`, `EditableList`, `EditableListRow`, and `ReorderActions`. Atelier-Kit adopted `ImageAttachmentControl` through #217, `Button` through #220, `AsyncOperationPanel` through #221, `PageIntro` and `FormActions` through #222, `Panel` and `Surface` through #223, and `FieldLabel` through #224. Gallery and Meta characterization is recorded through #225; editable-list adoption remains a future separate consumer issue.
 
 The remaining work is classified as follows:
 
 1. The color preset and font preset controls are credible future candidates but currently demonstrated together in only one consumer surface; their generic data and preview extension points need further design.
 2. The ordered editor's shared structure and reorder presentation are implemented through #30. Gallery and Meta adoption remains separate consumer work, while their schemas, cardinality, dirty tracking, focus, form naming, defaults, validation, and persistence remain outside Giada UI.
 3. The marked-text editor is a future candidate with broad usage but the greatest architectural coupling. Extracting it now would either leak Atelier Mark and Atelier-Kit typography/i18n into Giada UI or prematurely design a plugin-style editor contract.
+
+## Implemented control primitive: `IconButton`
+
+`IconButton` is implemented and exported from the Studio entry point as a
+dedicated icon-only native button primitive. It reuses the closed `ButtonVariant`
+and `ButtonSize` contracts while keeping its own accessible-name, target-size and
+`--giu-icon-button-*` presentation contract.
+
+The consumer must provide a non-empty resolved `label` and consumer-owned icon
+snippet. Giada UI reserves the button accessible name, hides icon geometry from
+the accessibility tree, preserves applicable native button attributes and
+defaults to `type="button"`. Invalid runtime labels fail closed rather than
+creating unnamed controls.
+
+It does not implement anchors, tooltips, asynchronous lifecycle, confirmation,
+icon registries, toggle state management or toolbar arrow-key behavior. Those
+responsibilities remain separate contracts or consumer-owned behavior.
+
+The component is supported by public type, deterministic SSR, DOM-preserving
+hydration, browser interaction, target-size and Axe accessibility tests.
 
 ## Implemented presentation primitive: `FieldLabel`
 

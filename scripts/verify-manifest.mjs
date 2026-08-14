@@ -26,6 +26,14 @@ const buttonContract = await readFile(
 	new URL('../src/lib/studio/button.ts', import.meta.url),
 	'utf8'
 );
+const iconButtonSource = await readFile(
+	new URL('../src/lib/studio/IconButton.svelte', import.meta.url),
+	'utf8'
+);
+const iconButtonContract = await readFile(
+	new URL('../src/lib/studio/icon-button.ts', import.meta.url),
+	'utf8'
+);
 const fieldLabelSource = await readFile(
 	new URL('../src/lib/studio/FieldLabel.svelte', import.meta.url),
 	'utf8'
@@ -115,6 +123,53 @@ requireValue(
 requireValue(
 	[...buttonSource.matchAll(/var\(([^)]+)\)/g)].every(([, value]) => value.includes(',')),
 	'Button custom-property uses must provide fallbacks'
+);
+
+requireValue(
+	iconButtonSource.includes('<button') &&
+		iconButtonSource.includes('{...sanitizeNativeAttributes(nativeAttributes)}') &&
+		iconButtonSource.includes('aria-label={normalizedLabel}') &&
+		iconButtonSource.includes('aria-hidden="true"') &&
+		iconButtonContract.includes('label: string') &&
+		iconButtonContract.includes('icon: Snippet') &&
+		iconButtonContract.includes("'aria-label'") &&
+		iconButtonContract.includes("'aria-labelledby'") &&
+		iconButtonSource.includes("Reflect.deleteProperty(sanitized, 'aria-label')") &&
+		iconButtonSource.includes("Reflect.deleteProperty(sanitized, 'aria-labelledby')"),
+	'IconButton must remain a native icon-only button with a reserved required accessible-name contract'
+);
+
+requireValue(
+	iconButtonSource.includes('{#if normalizedLabel}') &&
+		iconButtonContract.includes('normalizeIconButtonLabel') &&
+		iconButtonContract.includes('.trim()'),
+	'IconButton invalid runtime labels must fail closed after trimming'
+);
+
+const iconButtonCustomProperties = [
+	...iconButtonSource.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	iconButtonCustomProperties.length > 0 &&
+		iconButtonCustomProperties.every((property) =>
+			property.startsWith('--giu-icon-button-')
+		),
+	'IconButton must use only neutral --giu-icon-button-* tokens'
+);
+
+requireValue(
+	!iconButtonSource.includes(':global') &&
+		!iconButtonSource.includes('--studio-') &&
+		!iconButtonSource.includes('--site-'),
+	'IconButton CSS must remain scoped and application-neutral'
+);
+
+requireValue(
+	[...iconButtonSource.matchAll(/var\(([^)]+)\)/g)].every(([, value]) =>
+		value.includes(',')
+	),
+	'IconButton custom-property uses must provide fallbacks'
 );
 
 const fieldLabelStyleMatch = fieldLabelSource.match(

@@ -252,6 +252,26 @@ owning `aria-busy`, disabled state and announcements itself. Use
 icon-only controls remain separate components/contracts. Compose related
 consumer-owned controls with `FormActions`.
 
+## IconButton
+
+Import `IconButton` only from the Studio entry point. It always represents one
+icon-only native button for valid props, defaults to `type="button"`, requires a
+consumer-resolved non-empty `label`, and accepts required consumer-owned `icon`
+snippet content.
+
+The icon wrapper is presentation-only and `aria-hidden="true"`, so geometry does
+not duplicate the button name. `IconButton` reuses the existing `ButtonVariant`
+and `ButtonSize` contracts while exposing independent `--giu-icon-button-*`
+presentation hooks. Default and compact targets are at least 44px and 40px,
+respectively.
+
+A missing or blank runtime label fails closed rather than rendering an unnamed
+control. `aria-label` and `aria-labelledby` are reserved by the component;
+ordinary native button attributes, other applicable ARIA/data attributes and
+handlers compose normally. `IconButton` provides no tooltip, icon registry,
+loading lifecycle, confirmation, navigation or toolbar keyboard model. See
+`docs/icon-button.md`.
+
 ## FormActions
 
 Import `FormActions` only from the Studio entry point:
