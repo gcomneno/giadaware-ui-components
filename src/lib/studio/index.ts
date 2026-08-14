@@ -1,6 +1,7 @@
 import ImageAttachmentControlImplementation from './ImageAttachmentControl.svelte';
 import AsyncOperationPanelImplementation from './AsyncOperationPanel.svelte';
 import ButtonImplementation from './Button.svelte';
+import IconButtonImplementation from './IconButton.svelte';
 import FormActionsImplementation from './FormActions.svelte';
 import FieldLabelImplementation from './FieldLabel.svelte';
 import EditableListImplementation from './EditableList.svelte';
@@ -13,6 +14,7 @@ import SurfaceImplementation from './Surface.svelte';
 import type { Component, ComponentProps } from 'svelte';
 import type { AsyncOperationPanelProps } from './async-operation-panel.js';
 import type { ButtonProps } from './button.js';
+import type { IconButtonProps } from './icon-button.js';
 import type { FormActionsProps } from './form-actions.js';
 import type { FieldLabelProps } from './field-label.js';
 import type { EditableListProps } from './editable-list.js';
@@ -69,6 +71,13 @@ type ButtonPropsAreEqual =
 			: false
 		: false;
 type _ButtonPropsAreSynchronized = Assert<ButtonPropsAreEqual>;
+type IconButtonPropsAreEqual =
+	IconButtonProps extends ComponentProps<typeof IconButtonImplementation>
+		? ComponentProps<typeof IconButtonImplementation> extends IconButtonProps
+			? true
+			: false
+		: false;
+type _IconButtonPropsAreSynchronized = Assert<IconButtonPropsAreEqual>;
 type FieldLabelPropsAreEqual =
 	FieldLabelProps extends ComponentProps<typeof FieldLabelImplementation>
 		? ComponentProps<typeof FieldLabelImplementation> extends FieldLabelProps
@@ -132,6 +141,7 @@ export const AsyncOperationPanel: Component<AsyncOperationPanelProps, {}, ''> =
 	AsyncOperationPanelImplementation;
 
 export const Button: Component<ButtonProps, {}, ''> = ButtonImplementation;
+export const IconButton: Component<IconButtonProps, {}, ''> = IconButtonImplementation;
 
 export const FieldLabel: Component<FieldLabelProps, {}, ''> = FieldLabelImplementation;
 export const EditableList: Component<EditableListProps, {}, ''> = EditableListImplementation;
@@ -161,6 +171,7 @@ export type {
 
 export type { AsyncOperationHeadingLevel, AsyncOperationPanelProps, AsyncOperationState } from './async-operation-panel.js';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
+export type { IconButtonProps } from './icon-button.js';
 export type { FieldLabelProps } from './field-label.js';
 export type { EditableListProps } from './editable-list.js';
 export type { EditableListRowProps } from './editable-list-row.js';
