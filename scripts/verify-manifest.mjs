@@ -50,6 +50,22 @@ const fieldLabelContract = await readFile(
 	new URL('../src/lib/studio/field-label.ts', import.meta.url),
 	'utf8'
 );
+const fieldDescriptionSource = await readFile(
+	new URL('../src/lib/studio/FieldDescription.svelte', import.meta.url),
+	'utf8'
+);
+const fieldDescriptionContract = await readFile(
+	new URL('../src/lib/studio/field-description.ts', import.meta.url),
+	'utf8'
+);
+const fieldErrorSource = await readFile(
+	new URL('../src/lib/studio/FieldError.svelte', import.meta.url),
+	'utf8'
+);
+const fieldErrorContract = await readFile(
+	new URL('../src/lib/studio/field-error.ts', import.meta.url),
+	'utf8'
+);
 const formActionsSource = await readFile(
 	new URL('../src/lib/studio/FormActions.svelte', import.meta.url),
 	'utf8'
@@ -357,6 +373,163 @@ requireValue(
 	'FieldLabel must not depend on Atelier-Kit'
 );
 
+
+const fieldDescriptionStyleMatch = fieldDescriptionSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const fieldDescriptionStyle =
+	fieldDescriptionStyleMatch?.[1] ?? '';
+const fieldDescriptionCustomProperties = [
+	...fieldDescriptionStyle.matchAll(
+		/var\((--[a-z0-9-]+)/g
+	)
+].map(([, property]) => property);
+
+requireValue(
+	fieldDescriptionContract.includes('text: string') &&
+		fieldDescriptionContract.includes('id?: string') &&
+		fieldDescriptionContract.includes('class?: string') &&
+		fieldDescriptionContract.includes('style?: string') &&
+		!fieldDescriptionContract.includes('Snippet'),
+	'FieldDescription must expose the minimal text-only public contract'
+);
+
+requireValue(
+	fieldDescriptionSource.includes('{#if hasText}') &&
+		fieldDescriptionSource.includes(
+			"typeof text === 'string'"
+		) &&
+		fieldDescriptionSource.includes(
+			'Boolean(text.trim())'
+		) &&
+		fieldDescriptionSource.includes(
+			"typeof id === 'string'"
+		) &&
+		fieldDescriptionSource.includes('id.trim()') &&
+		fieldDescriptionSource.includes('{text}'),
+	'FieldDescription must omit whitespace-only content and preserve consumer text/ID ownership'
+);
+
+requireValue(
+	fieldDescriptionSource.includes('<p') &&
+		fieldDescriptionSource.includes(
+			"'giu-field-description'"
+		) &&
+		!fieldDescriptionSource.includes('aria-live') &&
+		!fieldDescriptionSource.includes('aria-atomic') &&
+		!fieldDescriptionSource.includes('role=') &&
+		!fieldDescriptionSource.includes('<label') &&
+		!fieldDescriptionSource.includes('<input') &&
+		!fieldDescriptionSource.includes(
+			'aria-describedby'
+		) &&
+		!fieldDescriptionSource.includes(
+			'aria-errormessage'
+		) &&
+		!fieldDescriptionSource.includes('aria-invalid'),
+	'FieldDescription must remain a static presentation primitive without field-association ownership'
+);
+
+requireValue(
+	JSON.stringify(fieldDescriptionCustomProperties) ===
+		JSON.stringify([
+			'--giu-field-description-color',
+			'--giu-field-description-size',
+			'--giu-field-description-line-height'
+		]),
+	'FieldDescription must expose exactly the documented neutral custom properties'
+);
+
+requireValue(
+	[...fieldDescriptionStyle.matchAll(
+		/var\(([^)]+)\)/g
+	)].every(([, value]) => value.includes(',')) &&
+		!fieldDescriptionStyle.includes(':global') &&
+		!fieldDescriptionSource.includes('--studio-') &&
+		!fieldDescriptionSource.includes('--site-'),
+	'FieldDescription CSS must remain scoped, neutral and fallback-complete'
+);
+
+const fieldErrorStyleMatch = fieldErrorSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const fieldErrorStyle = fieldErrorStyleMatch?.[1] ?? '';
+const fieldErrorCustomProperties = [
+	...fieldErrorStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	fieldErrorContract.includes('text: string') &&
+		fieldErrorContract.includes('id?: string') &&
+		fieldErrorContract.includes('announce?: boolean') &&
+		fieldErrorContract.includes('class?: string') &&
+		fieldErrorContract.includes('style?: string') &&
+		!fieldErrorContract.includes('Snippet'),
+	'FieldError must expose the minimal text-only contract with explicit announcement opt-in'
+);
+
+requireValue(
+	fieldErrorSource.includes('{#if hasText}') &&
+		fieldErrorSource.includes(
+			"typeof text === 'string'"
+		) &&
+		fieldErrorSource.includes(
+			'Boolean(text.trim())'
+		) &&
+		fieldErrorSource.includes('announce = false') &&
+		fieldErrorSource.includes('announce === true'),
+	'FieldError must omit whitespace-only content and default to static presentation'
+);
+
+requireValue(
+	fieldErrorSource.includes(
+		"role={isLive ? 'alert' : undefined}"
+	) &&
+		fieldErrorSource.includes(
+			"aria-live={isLive ? 'assertive' : undefined}"
+		) &&
+		fieldErrorSource.includes(
+			"aria-atomic={isLive ? 'true' : undefined}"
+		) &&
+		!fieldErrorSource.includes('<label') &&
+		!fieldErrorSource.includes('<input') &&
+		!fieldErrorSource.includes('aria-describedby') &&
+		!fieldErrorSource.includes('aria-errormessage') &&
+		!fieldErrorSource.includes('aria-invalid'),
+	'FieldError must use assertive alert semantics only through explicit announce opt-in and never own control association'
+);
+
+requireValue(
+	JSON.stringify(fieldErrorCustomProperties) ===
+		JSON.stringify([
+			'--giu-field-error-color',
+			'--giu-field-error-size',
+			'--giu-field-error-line-height'
+		]),
+	'FieldError must expose exactly the documented neutral custom properties'
+);
+
+requireValue(
+	[...fieldErrorStyle.matchAll(
+		/var\(([^)]+)\)/g
+	)].every(([, value]) => value.includes(',')) &&
+		!fieldErrorStyle.includes(':global') &&
+		!fieldErrorSource.includes('--studio-') &&
+		!fieldErrorSource.includes('--site-'),
+	'FieldError CSS must remain scoped, neutral and fallback-complete'
+);
+
+requireValue(
+	!fieldDescriptionSource.toLowerCase().includes(
+		'atelier'
+	) &&
+		!fieldDescriptionContract.toLowerCase().includes(
+			'atelier'
+		) &&
+		!fieldErrorSource.toLowerCase().includes('atelier') &&
+		!fieldErrorContract.toLowerCase().includes('atelier'),
+	'FieldDescription and FieldError must not depend on Atelier-Kit'
+);
 
 const formActionsStyleMatch = formActionsSource.match(
 	/<style>([\s\S]*?)<\/style>/
