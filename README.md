@@ -21,6 +21,7 @@ package.
 The approved trial contains:
 
 - `SocialIcon`
+- `SocialLink`
 - `FormStatus`
 - `ImageAttachmentControl`
 - `AsyncOperationPanel`
@@ -36,7 +37,8 @@ The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
 
 - `giadaware-ui-components` exports `FormStatus`, `FormStatusTone`,
-  `SocialIcon`, `SocialIconId` and `SOCIAL_ICON_IDS`;
+  `SocialIcon`, `SocialIconId`, `SOCIAL_ICON_IDS`, `SocialLink` and
+  `SocialLinkProps`;
 - `giadaware-ui-components/visitor` exports `ImageLightbox`,
   `ImageLightboxLabels`, `ImageLightboxProps`, `RelationshipGraph` and its
   public types;
@@ -51,6 +53,10 @@ are:
   and `FormActionsAlign`, plus `Panel`,
   `PanelProps` and `PanelHeadingLevel`, plus `Surface` and `SurfaceProps`, plus
   `EditableList`, `EditableListRow`, `ReorderActions` and their public props.
+
+See [SocialLink](docs/social-link.md) for its native-anchor contract,
+accessible-name rules, navigation ownership, styling hooks and composition with
+`SocialIcon`.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
 snippet contract, accessibility behavior, examples, and styling hooks.
@@ -387,6 +393,51 @@ The GitHub Sponsors heart comes from GitHub Primer Octicons v19.29.2,
 Inc.
 
 See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the complete notices.
+
+## SocialLink
+
+`SocialLink` packages the recurring accessible composition of a supported
+`SocialIcon` and a native anchor without moving navigation policy into Giada UI.
+
+Icon-only use provides a consumer-owned accessible label:
+
+```svelte
+<SocialLink
+	id="github"
+	href="/profile"
+	label="Profilo GitHub"
+/>
+```
+
+Visible-label use leaves the visible content as the single naming source:
+
+```svelte
+{#snippet githubLabel()}
+	<span>Profilo GitHub</span>
+{/snippet}
+
+<SocialLink
+	id="github"
+	href="/profile"
+	children={githubLabel}
+/>
+```
+
+The nested icon is always decorative relative to the link. Invalid blank
+`href` values and unnamed icon-only runtime calls fail closed.
+
+Consumers retain full ownership of `href`, `target`, `rel`, routes, visible
+copy, localization, analytics and external-link policy. The component never
+silently adds `target="_blank"` or `rel`.
+
+`aria-label` and `aria-labelledby` are reserved by the component naming
+contract; other applicable native anchor, ARIA, `data-*` and event attributes
+are forwarded.
+
+`SocialLink` introduces no additional brand geometry. The existing
+`SocialIcon` third-party and trademark notices remain authoritative.
+
+See [SocialLink](docs/social-link.md) for the complete public contract.
 
 ## FormStatus
 

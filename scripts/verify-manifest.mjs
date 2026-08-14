@@ -10,6 +10,14 @@ const formStatusSource = await readFile(
 	),
 	'utf8'
 );
+const socialLinkSource = await readFile(
+	new URL('../src/lib/SocialLink.svelte', import.meta.url),
+	'utf8'
+);
+const socialLinkContract = await readFile(
+	new URL('../src/lib/social-link.ts', import.meta.url),
+	'utf8'
+);
 const asyncOperationPanelSource = await readFile(
 	new URL('../src/lib/studio/AsyncOperationPanel.svelte', import.meta.url),
 	'utf8'
@@ -78,6 +86,63 @@ function requireValue(condition, message) {
 requireValue(
 	manifest.name === 'giadaware-ui-components',
 	'unexpected package name'
+);
+
+requireValue(
+	socialLinkSource.includes('<a') &&
+		socialLinkSource.includes('<SocialIcon') &&
+		socialLinkSource.includes('{...sanitizeNativeAttributes(nativeAttributes)}') &&
+		socialLinkSource.includes('aria-label={renderState.ariaLabel}') &&
+		socialLinkSource.includes("Reflect.deleteProperty(sanitized, 'aria-label')") &&
+		socialLinkSource.includes("Reflect.deleteProperty(sanitized, 'aria-labelledby')") &&
+		socialLinkContract.includes('HTMLAnchorAttributes') &&
+		socialLinkContract.includes('href: string') &&
+		socialLinkContract.includes('id: SocialIconId') &&
+		socialLinkContract.includes("'aria-label'") &&
+		socialLinkContract.includes("'aria-labelledby'"),
+	'SocialLink must remain a native anchor composed with SocialIcon and reserve its accessible naming contract'
+);
+
+requireValue(
+	socialLinkSource.includes('{#if normalizedHref && renderState}') &&
+		socialLinkContract.includes('normalizeSocialLinkHref') &&
+		socialLinkContract.includes('resolveSocialLinkRenderState') &&
+		socialLinkContract.includes('.trim()'),
+	'SocialLink invalid href, identifier and icon-only naming states must fail closed'
+);
+
+requireValue(
+	!socialLinkSource.includes('target="_blank"') &&
+		!socialLinkSource.includes("target='_blank'") &&
+		!socialLinkSource.includes('rel="') &&
+		!socialLinkSource.includes("rel='"),
+	'SocialLink must not silently force target or rel navigation policy'
+);
+
+const socialLinkCustomProperties = [
+	...socialLinkSource.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	socialLinkCustomProperties.length > 0 &&
+		socialLinkCustomProperties.every((property) =>
+			property.startsWith('--giu-social-link-')
+		),
+	'SocialLink must use only neutral --giu-social-link-* tokens'
+);
+
+requireValue(
+	[...socialLinkSource.matchAll(/var\(([^)]+)\)/g)].every(
+		([, value]) => value.includes(',')
+	),
+	'SocialLink custom-property uses must provide fallbacks'
+);
+
+requireValue(
+	!socialLinkSource.includes(':global') &&
+		!socialLinkSource.includes('--studio-') &&
+		!socialLinkSource.includes('--site-'),
+	'SocialLink CSS must remain scoped and application-neutral'
 );
 
 requireValue(
