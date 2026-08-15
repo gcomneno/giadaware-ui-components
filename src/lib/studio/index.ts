@@ -4,6 +4,8 @@ import ButtonImplementation from './Button.svelte';
 import IconButtonImplementation from './IconButton.svelte';
 import FormActionsImplementation from './FormActions.svelte';
 import FieldLabelImplementation from './FieldLabel.svelte';
+import FieldDescriptionImplementation from './FieldDescription.svelte';
+import FieldErrorImplementation from './FieldError.svelte';
 import EditableListImplementation from './EditableList.svelte';
 import EditableListRowImplementation from './EditableListRow.svelte';
 import ReorderActionsImplementation from './ReorderActions.svelte';
@@ -17,6 +19,8 @@ import type { ButtonProps } from './button.js';
 import type { IconButtonProps } from './icon-button.js';
 import type { FormActionsProps } from './form-actions.js';
 import type { FieldLabelProps } from './field-label.js';
+import type { FieldDescriptionProps } from './field-description.js';
+import type { FieldErrorProps } from './field-error.js';
 import type { EditableListProps } from './editable-list.js';
 import type { EditableListRowProps } from './editable-list-row.js';
 import type { ReorderActionsProps } from './reorder-actions.js';
@@ -85,6 +89,20 @@ type FieldLabelPropsAreEqual =
 			: false
 		: false;
 type _FieldLabelPropsAreSynchronized = Assert<FieldLabelPropsAreEqual>;
+type FieldDescriptionPropsAreEqual =
+	FieldDescriptionProps extends ComponentProps<typeof FieldDescriptionImplementation>
+		? ComponentProps<typeof FieldDescriptionImplementation> extends FieldDescriptionProps
+			? true
+			: false
+		: false;
+type _FieldDescriptionPropsAreSynchronized = Assert<FieldDescriptionPropsAreEqual>;
+type FieldErrorPropsAreEqual =
+	FieldErrorProps extends ComponentProps<typeof FieldErrorImplementation>
+		? ComponentProps<typeof FieldErrorImplementation> extends FieldErrorProps
+			? true
+			: false
+		: false;
+type _FieldErrorPropsAreSynchronized = Assert<FieldErrorPropsAreEqual>;
 type EditableListPropsAreEqual =
 	EditableListProps extends ComponentProps<typeof EditableListImplementation>
 		? ComponentProps<typeof EditableListImplementation> extends EditableListProps
@@ -144,6 +162,8 @@ export const Button: Component<ButtonProps, {}, ''> = ButtonImplementation;
 export const IconButton: Component<IconButtonProps, {}, ''> = IconButtonImplementation;
 
 export const FieldLabel: Component<FieldLabelProps, {}, ''> = FieldLabelImplementation;
+export const FieldDescription: Component<FieldDescriptionProps, {}, ''> = FieldDescriptionImplementation;
+export const FieldError: Component<FieldErrorProps, {}, ''> = FieldErrorImplementation;
 export const EditableList: Component<EditableListProps, {}, ''> = EditableListImplementation;
 export const EditableListRow: Component<EditableListRowProps, {}, ''> = EditableListRowImplementation;
 export const ReorderActions: Component<ReorderActionsProps, {}, ''> = ReorderActionsImplementation;
@@ -173,6 +193,8 @@ export type { AsyncOperationHeadingLevel, AsyncOperationPanelProps, AsyncOperati
 export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
 export type { IconButtonProps } from './icon-button.js';
 export type { FieldLabelProps } from './field-label.js';
+export type { FieldDescriptionProps } from './field-description.js';
+export type { FieldErrorProps } from './field-error.js';
 export type { EditableListProps } from './editable-list.js';
 export type { EditableListRowProps } from './editable-list-row.js';
 export type { ReorderActionsProps, ReorderActionsSize } from './reorder-actions.js';

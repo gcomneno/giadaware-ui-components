@@ -28,6 +28,7 @@ The approved trial contains:
 - `Button`
 - `PageIntro`
 - `FieldLabel`
+- `FieldDescription` and `FieldError`
 - `FormActions`
 - `Panel`
 - `Surface`
@@ -49,8 +50,9 @@ are:
   `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
   `AsyncOperationPanel` and its public types, plus `Button`, `ButtonProps`,
   `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`, plus
-  `FieldLabel` and `FieldLabelProps`, plus `FormActions`, `FormActionsProps`
-  and `FormActionsAlign`, plus `Panel`,
+  `FieldLabel` and `FieldLabelProps`, plus `FieldDescription`,
+  `FieldDescriptionProps`, `FieldError` and `FieldErrorProps`, plus
+  `FormActions`, `FormActionsProps` and `FormActionsAlign`, plus `Panel`,
   `PanelProps` and `PanelHeadingLevel`, plus `Surface` and `SurfaceProps`, plus
   `EditableList`, `EditableListRow`, `ReorderActions` and their public props.
 
@@ -70,6 +72,10 @@ responsibility boundary, accessibility behavior and CSS custom properties.
 See [FieldLabel](docs/field-label.md) for its presentation-only field-label
 contract, required and optional marker policy, hint association and styling
 hooks.
+
+See [FieldDescription and FieldError](docs/field-description-error.md) for
+static description/error association, opt-in live error announcement,
+empty-content behavior and ownership boundaries.
 
 See [FormActions](docs/form-actions.md) for its flex layout contract, wrapping
 behavior, ownership boundaries and gap customization.
@@ -156,6 +162,47 @@ Import `FieldLabel` only from the Studio entry point:
 the semantic `label` association, native `required`, stable control IDs and
 hint relationships. Required presentation takes precedence over optional
 presentation, and unresolved marker labels are omitted.
+
+## FieldDescription and FieldError
+
+Import both primitives only from the Studio entry point:
+
+```svelte
+<script lang="ts">
+	import {
+		FieldDescription,
+		FieldError
+	} from 'giadaware-ui-components/studio';
+</script>
+
+<input
+	id="display-name"
+	aria-invalid="true"
+	aria-describedby="display-name-description display-name-error"
+/>
+
+<FieldDescription
+	id="display-name-description"
+	text="Shown on your public profile."
+/>
+
+<FieldError
+	id="display-name-error"
+	text="Use at least three characters."
+/>
+```
+
+Both components render consumer-resolved text and omit whitespace-only content.
+They never generate IDs or mutate a control's ARIA attributes.
+
+`FieldDescription` is always static. `FieldError` is static by default, which
+avoids announcing an already-rendered SSR error again during hydration. For an
+error genuinely introduced after consumer interaction, `announce={true}`
+opts into `role="alert"`, `aria-live="assertive"` and `aria-atomic="true"`.
+
+Consumers own validation, `aria-invalid`, `aria-describedby`,
+`aria-errormessage`, IDs, localization and focus policy. See
+`docs/field-description-error.md` for the complete contract.
 
 ## Panel
 

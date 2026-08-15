@@ -6,6 +6,7 @@
 
 - Add the root `SocialLink` primitive with native anchor semantics, supported `SocialIcon` composition, icon-only accessible-name validation, visible-label support, consumer-owned navigation policy and neutral styling hooks.
 - Add the Studio `IconButton` primitive with a required accessible label, consumer-owned decorative icon content, Button-aligned variants/sizes, native button behavior and explicit target-size styling hooks.
+- Add Studio `FieldDescription` and `FieldError` primitives with consumer-owned field associations, whitespace-empty omission, static validation presentation and explicit opt-in assertive error announcement.
 
 ### Changed
 
