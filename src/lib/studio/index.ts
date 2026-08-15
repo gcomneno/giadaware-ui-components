@@ -9,6 +9,7 @@ import FieldErrorImplementation from './FieldError.svelte';
 import EditableListImplementation from './EditableList.svelte';
 import EditableListRowImplementation from './EditableListRow.svelte';
 import ReorderActionsImplementation from './ReorderActions.svelte';
+import ReorderAnnouncementImplementation from './ReorderAnnouncement.svelte';
 import PageIntroImplementation from './PageIntro.svelte';
 import PanelImplementation from './Panel.svelte';
 import SurfaceImplementation from './Surface.svelte';
@@ -24,6 +25,7 @@ import type { FieldErrorProps } from './field-error.js';
 import type { EditableListProps } from './editable-list.js';
 import type { EditableListRowProps } from './editable-list-row.js';
 import type { ReorderActionsProps } from './reorder-actions.js';
+import type { ReorderAnnouncementProps } from './reorder-announcement.js';
 import type { PageIntroProps } from './page-intro.js';
 import type { PanelProps } from './panel.js';
 import type { SurfaceProps } from './surface.js';
@@ -126,6 +128,13 @@ type ReorderActionsPropsAreEqual =
 			: false
 		: false;
 type _ReorderActionsPropsAreSynchronized = Assert<ReorderActionsPropsAreEqual>;
+type ReorderAnnouncementPropsAreEqual =
+	ReorderAnnouncementProps extends ComponentProps<typeof ReorderAnnouncementImplementation>
+		? ComponentProps<typeof ReorderAnnouncementImplementation> extends ReorderAnnouncementProps
+			? true
+			: false
+		: false;
+type _ReorderAnnouncementPropsAreSynchronized = Assert<ReorderAnnouncementPropsAreEqual>;
 type FormActionsPropsAreEqual =
 	FormActionsProps extends ComponentProps<typeof FormActionsImplementation>
 		? ComponentProps<typeof FormActionsImplementation> extends FormActionsProps
@@ -167,6 +176,7 @@ export const FieldError: Component<FieldErrorProps, {}, ''> = FieldErrorImplemen
 export const EditableList: Component<EditableListProps, {}, ''> = EditableListImplementation;
 export const EditableListRow: Component<EditableListRowProps, {}, ''> = EditableListRowImplementation;
 export const ReorderActions: Component<ReorderActionsProps, {}, ''> = ReorderActionsImplementation;
+export const ReorderAnnouncement: Component<ReorderAnnouncementProps, {}, ''> = ReorderAnnouncementImplementation;
 
 export const FormActions: Component<FormActionsProps, {}, ''> = FormActionsImplementation;
 
@@ -198,6 +208,7 @@ export type { FieldErrorProps } from './field-error.js';
 export type { EditableListProps } from './editable-list.js';
 export type { EditableListRowProps } from './editable-list-row.js';
 export type { ReorderActionsProps, ReorderActionsSize } from './reorder-actions.js';
+export type { ReorderAnnouncementKey, ReorderAnnouncementProps } from './reorder-announcement.js';
 export type { FormActionsAlign, FormActionsProps } from './form-actions.js';
 export type { PageIntroProps } from './page-intro.js';
 export type { PanelHeadingLevel, PanelProps } from './panel.js';

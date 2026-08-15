@@ -33,7 +33,7 @@ The approved trial contains:
 - `FormActions`
 - `Panel`
 - `Surface`
-- `EditableList`, `EditableListRow` and `ReorderActions`
+- `EditableList`, `EditableListRow`, `ReorderActions` and `ReorderAnnouncement`
 
 The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
@@ -56,7 +56,8 @@ are:
   `FieldDescriptionProps`, `FieldError` and `FieldErrorProps`, plus
   `FormActions`, `FormActionsProps` and `FormActionsAlign`, plus `Panel`,
   `PanelProps` and `PanelHeadingLevel`, plus `Surface` and `SurfaceProps`, plus
-  `EditableList`, `EditableListRow`, `ReorderActions` and their public props.
+  `EditableList`, `EditableListRow`, `ReorderActions`, `ReorderAnnouncement`
+  and their public props.
 
 See [SocialLink](docs/social-link.md) for its native-anchor contract,
 accessible-name rules, navigation ownership, styling hooks and composition with
