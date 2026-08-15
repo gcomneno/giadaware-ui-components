@@ -1162,7 +1162,7 @@ requireValue(
 );
 
 requireValue(
-	manifest.version === '0.0.0',
+	manifest.version === '0.1.0',
 	'unexpected package version'
 );
 
