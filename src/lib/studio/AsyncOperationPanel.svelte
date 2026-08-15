@@ -2,7 +2,50 @@
 	import FormStatusPresentation from '../internal/FormStatusPresentation.svelte';
 	import { normalizeAsyncOperationHeadingLevel, normalizeAsyncOperationState } from './async-operation-panel.js';
 
-	import type { AsyncOperationPanelProps as Props } from './async-operation-panel.js';
+	import type {
+		AsyncOperationPanelProps as Props,
+		AsyncOperationProgress,
+		AsyncOperationState
+	} from './async-operation-panel.js';
+
+	function normalizeAsyncOperationProgress(state: AsyncOperationState, value: unknown): AsyncOperationProgress | undefined {
+		if (state !== 'running' || value === null || typeof value !== 'object') {
+			return undefined;
+		}
+
+		const progress = value as {
+			mode?: unknown;
+			label?: unknown;
+			value?: unknown;
+			max?: unknown;
+		};
+
+		if (typeof progress.label !== 'string') {
+			return undefined;
+		}
+
+		const label = progress.label.trim();
+		if (label.length === 0) {
+			return undefined;
+		}
+
+		if (progress.mode === 'indeterminate') {
+			return { mode: 'indeterminate', label };
+		}
+
+		if (progress.mode !== 'determinate') {
+			return undefined;
+		}
+
+		if (!Number.isFinite(progress.value) || !Number.isFinite(progress.max) || (progress.max as number) <= 0) {
+			return { mode: 'indeterminate', label };
+		}
+
+		const max = progress.max as number;
+		const normalizedValue = Math.min(Math.max(progress.value as number, 0), max);
+
+		return { mode: 'determinate', label, value: normalizedValue, max };
+	}
 
 	let {
 		state,
@@ -10,6 +53,7 @@
 		action,
 		description,
 		message,
+		progress,
 		result,
 		technicalDetails,
 		technicalDetailsLabel,
@@ -29,6 +73,7 @@
 	const headingTag = $derived(`h${normalizedHeadingLevel}` as const);
 	const running = $derived(normalizedState === 'running');
 	const terminal = $derived(normalizedState === 'success' || normalizedState === 'warning' || normalizedState === 'error');
+	const normalizedProgress = $derived(normalizeAsyncOperationProgress(normalizedState, progress));
 	const statusTone = $derived(
 		normalizedState === 'success' || normalizedState === 'warning' || normalizedState === 'error'
 			? normalizedState
@@ -60,6 +105,24 @@
 		<FormStatusPresentation message={statusMessage} tone={statusTone} />
 	{/if}
 
+	{#if normalizedProgress}
+		<div class="async-operation-panel__progress" data-giu-progress={normalizedProgress.mode}>
+			{#if normalizedProgress.mode === 'determinate'}
+				<progress
+					class="async-operation-panel__progress-bar"
+					aria-label={normalizedProgress.label}
+					value={normalizedProgress.value}
+					max={normalizedProgress.max}
+				></progress>
+			{:else}
+				<progress
+					class="async-operation-panel__progress-bar"
+					aria-label={normalizedProgress.label}
+				></progress>
+			{/if}
+		</div>
+	{/if}
+
 	{#if terminal && result}
 		<div class="async-operation-panel__result">{@render result()}</div>
 	{/if}
@@ -88,10 +151,39 @@
 
 	.async-operation-panel__header,
 	.async-operation-panel__description,
+	.async-operation-panel__progress,
 	.async-operation-panel__result,
 	.async-operation-panel__details-content { min-width: 0; }
 
 	.async-operation-panel :is(h2, h3, h4, h5, h6) { margin: 0; font-size: var(--giu-async-operation-panel-title-size, 1.125rem); }
+
+	.async-operation-panel__progress-bar {
+		display: block;
+		width: 100%;
+		height: var(--giu-async-operation-panel-progress-height, 0.5rem);
+		border: var(--giu-async-operation-panel-progress-border-width, 0) solid var(--giu-async-operation-panel-progress-border-color, transparent);
+		border-radius: var(--giu-async-operation-panel-progress-radius, 999px);
+		overflow: hidden;
+		color: var(--giu-async-operation-panel-progress-color, #1559a6);
+		background: var(--giu-async-operation-panel-progress-background, #e6e6e6);
+		accent-color: var(--giu-async-operation-panel-progress-color, #1559a6);
+	}
+
+	.async-operation-panel__progress-bar::-webkit-progress-bar {
+		border-radius: var(--giu-async-operation-panel-progress-radius, 999px);
+		background: var(--giu-async-operation-panel-progress-background, #e6e6e6);
+	}
+
+	.async-operation-panel__progress-bar::-webkit-progress-value {
+		border-radius: var(--giu-async-operation-panel-progress-radius, 999px);
+		background: var(--giu-async-operation-panel-progress-color, #1559a6);
+	}
+
+	.async-operation-panel__progress-bar::-moz-progress-bar {
+		border-radius: var(--giu-async-operation-panel-progress-radius, 999px);
+		background: var(--giu-async-operation-panel-progress-color, #1559a6);
+	}
+
 	.async-operation-panel summary:focus-visible {
 		outline: var(--giu-async-operation-panel-focus-width, 3px) solid var(--giu-async-operation-panel-focus-color, #1559a6);
 		outline-offset: var(--giu-async-operation-panel-focus-offset, 2px);

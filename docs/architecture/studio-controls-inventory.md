@@ -166,6 +166,7 @@ One `AsyncOperationPanel` instance represents exactly one operation. It is respo
 - rendering or composing the consumer-provided action control;
 - reflecting the controlled operation state and exposing appropriate busy/status semantics;
 - presenting a primary human-readable status/result message;
+- rendering optional running-only native progress when supplied by the consumer;
 - composing or reusing the existing `FormStatus` tone and live-region behavior where that is the appropriate presentation primitive;
 - rendering optional result content, such as a deployed-site link;
 - rendering optional technical details behind an accessible, collapsible disclosure;
@@ -186,6 +187,7 @@ The consumer is responsible for:
 - supplying localized title, description, action text, summary, technical-detail label/content, and optional result content;
 - deciding whether details initially open, subject to the component's accessibility contract;
 - preserving or clearing prior results when a new run begins;
+- supplying optional running progress labels and numeric values when progress is known;
 - deciding confirmation, retry, cancellation, and navigation policy.
 
 ### Invariants
@@ -200,6 +202,7 @@ The consumer is responsible for:
 8. Labels are supplied by the consumer. Giada UI contains no Atelier-Kit translation keys or English fallback copy.
 9. SSR output is deterministic for the supplied state, and hydration does not start an operation or change disclosure state unexpectedly.
 10. Reuse of `FormStatus` must preserve its established tones (`success`, `warning`, `error`, `info`) and alert/live-region semantics without producing duplicate announcements.
+11. Progress is valid only while `running`, uses native `progress` semantics, and is never a live region.
 
 ### Implemented public API
 
@@ -211,6 +214,7 @@ The exported `AsyncOperationPanelProps` contract expresses these concepts:
 - `action`: required consumer-provided snippet for the button, form, or trigger region;
 - `headingLevel`: optional native heading level from 2 through 6, defaulting to 2;
 - `message`: optional primary status text for the current state;
+- `progress`: optional consumer-supplied running progress, either indeterminate or determinate with finite value and max;
 - `result`: optional rich, consumer-provided result content, for example a safe link;
 - `technicalDetails`: optional plain-text technical content;
 - `technicalDetailsLabel`: required when technical details exist;
@@ -218,9 +222,9 @@ The exported `AsyncOperationPanelProps` contract expresses these concepts:
 - `busyLabel`: required in `running` state;
 - standard styling hooks such as `class`, `style`, and documented CSS custom properties.
 
-The state-discriminated contract accepts no status content in `idle`, requires `busyLabel` and rejects `message` and `result` in `running`, and requires `message` with an optional result snippet in terminal states. The action remains required in terminal states. Technical output is escaped text, and disclosure state is native and uncontrolled after its optional initial value.
+The state-discriminated contract accepts no status content or progress in `idle`, requires `busyLabel`, accepts optional progress and rejects `message` and `result` in `running`, and requires `message` with an optional result snippet while rejecting progress in terminal states. The action remains required in terminal states. Technical output is escaped text, and disclosure state is native and uncontrolled after its optional initial value.
 
-The implementation composes `FormStatus` without adding a second live region: `running` uses `info`, and terminal states use their same-named tone. Rich result content and technical details sit beside the primary string status.
+The implementation composes `FormStatus` without adding a second live region: `running` uses `info`, and terminal states use their same-named tone. Native progress is separate static semantics, not a live region. Rich result content and technical details sit beside the primary string status.
 
 ### Implemented test strategy
 
@@ -229,7 +233,7 @@ The component has focused type, SSR, browser, accessibility, and hydration cover
 - type-contract coverage for required state/content relationships and public exports;
 - SSR coverage for all five states, optional regions, escaped technical text, deterministic markup, and absence of browser-side work;
 - browser interaction coverage for the details disclosure, focus/keyboard behavior, controlled state changes, and action-region composition;
-- accessibility coverage for heading structure, `aria-busy`, status versus alert announcements, no duplicate live regions when using `FormStatus`, disclosure naming, and terminal tone semantics;
+- accessibility coverage for heading structure, `aria-busy`, status versus alert announcements, no duplicate live regions when using `FormStatus`, native progress naming, disclosure naming, and terminal tone semantics;
 - hydration coverage for each state and both collapsed and expanded technical details;
 - a small consumer-style fixture with two panels proving that results remain independent and that mutual exclusion can be implemented externally. The fixture demonstrates composition only; the component itself must not coordinate the instances.
 
@@ -241,7 +245,7 @@ No Git, build, deploy, network, SvelteKit form-action, or Promise execution belo
 - Technical-detail disclosure is uncontrolled with a consumer-supplied initial value. Atelier-Kit must account for native disclosure state when replacing or resetting operation results.
 - Running and terminal announcement behavior is implemented and covered in Giada UI; consumer integration still needs validation to avoid duplicate surrounding live regions or unexpected focus changes.
 - Terminal messages are persistent. Atelier-Kit remains responsible for deciding when results are replaced or cleared.
-- Cancellation and progress percentage have no concrete readiness consumer and remain out of scope unless a real consumer motivates future API expansion.
+- Cancellation remains out of scope unless a real consumer motivates future API expansion. Progress is limited to optional consumer-supplied native progress while `running`.
 - The component name, Studio export path, CSS token names, and prop contract are implemented and documented public contracts.
 - Atelier-Kit does not currently map the publication service's `outcome: 'partial'` to a five-state presentation model. Adoption will need an explicit adapter and consumer tests.
 

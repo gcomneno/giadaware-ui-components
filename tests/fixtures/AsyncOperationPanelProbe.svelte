@@ -7,7 +7,12 @@
 	<AsyncOperationPanel state="idle" title="idle operation">
 		{#snippet action()}<button type="button" onclick={() => count += 1}>Run idle</button>{/snippet}
 	</AsyncOperationPanel>
-	<AsyncOperationPanel state="running" title="running operation" busyLabel="Operation in progress">
+	<AsyncOperationPanel
+		state="running"
+		title="running operation"
+		busyLabel="Operation in progress"
+		progress={{ mode: 'determinate', label: 'Operation progress', value: 3.5, max: 10 }}
+	>
 		{#snippet action()}<button type="button" disabled>Run running</button>{/snippet}
 	</AsyncOperationPanel>
 	{#each ['success', 'warning', 'error'] as state}

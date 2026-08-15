@@ -1,4 +1,5 @@
 import { createRawSnippet } from 'svelte';
+import { tick } from 'svelte';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
@@ -17,6 +18,16 @@ test('renders all states, maps tones, and owns only action presentation', async 
 	expect(panels[1]).toHaveAttribute('aria-busy', 'true');
 	expect(panels[1].querySelector('button')).toBeDisabled();
 	expect(panels[1].querySelector('[role="status"]')).toHaveAttribute('data-tone', 'info');
+	const progressWrapper = panels[1].querySelector('.async-operation-panel__progress');
+	const progressBar = progressWrapper?.querySelector('progress');
+	expect(progressWrapper).toHaveAttribute('data-giu-progress', 'determinate');
+	expect(progressBar).toHaveClass('async-operation-panel__progress-bar');
+	expect(progressBar).toHaveAttribute('aria-label', 'Operation progress');
+	expect(progressBar).toHaveAttribute('value', '3.5');
+	expect(progressBar).toHaveAttribute('max', '10');
+	expect(progressBar).not.toHaveAttribute('role');
+	expect(progressBar).not.toHaveAttribute('aria-valuenow');
+	expect(progressBar).not.toHaveAttribute('aria-live');
 	expect(panels[2].querySelector('[role="status"]')).toHaveAttribute('data-tone', 'success');
 	expect(panels[3].querySelector('[role="status"]')).toHaveAttribute('data-tone', 'warning');
 	expect(panels[4].querySelector('[role="alert"]')).toHaveAttribute('data-tone', 'error');
@@ -80,4 +91,62 @@ test('normalizes invalid runtime state and forwards class/style', async () => {
 	expect(panel).toHaveStyle('max-width: 20rem');
 	expect(panel?.querySelector('h2')).toHaveTextContent('Normalized');
 	expect(action).not.toHaveBeenCalled();
+});
+
+test('updates progress without changing status semantics or adding live regions', async () => {
+	const actionSnippet = createRawSnippet(() => ({ render: () => '<button disabled>Run</button>' }));
+	const screen = await render(AsyncOperationPanel, {
+		state: 'running',
+		title: 'Upload',
+		action: actionSnippet,
+		busyLabel: 'Uploading files',
+		progress: { mode: 'determinate', label: 'Upload progress', value: 1, max: 4 }
+	});
+	const status = screen.container.querySelector('[role="status"]');
+
+	expect(status).toHaveTextContent('Uploading files');
+	expect(screen.container.querySelectorAll('[aria-live]')).toHaveLength(1);
+	expect(screen.container.querySelector('progress')).toHaveAttribute('value', '1');
+
+	await screen.rerender({
+		state: 'running',
+		title: 'Upload',
+		action: actionSnippet,
+		busyLabel: 'Uploading files',
+		progress: { mode: 'determinate', label: 'Upload progress', value: 3, max: 4 }
+	});
+	await tick();
+
+	expect(screen.container.querySelector('[role="status"]')).toBe(status);
+	expect(status).toHaveTextContent('Uploading files');
+	expect(screen.container.querySelectorAll('[aria-live]')).toHaveLength(1);
+	expect(screen.container.querySelector('progress')).toHaveAttribute('value', '3');
+
+	await screen.rerender({
+		state: 'running',
+		title: 'Upload',
+		action: actionSnippet,
+		busyLabel: 'Uploading files',
+		progress: { mode: 'determinate', label: 'Upload progress', value: Number.NaN, max: 4 } as never
+	});
+	await tick();
+
+	const indeterminateProgress = screen.container.querySelector('progress');
+	expect(screen.container.querySelector('.async-operation-panel__progress')).toHaveAttribute('data-giu-progress', 'indeterminate');
+	expect(indeterminateProgress).not.toHaveAttribute('value');
+	expect(indeterminateProgress).not.toHaveAttribute('max');
+	expect(screen.container.querySelectorAll('[aria-live]')).toHaveLength(1);
+
+	await screen.rerender({
+		state: 'success',
+		title: 'Upload',
+		action: actionSnippet,
+		message: 'Uploaded',
+		progress: { mode: 'determinate', label: 'Upload progress', value: 4, max: 4 }
+	} as never);
+	await tick();
+
+	expect(screen.container.querySelector('progress')).toBeNull();
+	expect(screen.container.querySelectorAll('[aria-live]')).toHaveLength(1);
+	expect(screen.container.querySelector('[role="status"]')).toHaveAttribute('data-tone', 'success');
 });

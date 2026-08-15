@@ -10,6 +10,7 @@ test('hydrates actions and preserves collapsed and expanded native disclosures',
 	document.body.append(container);
 	const serverRoot = container.querySelector('[data-testid="async-operation-panel-hydration-probe"]');
 	const serverPanels = [...container.querySelectorAll('section')];
+	const serverProgress = container.querySelector('progress');
 	const serverDetails = [...container.querySelectorAll('details')];
 	let component: Record<string, unknown> | undefined;
 	const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -19,6 +20,8 @@ test('hydrates actions and preserves collapsed and expanded native disclosures',
 		await tick();
 		expect(container.querySelector('[data-testid="async-operation-panel-hydration-probe"]')).toBe(serverRoot);
 		expect([...container.querySelectorAll('section')]).toEqual(serverPanels);
+		expect(container.querySelector('progress')).toBe(serverProgress);
+		expect(container.querySelector('.async-operation-panel__progress')).toHaveAttribute('data-giu-progress', 'determinate');
 		expect([...container.querySelectorAll('details')]).toEqual(serverDetails);
 		expect(serverDetails.map((details) => details.open)).toEqual([false, true]);
 		(serverPanels[0].querySelector('button') as HTMLButtonElement).click();

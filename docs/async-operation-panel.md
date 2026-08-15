@@ -7,14 +7,26 @@
 The public `AsyncOperationPanelProps` union has five states:
 
 - `idle` accepts neither `message`, `busyLabel`, nor `result` and creates no live region.
-- `running` requires the consumer-written `busyLabel` and accepts neither `message` nor `result`.
-- `success`, `warning`, and `error` require a human-readable `message`, reject `busyLabel`, and optionally accept a `result` snippet.
+- `running` requires the consumer-written `busyLabel`, accepts optional `progress`, and accepts neither `message` nor `result`.
+- `success`, `warning`, and `error` require a human-readable `message`, reject `busyLabel` and `progress`, and optionally accept a `result` snippet.
 
 Every state requires `title` and the named `action: Snippet`. Every state also accepts `description?: Snippet`, `headingLevel?: 2 | 3 | 4 | 5 | 6`, `id`, `class`, and `style`. `headingLevel` defaults to `2`; invalid untyped runtime values normalize to `2`. The panel's deterministic `aria-labelledby` always refers to the rendered native heading.
 
 The action is consumer-provided so native button, form, focus, disabled, and submission behavior stays under consumer control. The action region remains present in terminal states. The consumer owns lifecycle changes, domain-result mapping, duplicate-submission policy, retries, and locking across operations. The component owns only structure and presentation.
 
 Running uses the internal FormStatus presentation with `info`, `role="status"`, and a polite announcement while the panel has `aria-busy="true"`. Success and warning use their matching tones with status semantics. Error uses the error tone and FormStatus's assertive alert semantics. Messages remain persistent, and the panel does not add a second live region or move focus.
+
+Optional running progress is a small presentation contract:
+
+```ts
+type AsyncOperationProgress =
+	| { mode: 'indeterminate'; label: string }
+	| { mode: 'determinate'; label: string; value: number; max: number };
+```
+
+Progress is rendered only while the normalized state is `running` and the progress input is valid. Invalid untyped runtime progress is omitted, except invalid determinate numbers normalize to an indeterminate native `progress` element with the supplied label. Determinate values are clamped to `0...max`; finite `value` and `max` are otherwise preserved exactly and are not rounded.
+
+Progress uses native `progress` semantics with a required consumer label. It does not add `role`, `aria-valuenow`, `aria-valuemax`, `aria-valuetext`, or `aria-live`. Keep `busyLabel` as the stable polite status for the operation; do not put high-frequency percentage updates into `busyLabel`.
 
 Technical output is provided with `technicalDetails`; `technicalDetailsLabel` is then required. It is escaped plain text inside `pre`, never HTML. The native, uncontrolled `details` disclosure defaults closed and is initialized open only when `technicalDetailsInitiallyExpanded` is true.
 
@@ -28,6 +40,21 @@ Technical output is provided with `technicalDetails`; `technicalDetailsLabel` is
 <AsyncOperationPanel state="running" title="Refresh index" busyLabel="Refreshing index">
 	{#snippet action()}
 		<form method="post"><button disabled>Refresh</button></form>
+	{/snippet}
+</AsyncOperationPanel>
+```
+
+## Progress example
+
+```svelte
+<AsyncOperationPanel
+	state="running"
+	title="Upload media"
+	busyLabel="Uploading media"
+	progress={{ mode: 'determinate', label: 'Upload progress', value: bytesSent, max: totalBytes }}
+>
+	{#snippet action()}
+		<button disabled>Upload</button>
 	{/snippet}
 </AsyncOperationPanel>
 ```
@@ -103,6 +130,12 @@ coordinate one another.
 - `--giu-async-operation-panel-color`
 - `--giu-async-operation-panel-background`
 - `--giu-async-operation-panel-title-size`
+- `--giu-async-operation-panel-progress-height`
+- `--giu-async-operation-panel-progress-background`
+- `--giu-async-operation-panel-progress-color`
+- `--giu-async-operation-panel-progress-border-width`
+- `--giu-async-operation-panel-progress-border-color`
+- `--giu-async-operation-panel-progress-radius`
 - `--giu-async-operation-panel-focus-width`
 - `--giu-async-operation-panel-focus-color`
 - `--giu-async-operation-panel-focus-offset`

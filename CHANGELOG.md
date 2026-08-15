@@ -4,6 +4,9 @@
 
 ### Added
 
+- Add optional running-only `AsyncOperationPanel` progress with native
+  indeterminate and determinate presentation, strict lifecycle typing, runtime
+  normalization and neutral styling hooks.
 - Add the root `StatusNotice` primitive with composable title/body/icon/actions
   regions, explicit optional live announcement semantics, controlled native
   dismissal, neutral styling hooks and documentation distinguishing it from

@@ -50,8 +50,9 @@ are:
   `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`,
   `ImageAttachmentIntent`,
   `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
-  `AsyncOperationPanel` and its public types, plus `Button`, `ButtonProps`,
-  `ButtonVariant` and `ButtonSize`, plus `PageIntro` and `PageIntroProps`, plus
+  `AsyncOperationPanel` and its public types including `AsyncOperationProgress`,
+  plus `Button`, `ButtonProps`, `ButtonVariant` and `ButtonSize`, plus
+  `PageIntro` and `PageIntroProps`, plus
   `FieldLabel` and `FieldLabelProps`, plus `FieldDescription`,
   `FieldDescriptionProps`, `FieldError` and `FieldErrorProps`, plus
   `FormActions`, `FormActionsProps` and `FormActionsAlign`, plus `Panel`,
@@ -68,7 +69,8 @@ contract, explicit announcement semantics, controlled dismissal, FormStatus
 distinction and future-toast non-goals.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
-snippet contract, accessibility behavior, examples, and styling hooks.
+optional running progress, snippet contract, accessibility behavior, examples,
+and styling hooks.
 
 See [Button](docs/button.md) for native attribute forwarding, variants, sizes,
 accessibility responsibilities, examples, and CSS custom properties.

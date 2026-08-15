@@ -295,8 +295,24 @@ requireValue(
 requireValue(
 	asyncOperationPanelContract.includes('action: Snippet') &&
 		asyncOperationPanelContract.includes("state: 'running'; busyLabel: string") &&
+		asyncOperationPanelContract.includes('progress?: AsyncOperationProgress') &&
+		asyncOperationPanelContract.includes('progress?: never') &&
 		asyncOperationPanelContract.includes("state: 'success' | 'warning' | 'error'; message: string"),
 	'AsyncOperationPanel discriminated state contract is missing required content'
+);
+
+requireValue(
+	asyncOperationPanelContract.includes('export type AsyncOperationProgress') &&
+		asyncOperationPanelSource.includes('<progress') &&
+		asyncOperationPanelSource.includes('data-giu-progress={normalizedProgress.mode}') &&
+		asyncOperationPanelSource.includes('class="async-operation-panel__progress-bar"') &&
+		asyncOperationPanelSource.includes('aria-label={normalizedProgress.label}') &&
+		!asyncOperationPanelSource.includes('role="progressbar"') &&
+		!asyncOperationPanelSource.includes('aria-valuenow') &&
+		!asyncOperationPanelSource.includes('aria-valuemax') &&
+		!asyncOperationPanelSource.includes('aria-valuetext') &&
+		!asyncOperationPanelSource.includes('aria-live='),
+	'AsyncOperationPanel progress must stay native, labeled and non-live'
 );
 
 requireValue(
