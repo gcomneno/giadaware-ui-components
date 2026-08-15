@@ -11,6 +11,12 @@ Quando un documento canonico inglese in ambito cambia, valutare e aggiornare lo
 specchio italiano mantenuto nella stessa pull request, mantenere validi i
 selettori di lingua reciproci ed eseguire `npm run verify:docs`.
 
+La preparazione delle release deve seguire
+[docs/it/releases.md](docs/it/releases.md) e la relativa
+[policy architetturale](docs/architecture/release-versioning-policy.md).
+I normali merge di feature non richiedono una release e il lavoro di release
+non deve abilitare la pubblicazione su registry.
+
 Prima di aprire una pull request, eseguire:
 
     npm install

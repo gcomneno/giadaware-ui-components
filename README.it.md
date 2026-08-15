@@ -12,6 +12,10 @@ Quel flag impedisce la pubblicazione su registry. Non rende privato il repositor
 
 Durante il trial, artefatti immutabili del pacchetto vengono creati con `npm pack`, identificati da commit sorgente, nome file e checksum, e installati solo in consumer controllati.
 
+La semantica di release e versioning e' definita dalla
+[guida alle release](docs/it/releases.md) e dalla relativa
+[policy architetturale](docs/architecture/release-versioning-policy.md).
+
 Non sono richiesti account npm, organizzazione, scope, identita' registry o workflow di pubblicazione.
 
 Atelier-Kit e' il primo consumer di validazione. Non e' una dipendenza di questo pacchetto.
@@ -548,6 +552,9 @@ Esegui tutti i gate di validazione correnti:
 Crea un artefatto trial locale:
 
     npm pack
+
+Per le regole immutabili di release/versioning e la procedura operativa di
+release, vedi [Release](docs/it/releases.md).
 
 La pubblicazione su registry e' vietata durante l'incubazione privata.
 

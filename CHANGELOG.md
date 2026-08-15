@@ -4,6 +4,11 @@
 
 ### Added
 
+- Define the release and versioning policy, including strict SemVer,
+  immutable Git/GitHub release identity, curated changelog rules, `0.x`
+  breaking-change handling and the path toward `1.0.0`.
+- Add the bilingual operational release guide while keeping registry
+  publication blocked during private incubation.
 - Establish the bilingual public documentation contract with maintained Italian
   mirrors, reciprocal language selectors and an automated documentation
   verification gate.
