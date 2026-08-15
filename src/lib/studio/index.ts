@@ -207,7 +207,7 @@ export type { FieldDescriptionProps } from './field-description.js';
 export type { FieldErrorProps } from './field-error.js';
 export type { EditableListProps } from './editable-list.js';
 export type { EditableListRowProps } from './editable-list-row.js';
-export type { ReorderActionsProps, ReorderActionsSize } from './reorder-actions.js';
+export type { ReorderActionsPositionContext, ReorderActionsProps, ReorderActionsSize } from './reorder-actions.js';
 export type { ReorderAnnouncementKey, ReorderAnnouncementProps } from './reorder-announcement.js';
 export type { FormActionsAlign, FormActionsProps } from './form-actions.js';
 export type { PageIntroProps } from './page-intro.js';

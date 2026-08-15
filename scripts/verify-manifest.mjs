@@ -82,6 +82,14 @@ const formActionsContract = await readFile(
 	new URL('../src/lib/studio/form-actions.ts', import.meta.url),
 	'utf8'
 );
+const reorderActionsSource = await readFile(
+	new URL('../src/lib/studio/ReorderActions.svelte', import.meta.url),
+	'utf8'
+);
+const reorderActionsContract = await readFile(
+	new URL('../src/lib/studio/reorder-actions.ts', import.meta.url),
+	'utf8'
+);
 const reorderAnnouncementSource = await readFile(
 	new URL('../src/lib/studio/ReorderAnnouncement.svelte', import.meta.url),
 	'utf8'
@@ -720,6 +728,70 @@ requireValue(
 	!formActionsSource.toLowerCase().includes('atelier') &&
 		!formActionsContract.toLowerCase().includes('atelier'),
 	'FormActions must not depend on Atelier-Kit'
+);
+
+const reorderActionsStyleMatch = reorderActionsSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const reorderActionsStyle = reorderActionsStyleMatch?.[1] ?? '';
+const reorderActionsCustomProperties = [
+	...reorderActionsStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	reorderActionsContract.includes('export type ReorderActionsPositionContext = {') &&
+		reorderActionsContract.includes('id: string') &&
+		reorderActionsContract.includes('text: string') &&
+		reorderActionsContract.includes('positionContext?: ReorderActionsPositionContext') &&
+		!/\bposition\??:/.test(reorderActionsContract) &&
+		!/\btotal\??:/.test(reorderActionsContract),
+	'ReorderActions must expose the grouped consumer-owned positionContext contract without numeric position or total props'
+);
+
+requireValue(
+	reorderActionsSource.includes('validPositionContext') &&
+		reorderActionsSource.includes("typeof positionContext.id !== 'string'") &&
+		reorderActionsSource.includes("typeof positionContext.text !== 'string'") &&
+		reorderActionsSource.includes('!positionContext.id.trim()') &&
+		reorderActionsSource.includes('/\\s/.test(positionContext.id)') &&
+		reorderActionsSource.includes('!positionContext.text.trim()') &&
+		reorderActionsSource.includes('return null') &&
+		!reorderActionsSource.includes('crypto') &&
+		!reorderActionsSource.includes('Math.random') &&
+		!reorderActionsSource.includes('Date.now') &&
+		!reorderActionsSource.includes('onMount') &&
+		!reorderActionsSource.includes('document.') &&
+		!reorderActionsSource.includes('window.'),
+	'ReorderActions positionContext must validate consumer-owned strings and avoid generated or browser-derived IDs'
+);
+
+requireValue(
+	reorderActionsSource.includes('class="giu-reorder-actions__position-context"') &&
+		reorderActionsSource.includes('id={validPositionContext.id}') &&
+		reorderActionsSource.includes('{validPositionContext.text}') &&
+		reorderActionsSource.includes('aria-describedby={validPositionContext?.id}') &&
+		(reorderActionsSource.match(/aria-describedby=\{validPositionContext\?\.id\}/g) ?? []).length === 2 &&
+		reorderActionsSource.includes('aria-label={moveUpLabel}') &&
+		reorderActionsSource.includes('aria-label={moveDownLabel}') &&
+		!reorderActionsSource.includes('aria-labelledby') &&
+		!reorderActionsSource.includes('aria-live') &&
+		!reorderActionsSource.includes('aria-hidden') &&
+		!reorderActionsSource.includes('role='),
+	'ReorderActions must describe both buttons with one non-live hidden position context while preserving exact labels'
+);
+
+requireValue(
+	reorderActionsCustomProperties.length > 0 &&
+		reorderActionsCustomProperties.every((property) =>
+			property.startsWith('--giu-reorder-actions-')
+		) &&
+		[...reorderActionsStyle.matchAll(/var\(([^)]+)\)/g)].every(
+			([, value]) => value.includes(',')
+		) &&
+		!reorderActionsStyle.includes(':global') &&
+		!reorderActionsSource.includes('--studio-') &&
+		!reorderActionsSource.includes('--site-'),
+	'ReorderActions CSS must remain scoped, neutral and fallback-complete'
 );
 
 const reorderAnnouncementStyleMatch = reorderAnnouncementSource.match(

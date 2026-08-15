@@ -68,6 +68,10 @@
 					moveDownLabel={`Move ${item.label} down`}
 					canMoveUp={index > 0}
 					canMoveDown={index < items.length - 1}
+					positionContext={{
+						id: `${item.id}-reorder-context`,
+						text: `${item.label}, position ${index + 1} of ${items.length}`
+					}}
 					onMoveUp={() => confirmMove(index, -1)}
 					onMoveDown={() => confirmMove(index, 1)}
 				/>

@@ -14,6 +14,8 @@
 - Add the Studio `ReorderAnnouncement` companion primitive for visually hidden,
   event-key-driven polite announcements of confirmed editable-list reorder
   outcomes.
+- Add optional Studio `ReorderActions` position context descriptions with
+  consumer-owned stable IDs and localized text.
 
 ### Changed
 

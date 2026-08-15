@@ -66,6 +66,111 @@ describe('editable-list SSR', () => {
 		expect(singleRow.body.match(/disabled/g)).toHaveLength(2);
 	});
 
+	test('omits position context description and aria-describedby when absent', () => {
+		const { body } = render(ReorderActions, {
+			props: {
+				moveUpLabel: 'Move image up',
+				moveDownLabel: 'Move image down',
+				onMoveUp: vi.fn(),
+				onMoveDown: vi.fn()
+			}
+		});
+
+		expect(body).not.toContain('giu-reorder-actions__position-context');
+		expect(body).not.toContain('aria-describedby');
+	});
+
+	test('renders one non-live position description referenced by both reorder controls', () => {
+		const { body } = render(ReorderActions, {
+			props: {
+				moveUpLabel: 'Move image up',
+				moveDownLabel: 'Move image down',
+				positionContext: {
+					id: 'hero-image-reorder-context',
+					text: 'Hero image, position 2 of 4'
+				},
+				onMoveUp: vi.fn(),
+				onMoveDown: vi.fn(),
+				canMoveUp: true,
+				canMoveDown: false
+			}
+		});
+
+		expect(body.match(/giu-reorder-actions__position-context/g)).toHaveLength(1);
+		expect(body).toContain('id="hero-image-reorder-context"');
+		expect(body).toContain('Hero image, position 2 of 4');
+		expect(body.match(/aria-describedby="hero-image-reorder-context"/g)).toHaveLength(2);
+		expect(body).toContain('aria-label="Move image up"');
+		expect(body).toContain('aria-label="Move image down"');
+		expect(body).not.toContain('aria-live');
+		expect(body).not.toContain('role=');
+		expect(body).not.toContain('aria-hidden');
+		expect(body).not.toContain('aria-labelledby');
+	});
+
+	test('keeps enabled and disabled boundary semantics while describing all row states', () => {
+		const states = [
+			{ name: 'first', canMoveUp: false, canMoveDown: true, disabled: 1 },
+			{ name: 'middle', canMoveUp: true, canMoveDown: true, disabled: 0 },
+			{ name: 'last', canMoveUp: true, canMoveDown: false, disabled: 1 },
+			{ name: 'single', canMoveUp: false, canMoveDown: false, disabled: 2 }
+		];
+
+		for (const state of states) {
+			const { body } = render(ReorderActions, {
+				props: {
+					moveUpLabel: `Move ${state.name} item up`,
+					moveDownLabel: `Move ${state.name} item down`,
+					positionContext: {
+						id: `${state.name}-item-reorder-context`,
+						text: `${state.name} item position`
+					},
+					onMoveUp: vi.fn(),
+					onMoveDown: vi.fn(),
+					canMoveUp: state.canMoveUp,
+					canMoveDown: state.canMoveDown
+				}
+			});
+
+			expect(body.match(/aria-describedby=/g)).toHaveLength(2);
+			expect(body.match(/disabled/g) ?? []).toHaveLength(state.disabled);
+		}
+	});
+
+	test('fails closed without warnings for invalid runtime position context values', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const invalidContexts = [
+			{ id: '', text: 'Hero image' },
+			{ id: '   ', text: 'Hero image' },
+			{ id: 'hero image', text: 'Hero image' },
+			{ id: 'hero-image', text: '' },
+			{ id: 'hero-image', text: '   ' },
+			{ id: 1, text: 'Hero image' },
+			{ id: 'hero-image', text: 1 }
+		] as const;
+
+		try {
+			for (const positionContext of invalidContexts) {
+				const { body } = render(ReorderActions, {
+					props: {
+						moveUpLabel: 'Move image up',
+						moveDownLabel: 'Move image down',
+						positionContext: positionContext as never,
+						onMoveUp: vi.fn(),
+						onMoveDown: vi.fn()
+					}
+				});
+
+				expect(body).not.toContain('giu-reorder-actions__position-context');
+				expect(body).not.toContain('aria-describedby');
+			}
+
+			expect(warn).not.toHaveBeenCalled();
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
 	test('renders reorder controls in order with exact labels, native type, boundaries and normalized size', () => {
 		const up = vi.fn(); const down = vi.fn();
 		const { body } = render(ReorderActions, { props: { moveUpLabel: 'Move first image up', moveDownLabel: 'Move first image down', onMoveUp: up, onMoveDown: down, canMoveUp: false, canMoveDown: true, size: 'large' as never, class: 'consumer-actions', style: '--giu-reorder-actions-gap: 1rem' } });

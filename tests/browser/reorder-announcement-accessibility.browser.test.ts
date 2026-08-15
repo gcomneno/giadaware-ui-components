@@ -9,6 +9,7 @@ test('has one polite live region beside non-live visible feedback and remains vi
 	const root = screen.getByTestId('reorder-announcement-consumer-probe').element();
 	const liveRegions = root.querySelectorAll('[aria-live]');
 	const liveRegion = root.querySelector('.giu-reorder-announcement');
+	const positionContexts = root.querySelectorAll('.giu-reorder-actions__position-context');
 	const visibleConfirmation = screen.getByTestId('visible-confirmation').element();
 
 	expect(liveRegions).toHaveLength(1);
@@ -16,6 +17,15 @@ test('has one polite live region beside non-live visible feedback and remains vi
 	expect(liveRegion).toHaveAttribute('role', 'status');
 	expect(liveRegion).toHaveAttribute('aria-live', 'polite');
 	expect(liveRegion).toHaveAttribute('aria-atomic', 'true');
+	expect(positionContexts).toHaveLength(2);
+	for (const positionContext of positionContexts) {
+		expect(positionContext).not.toHaveAttribute('aria-live');
+		expect(positionContext).not.toHaveAttribute('role');
+		expect(positionContext).not.toHaveAttribute('aria-hidden');
+	}
+	for (const button of root.querySelectorAll('button[aria-describedby]')) {
+		expect(button.getAttribute('aria-describedby')).not.toBe(liveRegion?.id);
+	}
 	expect(visibleConfirmation).not.toHaveAttribute('aria-live');
 	expect(visibleConfirmation).not.toHaveAttribute('role');
 
