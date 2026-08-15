@@ -1,3 +1,5 @@
+[English](page-intro.md) | [Italiano](it/page-intro.md)
+
 # PageIntro
 
 `PageIntro` is available only from `giadaware-ui-components/studio`. It renders one semantic paragraph for short introductory content placed before the primary controls, panels or panel groups of a Studio page.

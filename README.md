@@ -1,6 +1,10 @@
+[English](README.md) | [Italiano](README.it.md)
+
 # giadaware-ui-components
 
 Private-incubation Svelte components for GiadaWare.
+
+English is the canonical source of truth for public documentation. Italian is an official maintained mirror for the public documentation surface; see the [documentation language policy](docs/documentation-policy.md).
 
 This is a public GitHub repository containing a package whose manifest uses
 `private: true`.

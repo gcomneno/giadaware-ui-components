@@ -1,3 +1,5 @@
+[English](form-actions.md) | [Italiano](it/form-actions.md)
+
 # FormActions
 
 `FormActions` is available only from `giadaware-ui-components/studio`. It is a layout primitive for an arbitrary consumer-provided action snippet and always renders one native `div`.

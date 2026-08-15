@@ -1,3 +1,5 @@
+[English](status-notice.md) | [Italiano](it/status-notice.md)
+
 # StatusNotice
 
 `StatusNotice` is a root-entry composable notice for persistent page-level or

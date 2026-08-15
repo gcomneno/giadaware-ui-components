@@ -94,6 +94,7 @@ try {
 	const expectedPaths = [
 		'CHANGELOG.md',
 		'LICENSE',
+		'README.it.md',
 		'README.md',
 		'THIRD_PARTY_NOTICES.md',
 		'dist/FormStatus.svelte',

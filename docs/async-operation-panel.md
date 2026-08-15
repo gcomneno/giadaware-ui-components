@@ -1,3 +1,5 @@
+[English](async-operation-panel.md) | [Italiano](it/async-operation-panel.md)
+
 # AsyncOperationPanel
 
 `AsyncOperationPanel` is available only from `giadaware-ui-components/studio`. It presents one consumer-controlled operation without starting work or coordinating other panels.

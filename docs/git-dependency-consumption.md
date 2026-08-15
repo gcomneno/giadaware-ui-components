@@ -1,3 +1,5 @@
+[English](git-dependency-consumption.md) | [Italiano](it/git-dependency-consumption.md)
+
 # Git dependency consumption
 
 GIADA UI is intentionally not published to a package registry during its private-incubation phase, but downstream GiadaWare applications still need a reproducible way to consume the real Svelte package without copying components.
