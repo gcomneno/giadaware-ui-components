@@ -22,6 +22,7 @@ The approved trial contains:
 
 - `SocialIcon`
 - `SocialLink`
+- `StatusNotice`
 - `FormStatus`
 - `ImageAttachmentControl`
 - `AsyncOperationPanel`
@@ -38,8 +39,9 @@ The three JavaScript entry graphs remain isolated. Their current public APIs
 are:
 
 - `giadaware-ui-components` exports `FormStatus`, `FormStatusTone`,
-  `SocialIcon`, `SocialIconId`, `SOCIAL_ICON_IDS`, `SocialLink` and
-  `SocialLinkProps`;
+  `StatusNotice`, `StatusNoticeAnnouncement`, `StatusNoticeProps`,
+  `StatusNoticeTone`, `SocialIcon`, `SocialIconId`, `SOCIAL_ICON_IDS`,
+  `SocialLink` and `SocialLinkProps`;
 - `giadaware-ui-components/visitor` exports `ImageLightbox`,
   `ImageLightboxLabels`, `ImageLightboxProps`, `RelationshipGraph` and its
   public types;
@@ -59,6 +61,10 @@ are:
 See [SocialLink](docs/social-link.md) for its native-anchor contract,
 accessible-name rules, navigation ownership, styling hooks and composition with
 `SocialIcon`.
+
+See [StatusNotice](docs/status-notice.md) for its composable static notice
+contract, explicit announcement semantics, controlled dismissal, FormStatus
+distinction and future-toast non-goals.
 
 See [AsyncOperationPanel](docs/async-operation-panel.md) for its state model,
 snippet contract, accessibility behavior, examples, and styling hooks.
