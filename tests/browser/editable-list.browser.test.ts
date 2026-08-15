@@ -1,8 +1,10 @@
+import { tick } from 'svelte';
 import { expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import EditableListProbe from '../fixtures/EditableListProbe.svelte';
 import EditableListStateProbe from '../fixtures/EditableListStateProbe.svelte';
+import ReorderActionsPositionContextProbe from '../fixtures/ReorderActionsPositionContextProbe.svelte';
 
 test('uses native list semantics and invokes only enabled reorder callbacks without submitting the form', async () => {
 	const screen = await render(EditableListProbe);
@@ -76,4 +78,50 @@ test('uses the consumer-owned isEmpty condition for a real empty each body', asy
 
 	expect(screen.getByText('No images yet.')).toBeInTheDocument();
 	expect(form.querySelector('ol')).toBeNull();
+});
+
+test('supports repeated action labels with distinct consumer-owned position descriptions', async () => {
+	const screen = await render(ReorderActionsPositionContextProbe);
+	const root = screen.getByTestId('reorder-actions-position-context-probe');
+	const buttons = [...root.element().querySelectorAll('button')];
+	const moveUpButtons = [buttons[0], buttons[2]];
+	const moveDownButtons = [buttons[1], buttons[3]];
+	const descriptions = root.element().querySelectorAll(
+		'.giu-reorder-actions__position-context'
+	);
+
+	expect(moveUpButtons).toHaveLength(2);
+	expect(moveDownButtons).toHaveLength(2);
+	expect(descriptions).toHaveLength(2);
+	expect(descriptions[0]).toHaveTextContent('Hero image, position 1 of 2');
+	expect(descriptions[1]).toHaveTextContent('Detail image, position 2 of 2');
+	expect(moveUpButtons[0]).toHaveAccessibleName('Move item up');
+	expect(moveUpButtons[0]).toHaveAccessibleDescription('Hero image, position 1 of 2');
+	expect(moveDownButtons[1]).toHaveAccessibleDescription('Detail image, position 2 of 2');
+	expect(moveUpButtons[0]).toHaveAttribute('aria-describedby', 'gallery-hero-reorder-context');
+	expect(moveDownButtons[0]).toHaveAttribute('aria-describedby', 'gallery-hero-reorder-context');
+	expect(moveUpButtons[1]).toHaveAttribute('aria-describedby', 'gallery-detail-reorder-context');
+	expect(moveDownButtons[1]).toHaveAttribute('aria-describedby', 'gallery-detail-reorder-context');
+
+	moveUpButtons[0].dispatchEvent(
+		new MouseEvent('click', { bubbles: true })
+	);
+	expect(root).toHaveAttribute('data-first-moves', '0');
+
+	moveDownButtons[0].dispatchEvent(
+		new MouseEvent('click', { bubbles: true })
+	);
+	await tick();
+	expect(root).toHaveAttribute('data-first-moves', '1');
+
+	moveUpButtons[1].focus();
+	await userEvent.keyboard('{Enter}');
+	expect(root).toHaveAttribute('data-second-moves', '1');
+	expect(document.activeElement).toBe(moveUpButtons[1]);
+
+	moveDownButtons[1].dispatchEvent(
+		new MouseEvent('click', { bubbles: true })
+	);
+	await tick();
+	expect(root).toHaveAttribute('data-second-moves', '1');
 });

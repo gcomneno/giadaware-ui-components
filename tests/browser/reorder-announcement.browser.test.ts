@@ -9,10 +9,12 @@ test('announces only confirmed consumer-owned reorder outcomes', async () => {
 	const screen = await render(ReorderAnnouncementConsumerProbe);
 	const root = screen.getByTestId('reorder-announcement-consumer-probe');
 	const liveRegion = root.element().querySelector('.giu-reorder-announcement');
+	const heroPositionContext = root.element().querySelector('#hero-reorder-context');
 	const disabledUp = screen.getByRole('button', { name: 'Move Hero image up' });
 	const moveDown = screen.getByRole('button', { name: 'Move Hero image down' });
 
 	expect(liveRegion).toBeInstanceOf(HTMLElement);
+	expect(heroPositionContext).toHaveTextContent('Hero image, position 1 of 2');
 	expect(liveRegion).toHaveTextContent('');
 	expect(document.activeElement).toBe(document.body);
 
@@ -27,6 +29,8 @@ test('announces only confirmed consumer-owned reorder outcomes', async () => {
 	(moveDown.element() as HTMLButtonElement).focus();
 	await moveDown.click();
 	expect(root).toHaveAttribute('data-confirmed-count', '1');
+	expect(heroPositionContext).toHaveTextContent('Hero image, position 2 of 2');
+	expect(moveDown).toHaveAttribute('aria-describedby', 'hero-reorder-context');
 	await vi.waitFor(() =>
 		expect(liveRegion).toHaveTextContent('Image moved')
 	);

@@ -6,6 +6,11 @@
 	} from '../../src/lib/studio/index.js';
 
 	let moveCount = $state(0);
+	let positionText = $state('Hero image, position 1 of 3');
+	const positionContext = $derived({
+		id: 'hero-image-reorder-context',
+		text: positionText
+	});
 </script>
 
 <div data-testid="editable-list-hydration-probe" data-move-count={moveCount}>
@@ -23,8 +28,12 @@
 			moveDownLabel="Move hero image down"
 			canMoveUp={false}
 			canMoveDown={true}
+			{positionContext}
 			onMoveUp={() => moveCount += 1}
-			onMoveDown={() => moveCount += 1}
+			onMoveDown={() => {
+				moveCount += 1;
+				positionText = 'Hero image, position 2 of 3';
+			}}
 		/>
 	{/snippet}
 
