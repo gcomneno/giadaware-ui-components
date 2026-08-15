@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.0 - 2026-08-15
+
 ### Added
 
 - Define the release and versioning policy, including strict SemVer,
