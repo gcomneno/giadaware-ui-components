@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- Add manual release automation that validates a prepared release, preserves
+  registry-publication guards, creates an annotated immutable Git tag and
+  creates the matching GitHub Release from curated changelog notes.
+
+### Changed
+
+- Update the bilingual release guide for the post-`v0.1.0` process, including
+  automated dispatch and the equivalent manual fallback.
+
 ## 0.1.0 - 2026-08-15
 
 ### Added

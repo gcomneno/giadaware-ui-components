@@ -12,14 +12,15 @@ npm registry publication.
 
 The package remains under private incubation.
 
-Until the first real release is prepared:
+The first real release, `v0.1.0`, was created from package version `0.1.0` on
+2026-08-15.
 
-- `package.json` remains at `0.0.0`;
-- no release tag exists;
-- downstream consumers may continue to pin exact reviewed Git commit SHAs;
-- `private: true` and the registry-publication guards remain unchanged.
+Downstream consumers may use:
 
-The first real release is planned as `0.1.0`.
+- an exact reviewed Git commit SHA; or
+- an exact immutable release tag.
+
+`private: true` and the registry-publication guards remain unchanged.
 
 ## Preparing a release
 
@@ -43,21 +44,71 @@ The release change should:
 
 Do not manually edit generated package output as the source of a release.
 
+The release workflow does not perform any of these preparation edits.
+
 ## Creating immutable release metadata
 
-After the release-preparation change is merged and the intended release commit
-has been verified:
+The normal metadata path is the manually dispatched GitHub Actions
+`Release` workflow.
 
-1. create the annotated Git tag `v<major>.<minor>.<patch>` at that exact
+After the release-preparation pull request is merged:
+
+1. verify that `main` points to the intended release commit;
+2. open **Actions → Release → Run workflow**;
+3. select `main`;
+4. enter the prepared SemVer version without the `v` prefix;
+5. run the workflow.
+
+The workflow fails closed unless:
+
+- it runs from the current `main` commit;
+- `package.json` uses the requested version;
+- both package-lock version fields use the requested version;
+- the repository-local manifest verifier deliberately expects that version;
+- `CHANGELOG.md` contains a non-empty dated section for that version;
+- `private: true` and the explicit `prepublishOnly` refusal guard remain intact;
+- no `publishConfig` is present;
+- the requested Git tag and GitHub Release do not already exist.
+
+Before mutating release metadata, the workflow installs the locked
+dependencies, installs Chromium and runs the canonical `npm run validate` gate.
+
+It then:
+
+1. extracts release notes from the human-curated changelog section;
+2. creates the annotated Git tag `v<major>.<minor>.<patch>` at the exact workflow
    commit;
-2. push that tag without moving or rewriting it;
-3. create the corresponding GitHub Release from the same tag;
-4. use the curated changelog section as the basis for the GitHub Release notes.
+3. pushes that immutable tag;
+4. verifies the remote tag target;
+5. creates the corresponding GitHub Release from the same tag and notes;
+6. verifies that the GitHub Release uses the expected tag.
 
 The package version, Git tag and GitHub Release version must agree.
 
 Published release tags must not be force-moved or reused for different content.
 If a released version is wrong, correct it with a subsequent SemVer release.
+
+If automation fails after the immutable tag has already been pushed, do not
+delete, move or recreate the tag merely to retry the workflow. Inspect the
+partial release state and complete or correct it deliberately.
+
+## Manual fallback
+
+If GitHub Actions is unavailable, maintainers may perform the same contract
+manually.
+
+The fallback must still:
+
+1. use the exact verified `main` release commit;
+2. run `npm run validate`;
+3. run the release-readiness verifier for the requested version;
+4. create an annotated `v<version>` tag on that exact commit;
+5. push the tag without rewriting it;
+6. create the GitHub Release from the same tag using the curated changelog
+   section;
+7. verify the resulting tag and release identity.
+
+Automation and manual fallback implement the same release contract.
 
 ## Consumer usage
 
@@ -66,7 +117,7 @@ Consumers must use immutable references.
 During private incubation, supported references are:
 
 - an exact reviewed Git commit SHA;
-- an exact release tag once releases exist.
+- an exact release tag.
 
 Do not depend on `main` or another moving branch as a release reference.
 
@@ -94,18 +145,22 @@ A release must not add or bypass:
 in force until a separate architecture decision explicitly changes the
 incubation model.
 
-## Future automation
+The release workflow uses repository-scoped GitHub permissions only to create
+the immutable Git tag and GitHub Release. It does not publish the package to an
+npm registry.
 
-Release automation may be introduced separately after the policy and manual
-contract are established.
+## Automation boundary
 
-Automation should make the release process reproducible and reduce mechanical
-error, but it must preserve:
+Release automation reduces mechanical error; it does not select release
+semantics.
+
+It preserves:
 
 - explicit SemVer selection;
-- the curated changelog;
+- a human-curated changelog;
+- reviewed release preparation through a pull request;
 - the canonical validation gate;
 - immutable tag/release identity;
 - the registry-publication prohibition.
 
-Automation must not turn every merge into a release.
+The workflow is manual-only and does not turn merges or pushes into releases.

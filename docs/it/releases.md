@@ -12,16 +12,15 @@ pubblicazione su registry npm.
 
 Il package resta in incubazione privata.
 
-Finche' non viene preparata la prima release reale:
+La prima release reale, `v0.1.0`, e' stata creata dalla versione package
+`0.1.0` il 2026-08-15.
 
-- `package.json` resta a `0.0.0`;
-- non esiste alcun tag di release;
-- i consumer downstream possono continuare a fissare SHA Git esatti e
-  revisionati;
-- `private: true` e i guard contro la pubblicazione su registry restano
-  invariati.
+I consumer downstream possono usare:
 
-La prima release reale e' pianificata come `0.1.0`.
+- uno SHA Git esatto e revisionato; oppure
+- un tag di release esatto e immutabile.
+
+`private: true` e i guard contro la pubblicazione su registry restano invariati.
 
 ## Preparare una release
 
@@ -48,17 +47,44 @@ La modifica di preparazione della release deve:
 Non modificare manualmente l'output generato del package come fonte di una
 release.
 
+Il workflow di release non esegue nessuna di queste modifiche di preparazione.
+
 ## Creare metadata immutabili di release
 
-Dopo il merge della modifica di preparazione della release e dopo aver
-verificato il commit di release previsto:
+Il percorso normale per i metadata e' il workflow GitHub Actions `Release`,
+avviato manualmente.
 
-1. creare il tag Git annotato `v<major>.<minor>.<patch>` su quel commit
-   esatto;
-2. pubblicare quel tag senza spostarlo o riscriverlo;
-3. creare la GitHub Release corrispondente dallo stesso tag;
-4. usare la sezione curata del changelog come base per le note della GitHub
-   Release.
+Dopo il merge della pull request di preparazione della release:
+
+1. verificare che `main` punti al commit di release previsto;
+2. aprire **Actions → Release → Run workflow**;
+3. selezionare `main`;
+4. inserire la versione SemVer preparata senza il prefisso `v`;
+5. avviare il workflow.
+
+Il workflow fallisce in modo chiuso a meno che:
+
+- venga eseguito dal commit corrente di `main`;
+- `package.json` usi la versione richiesta;
+- entrambi i campi versione del package-lock usino la versione richiesta;
+- il verifier locale del manifest attenda deliberatamente quella versione;
+- `CHANGELOG.md` contenga una sezione datata e non vuota per quella versione;
+- `private: true` e il guard esplicito `prepublishOnly` restino integri;
+- non sia presente `publishConfig`;
+- il tag Git e la GitHub Release richiesti non esistano gia'.
+
+Prima di modificare metadata di release, il workflow installa le dipendenze dal
+lockfile, installa Chromium ed esegue il gate canonico `npm run validate`.
+
+Quindi:
+
+1. estrae le note di release dalla sezione del changelog curata manualmente;
+2. crea il tag Git annotato `v<major>.<minor>.<patch>` sul commit esatto del
+   workflow;
+3. pubblica quel tag immutabile;
+4. verifica il target del tag remoto;
+5. crea la GitHub Release corrispondente dallo stesso tag e dalle stesse note;
+6. verifica che la GitHub Release usi il tag previsto.
 
 La versione del package, il tag Git e la versione della GitHub Release devono
 coincidere.
@@ -67,6 +93,29 @@ I tag di release pubblicati non devono essere spostati forzatamente o
 riutilizzati per contenuti diversi. Se una versione rilasciata e' errata,
 correggerla con una release SemVer successiva.
 
+Se l'automazione fallisce dopo che il tag immutabile e' gia' stato pubblicato,
+non eliminare, spostare o ricreare il tag soltanto per ritentare il workflow.
+Esaminare lo stato parziale della release e completarlo o correggerlo
+deliberatamente.
+
+## Fallback manuale
+
+Se GitHub Actions non e' disponibile, i maintainer possono eseguire manualmente
+lo stesso contratto.
+
+Il fallback deve comunque:
+
+1. usare il commit di release esatto e verificato di `main`;
+2. eseguire `npm run validate`;
+3. eseguire il verifier di release-readiness per la versione richiesta;
+4. creare un tag annotato `v<version>` su quel commit esatto;
+5. pubblicare il tag senza riscriverlo;
+6. creare la GitHub Release dallo stesso tag usando la sezione curata del
+   changelog;
+7. verificare l'identita' risultante di tag e release.
+
+Automazione e fallback manuale implementano lo stesso contratto di release.
+
 ## Uso da parte dei consumer
 
 I consumer devono usare riferimenti immutabili.
@@ -74,7 +123,7 @@ I consumer devono usare riferimenti immutabili.
 Durante l'incubazione privata, i riferimenti supportati sono:
 
 - uno SHA Git esatto e revisionato;
-- un tag di release esatto quando esistono release.
+- un tag di release esatto.
 
 Non dipendere da `main` o da un altro branch mobile come riferimento di release.
 
@@ -102,18 +151,22 @@ Una release non deve aggiungere o aggirare:
 restano in vigore finche' una decisione architetturale separata non modifica
 esplicitamente il modello di incubazione.
 
-## Automazione futura
+Il workflow di release usa permessi GitHub limitati al repository soltanto per
+creare il tag Git immutabile e la GitHub Release. Non pubblica il package su un
+registry npm.
 
-L'automazione delle release puo' essere introdotta separatamente dopo aver
-stabilito la policy e il contratto manuale.
+## Confine dell'automazione
 
-L'automazione dovrebbe rendere il processo di release riproducibile e ridurre
-gli errori meccanici, ma deve preservare:
+L'automazione delle release riduce gli errori meccanici; non sceglie la
+semantica della release.
+
+Preserva:
 
 - selezione SemVer esplicita;
-- changelog curato;
+- changelog curato manualmente;
+- preparazione revisionata della release tramite pull request;
 - gate canonico di validazione;
 - identita' immutabile di tag e release;
 - divieto di pubblicazione su registry.
 
-L'automazione non deve trasformare ogni merge in una release.
+Il workflow e' esclusivamente manuale e non trasforma merge o push in release.
