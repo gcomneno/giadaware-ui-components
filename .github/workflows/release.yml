@@ -1,0 +1,154 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Prepared SemVer release version, without the v prefix
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: giada-ui-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Validate and create immutable release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    env:
+      VERSION: ${{ inputs.version }}
+      TAG: v${{ inputs.version }}
+      NOTES_FILE: ${{ runner.temp }}/release-notes.md
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Check out exact dispatch commit
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Require current main commit
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "Release dispatch must run from main; got $GITHUB_REF." >&2
+            false
+          fi
+
+          git fetch origin main --tags
+
+          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
+            echo "Checked-out HEAD does not match the workflow commit." >&2
+            false
+          fi
+
+          if [[ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]]; then
+            echo "Release commit is no longer the current origin/main commit." >&2
+            false
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Verify prepared release state
+        run: >
+          node scripts/verify-release-readiness.mjs
+          --version "$VERSION"
+          --notes-file "$NOTES_FILE"
+
+      - name: Require unused immutable identity
+        shell: bash
+        run: |
+          if git show-ref --verify --quiet "refs/tags/$TAG"; then
+            echo "Tag $TAG already exists." >&2
+            false
+          fi
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Remote tag $TAG already exists." >&2
+            false
+          fi
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "GitHub Release $TAG already exists." >&2
+            false
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run canonical validation
+        run: npm run validate
+
+      - name: Re-verify release state after validation
+        run: >
+          node scripts/verify-release-readiness.mjs
+          --version "$VERSION"
+          --notes-file "$NOTES_FILE"
+
+      - name: Create and push annotated tag
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git tag -a "$TAG" "$GITHUB_SHA" -m "Giada UI $VERSION"
+
+          if [[ "$(git cat-file -t "$TAG")" != "tag" ]]; then
+            echo "$TAG is not an annotated tag." >&2
+            false
+          fi
+
+          if [[ "$(git rev-parse "$TAG^{}")" != "$GITHUB_SHA" ]]; then
+            echo "$TAG does not resolve to the workflow commit." >&2
+            false
+          fi
+
+          git push origin "$TAG"
+
+          remote_target="$(
+            git ls-remote origin "refs/tags/$TAG^{}" |
+            awk '{print $1}'
+          )"
+
+          if [[ "$remote_target" != "$GITHUB_SHA" ]]; then
+            echo "Remote $TAG does not resolve to the workflow commit." >&2
+            false
+          fi
+
+      - name: Create GitHub Release
+        run: >
+          gh release create "$TAG"
+          --title "Giada UI $VERSION"
+          --notes-file "$NOTES_FILE"
+          --verify-tag
+
+      - name: Verify GitHub Release identity
+        shell: bash
+        run: |
+          release_tag="$(
+            gh release view "$TAG" \
+              --json tagName \
+              --jq '.tagName'
+          )"
+
+          if [[ "$release_tag" != "$TAG" ]]; then
+            echo "GitHub Release does not use the expected tag." >&2
+            false
+          fi
+
+          echo "Released $TAG at $GITHUB_SHA."
