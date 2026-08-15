@@ -1,11 +1,14 @@
 import { AsyncOperationPanel } from '../../src/lib/studio/index.js';
-import type { AsyncOperationPanelProps, AsyncOperationState } from '../../src/lib/studio/index.js';
+import type { AsyncOperationPanelProps, AsyncOperationProgress, AsyncOperationState } from '../../src/lib/studio/index.js';
 import type { Snippet } from 'svelte';
 declare const action: Snippet;
 declare const result: Snippet;
+const indeterminateProgress: AsyncOperationProgress = { mode: 'indeterminate', label: 'Running progress' };
+const determinateProgress: AsyncOperationProgress = { mode: 'determinate', label: 'Running progress', value: 3.5, max: 10 };
 const valid: AsyncOperationPanelProps[] = [
 	{ state: 'idle', title: 'Idle', action },
-	{ state: 'running', title: 'Running', action, busyLabel: 'Working' },
+	{ state: 'running', title: 'Running', action, busyLabel: 'Working', progress: indeterminateProgress },
+	{ state: 'running', title: 'Running', action, busyLabel: 'Working', progress: determinateProgress },
 	{ state: 'success', title: 'Success', action, message: 'Done', result },
 	{ state: 'warning', title: 'Warning', action, message: 'Review' },
 	{ state: 'error', title: 'Error', action, message: 'Failed', headingLevel: 6 }
@@ -18,10 +21,32 @@ const noMessage: AsyncOperationPanelProps = { state: 'error', title: 'Error', ac
 const staleMessage: AsyncOperationPanelProps = { state: 'idle', title: 'Idle', action, message: 'Old' };
 // @ts-expect-error idle rejects result
 const staleResult: AsyncOperationPanelProps = { state: 'idle', title: 'Idle', action, result };
+// @ts-expect-error idle rejects progress
+const idleProgress: AsyncOperationPanelProps = { state: 'idle', title: 'Idle', action, progress: indeterminateProgress };
+// @ts-expect-error terminal states reject progress
+const terminalProgress: AsyncOperationPanelProps = { state: 'success', title: 'Success', action, message: 'Done', progress: determinateProgress };
+// @ts-expect-error indeterminate progress rejects value
+const invalidIndeterminateProgress: AsyncOperationProgress = { mode: 'indeterminate', label: 'Running progress', value: 1 };
+// @ts-expect-error determinate progress requires max
+const invalidDeterminateProgress: AsyncOperationProgress = { mode: 'determinate', label: 'Running progress', value: 1 };
 // @ts-expect-error action is required
 const noAction: AsyncOperationPanelProps = { state: 'idle', title: 'Idle' };
 // @ts-expect-error heading levels start at 2
 const badHeading: AsyncOperationPanelProps = { state: 'idle', title: 'Idle', action, headingLevel: 1 };
 // @ts-expect-error state is closed
 const badState: AsyncOperationState = 'complete';
-void [AsyncOperationPanel, valid, noBusy, noMessage, staleMessage, staleResult, noAction, badHeading, badState];
+void [
+	AsyncOperationPanel,
+	valid,
+	noBusy,
+	noMessage,
+	staleMessage,
+	staleResult,
+	idleProgress,
+	terminalProgress,
+	invalidIndeterminateProgress,
+	invalidDeterminateProgress,
+	noAction,
+	badHeading,
+	badState
+];

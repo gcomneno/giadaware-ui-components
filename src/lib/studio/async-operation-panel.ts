@@ -2,6 +2,17 @@ import type { Snippet } from 'svelte';
 
 export type AsyncOperationState = 'idle' | 'running' | 'success' | 'warning' | 'error';
 export type AsyncOperationHeadingLevel = 2 | 3 | 4 | 5 | 6;
+export type AsyncOperationProgress =
+	| {
+			mode: 'indeterminate';
+			label: string;
+	  }
+	| {
+			mode: 'determinate';
+			label: string;
+			value: number;
+			max: number;
+	  };
 
 type CommonProps = {
 	title: string;
@@ -18,9 +29,9 @@ type TechnicalDetailsProps =
 	| { technicalDetails: string; technicalDetailsLabel: string; technicalDetailsInitiallyExpanded?: boolean };
 
 type StateProps =
-	| { state: 'idle'; busyLabel?: never; message?: never; result?: never }
-	| { state: 'running'; busyLabel: string; message?: never; result?: never }
-	| { state: 'success' | 'warning' | 'error'; message: string; busyLabel?: never; result?: Snippet };
+	| { state: 'idle'; busyLabel?: never; message?: never; progress?: never; result?: never }
+	| { state: 'running'; busyLabel: string; message?: never; progress?: AsyncOperationProgress; result?: never }
+	| { state: 'success' | 'warning' | 'error'; message: string; busyLabel?: never; progress?: never; result?: Snippet };
 
 export type AsyncOperationPanelProps = CommonProps & TechnicalDetailsProps & StateProps;
 

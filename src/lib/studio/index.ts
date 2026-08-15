@@ -199,7 +199,12 @@ export type {
 	ImageAttachmentValidationError
 } from './image-attachment-control.js';
 
-export type { AsyncOperationHeadingLevel, AsyncOperationPanelProps, AsyncOperationState } from './async-operation-panel.js';
+export type {
+	AsyncOperationHeadingLevel,
+	AsyncOperationPanelProps,
+	AsyncOperationProgress,
+	AsyncOperationState
+} from './async-operation-panel.js';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
 export type { IconButtonProps } from './icon-button.js';
 export type { FieldLabelProps } from './field-label.js';
