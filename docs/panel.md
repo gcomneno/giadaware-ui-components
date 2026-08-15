@@ -1,3 +1,5 @@
+[English](panel.md) | [Italiano](it/panel.md)
+
 # Panel
 
 `Panel` is available only from `giadaware-ui-components/studio`. It renders one

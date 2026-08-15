@@ -1,7 +1,15 @@
+[English](CONTRIBUTING.md) | [Italiano](CONTRIBUTING.it.md)
+
 # Contributing
 
 Changes must preserve the private-incubation contract tracked by
 gcomneno/atelier-kit#127.
+
+Public documentation changes must preserve the bilingual contract in
+[docs/documentation-policy.md](docs/documentation-policy.md). When an in-scope
+canonical English document changes, evaluate and update its maintained Italian
+mirror in the same pull request, keep reciprocal language selectors valid, and
+run `npm run verify:docs`.
 
 Before opening a pull request, run:
 

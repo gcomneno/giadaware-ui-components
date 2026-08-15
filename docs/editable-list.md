@@ -1,3 +1,5 @@
+[English](editable-list.md) | [Italiano](it/editable-list.md)
+
 # EditableList, EditableListRow, ReorderActions and ReorderAnnouncement
 
 These primitives are available only from `giadaware-ui-components/studio`.

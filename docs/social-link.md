@@ -1,3 +1,5 @@
+[English](social-link.md) | [Italiano](it/social-link.md)
+
 # SocialLink
 
 `SocialLink` is the root primitive for the recurring composition of a supported

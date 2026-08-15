@@ -1,3 +1,5 @@
+[English](image-lightbox.md) | [Italiano](it/image-lightbox.md)
+
 # ImageLightbox
 
 `ImageLightbox` is a controlled Visitor primitive for presenting one full image

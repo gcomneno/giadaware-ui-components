@@ -4,6 +4,9 @@
 
 ### Added
 
+- Establish the bilingual public documentation contract with maintained Italian
+  mirrors, reciprocal language selectors and an automated documentation
+  verification gate.
 - Add optional running-only `AsyncOperationPanel` progress with native
   indeterminate and determinate presentation, strict lifecycle typing, runtime
   normalization and neutral styling hooks.
