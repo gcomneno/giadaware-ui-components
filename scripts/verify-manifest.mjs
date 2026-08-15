@@ -10,6 +10,14 @@ const formStatusSource = await readFile(
 	),
 	'utf8'
 );
+const statusNoticeSource = await readFile(
+	new URL('../src/lib/StatusNotice.svelte', import.meta.url),
+	'utf8'
+);
+const statusNoticeContract = await readFile(
+	new URL('../src/lib/status-notice.ts', import.meta.url),
+	'utf8'
+);
 const socialLinkSource = await readFile(
 	new URL('../src/lib/SocialLink.svelte', import.meta.url),
 	'utf8'
@@ -102,6 +110,105 @@ function requireValue(condition, message) {
 requireValue(
 	manifest.name === 'giadaware-ui-components',
 	'unexpected package name'
+);
+
+requireValue(
+	statusNoticeContract.includes("import type { Snippet } from 'svelte'") &&
+		statusNoticeContract.includes("type StatusNoticeDismissProps") &&
+		statusNoticeContract.includes('onDismiss?: undefined') &&
+		statusNoticeContract.includes('closeLabel?: undefined') &&
+		statusNoticeContract.includes('onDismiss: () => void') &&
+		statusNoticeContract.includes('closeLabel: string') &&
+		statusNoticeContract.includes('title: string') &&
+		statusNoticeContract.includes('children?: Snippet') &&
+		statusNoticeContract.includes('icon?: Snippet') &&
+		statusNoticeContract.includes('actions?: Snippet') &&
+		statusNoticeContract.includes("export type StatusNoticeTone") &&
+		statusNoticeContract.includes("'info'") &&
+		statusNoticeContract.includes("'success'") &&
+		statusNoticeContract.includes("'warning'") &&
+		statusNoticeContract.includes("'error'") &&
+		statusNoticeContract.includes("export type StatusNoticeAnnouncement") &&
+		statusNoticeContract.includes("'polite'") &&
+		statusNoticeContract.includes("'assertive'"),
+	'StatusNotice must expose the root public snippet contract with the dismissal invariant'
+);
+
+requireValue(
+	statusNoticeSource.includes("normalizeStatusNoticeTone(tone)") &&
+		statusNoticeSource.includes(
+			'normalizeStatusNoticeAnnouncement(announcement)'
+		) &&
+		statusNoticeSource.includes(
+			'normalizeStatusNoticeCloseLabel(closeLabel)'
+		) &&
+		statusNoticeSource.includes(
+			"normalizedAnnouncement === 'polite'"
+		) &&
+		statusNoticeSource.includes(
+			"normalizedAnnouncement === 'assertive'"
+		) &&
+		statusNoticeSource.includes("role={announcementRole}") &&
+		statusNoticeSource.includes('aria-live={normalizedAnnouncement}') &&
+		statusNoticeSource.includes(
+			"aria-atomic={normalizedAnnouncement ? 'true' : undefined}"
+		) &&
+		statusNoticeSource.includes(
+			'class="giu-status-notice__announcement"'
+		),
+	'StatusNotice live-region semantics must be explicit and normalized on the announcement subregion'
+);
+
+requireValue(
+	statusNoticeSource.includes('<button') &&
+		statusNoticeSource.includes('type="button"') &&
+		statusNoticeSource.includes('onclick={onDismiss}') &&
+		statusNoticeSource.includes('{#if canDismiss}') &&
+		statusNoticeSource.includes("typeof onDismiss === 'function'") &&
+		statusNoticeSource.includes('Boolean(normalizedCloseLabel)') &&
+		!statusNoticeSource.includes('$effect') &&
+		!statusNoticeSource.includes('onMount') &&
+		!statusNoticeSource.includes('setTimeout') &&
+		!statusNoticeSource.includes('Escape') &&
+		!statusNoticeSource.includes('IconButton'),
+	'StatusNotice dismissal must stay controlled with a native button and no lifecycle, timers, focus or IconButton dependency'
+);
+
+requireValue(
+	statusNoticeSource.includes('class="giu-status-notice__icon"') &&
+		statusNoticeSource.includes('aria-hidden="true"') &&
+		statusNoticeSource.includes('class="giu-status-notice__actions"') &&
+		statusNoticeSource.indexOf('class="giu-status-notice__actions"') >
+			statusNoticeSource.indexOf(
+				'class="giu-status-notice__announcement"'
+			),
+	'StatusNotice icon must be decorative and actions must remain outside the live announcement region'
+);
+
+const statusNoticeStyleMatch = statusNoticeSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const statusNoticeStyle = statusNoticeStyleMatch?.[1] ?? '';
+const statusNoticeCustomProperties = [
+	...statusNoticeStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	statusNoticeCustomProperties.length > 0 &&
+		statusNoticeCustomProperties.every((property) =>
+			property.startsWith('--giu-status-notice-')
+		),
+	'StatusNotice must use only neutral --giu-status-notice-* tokens'
+);
+
+requireValue(
+	[...statusNoticeStyle.matchAll(/var\(([^)]+)\)/g)].every(
+		([, value]) => value.includes(',')
+	) &&
+		!statusNoticeStyle.includes(':global') &&
+		!statusNoticeSource.includes('--studio-') &&
+		!statusNoticeSource.includes('--site-'),
+	'StatusNotice CSS must remain scoped, neutral and fallback-complete'
 );
 
 requireValue(
