@@ -58,7 +58,7 @@ are:
   `FormActions`, `FormActionsProps` and `FormActionsAlign`, plus `Panel`,
   `PanelProps` and `PanelHeadingLevel`, plus `Surface` and `SurfaceProps`, plus
   `EditableList`, `EditableListRow`, `ReorderActions`, `ReorderAnnouncement`
-  and their public props.
+  and their public props, drag candidate and cancellation types.
 
 See [SocialLink](docs/social-link.md) for its native-anchor contract,
 accessible-name rules, navigation ownership, styling hooks and composition with
@@ -96,8 +96,9 @@ See [Surface](docs/surface.md) for its neutral container contract, semantic
 boundaries, composition examples and CSS custom properties.
 
 See [EditableList](docs/editable-list.md) for composable ordered-row structure,
-native reorder controls, the consumer-owned `isEmpty` selection contract,
-ownership boundaries and isolated CSS properties.
+native reorder controls, optional handle-only pointer drag enhancement, the
+consumer-owned `isEmpty` selection contract, ownership boundaries and isolated
+CSS properties.
 
 See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
 deterministic layout, interactions, callback payloads, resilience policy, and
