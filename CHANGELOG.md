@@ -19,6 +19,9 @@
   outcomes.
 - Add optional Studio `ReorderActions` position context descriptions with
   consumer-owned stable IDs and localized text.
+- Add optional Studio `EditableListRow` handle-only pointer drag enhancement
+  with consumer-owned candidates, before/after drops, cancellation callbacks and
+  no package-owned ordering or announcements.
 
 ### Changed
 

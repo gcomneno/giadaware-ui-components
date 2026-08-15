@@ -82,6 +82,14 @@ const formActionsContract = await readFile(
 	new URL('../src/lib/studio/form-actions.ts', import.meta.url),
 	'utf8'
 );
+const editableListRowSource = await readFile(
+	new URL('../src/lib/studio/EditableListRow.svelte', import.meta.url),
+	'utf8'
+);
+const editableListRowContract = await readFile(
+	new URL('../src/lib/studio/editable-list-row.ts', import.meta.url),
+	'utf8'
+);
 const reorderActionsSource = await readFile(
 	new URL('../src/lib/studio/ReorderActions.svelte', import.meta.url),
 	'utf8'
@@ -744,6 +752,108 @@ requireValue(
 	!formActionsSource.toLowerCase().includes('atelier') &&
 		!formActionsContract.toLowerCase().includes('atelier'),
 	'FormActions must not depend on Atelier-Kit'
+);
+
+const editableListRowStyleMatch = editableListRowSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const editableListRowStyle = editableListRowStyleMatch?.[1] ?? '';
+const editableListRowCustomProperties = [
+	...editableListRowStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	editableListRowContract.includes(
+		"export type EditableListRowDropPosition = 'before' | 'after'"
+	) &&
+		editableListRowContract.includes('export type EditableListRowDragCandidate = {') &&
+		editableListRowContract.includes('sourceId: string') &&
+		editableListRowContract.includes('targetId: string') &&
+		editableListRowContract.includes('position: EditableListRowDropPosition') &&
+		editableListRowContract.includes("'pointercancel'") &&
+		editableListRowContract.includes("'lostpointercapture'") &&
+		editableListRowContract.includes("'escape'") &&
+		editableListRowContract.includes('export type EditableListRowDrag = {') &&
+		editableListRowContract.includes('id: string') &&
+		editableListRowContract.includes('label: string') &&
+		editableListRowContract.includes('disabled?: boolean') &&
+		editableListRowContract.includes('candidate?: EditableListRowDragCandidate | null') &&
+		editableListRowContract.includes('onDragStart?: (sourceId: string) => void') &&
+		editableListRowContract.includes('onDragCandidate?: (candidate: EditableListRowDragCandidate | null) => void') &&
+		editableListRowContract.includes('onDrop: (candidate: EditableListRowDragCandidate) => void') &&
+		editableListRowContract.includes('onDragCancel?: (reason: EditableListRowDragCancelReason) => void') &&
+		editableListRowContract.includes('drag?: EditableListRowDrag'),
+	'EditableListRow must expose the Studio-only optional pointer-drag contract'
+);
+
+requireValue(
+	editableListRowSource.includes('resolveValidDrag') &&
+		editableListRowSource.includes("typeof value.id !== 'string'") &&
+		editableListRowSource.includes("typeof value.label !== 'string'") &&
+		editableListRowSource.includes("typeof value.onDrop !== 'function'") &&
+		editableListRowSource.includes('value.id.trim() !== value.id') &&
+		editableListRowSource.includes('value.label.trim() !== value.label') &&
+		editableListRowSource.includes('/\\s/.test(value)') &&
+		editableListRowSource.includes('resolveValidCandidate') &&
+		editableListRowSource.includes('candidate.sourceId.trim() !== candidate.sourceId') &&
+		editableListRowSource.includes('candidate.targetId.trim() !== candidate.targetId') &&
+		editableListRowSource.includes('candidate.sourceId === candidate.targetId') &&
+		editableListRowSource.includes("validPositions.has(candidate.position)") &&
+		editableListRowSource.includes('validCandidate?.sourceId === validDrag.id') &&
+		editableListRowSource.includes('validCandidate?.targetId === validDrag.id') &&
+		!editableListRowSource.includes('crypto') &&
+		!editableListRowSource.includes('Math.random') &&
+		!editableListRowSource.includes('Date.now') &&
+		!editableListRowSource.includes('document.'),
+	'EditableListRow drag config and candidates must validate consumer-owned identity without generated IDs or DOM traversal'
+);
+
+requireValue(
+	editableListRowSource.includes('<button') &&
+		editableListRowSource.includes('type="button"') &&
+		editableListRowSource.includes('aria-label={validDrag.label}') &&
+		editableListRowSource.includes('disabled={validDrag.disabled}') &&
+		editableListRowSource.includes('data-giu-drag-handle') &&
+		editableListRowSource.includes('onpointerdown={handlePointerDown}') &&
+		editableListRowSource.includes('onpointermove={handlePointerMove}') &&
+		editableListRowSource.includes('onpointerup={handlePointerUp}') &&
+		editableListRowSource.includes('onpointercancel={handlePointerCancel}') &&
+		editableListRowSource.includes('onlostpointercapture={handleLostPointerCapture}') &&
+		editableListRowSource.includes('data-giu-dragging={activeGesture ?') &&
+		editableListRowSource.includes('data-giu-drop-candidate={dropCandidatePosition}') &&
+		editableListRowSource.includes('event.isPrimary') &&
+		editableListRowSource.includes("event.pointerType === 'mouse' && event.button !== 0") &&
+		editableListRowSource.includes('setPointerCapture') &&
+		editableListRowSource.includes('releasePointerCapture') &&
+		editableListRowSource.includes('if (activeGesture)') &&
+		editableListRowSource.includes("validDrag.onDragStart?.(validDrag.id)") &&
+		editableListRowSource.includes('notifyCandidate(sourceCandidate)') &&
+		editableListRowSource.includes('drop(candidate)') &&
+		editableListRowSource.includes("cancelGesture('pointercancel')") &&
+		editableListRowSource.includes("cancelGesture('lostpointercapture')") &&
+		editableListRowSource.includes("cancelGesture('escape')") &&
+		!editableListRowSource.includes('draggable') &&
+		!editableListRowSource.includes('aria-grabbed') &&
+		!editableListRowSource.includes('aria-dropeffect') &&
+		!editableListRowSource.includes('aria-live') &&
+		!editableListRowSource.includes('role='),
+	'EditableListRow drag must stay handle-only pointer enhancement without deprecated DnD ARIA or live-region behavior'
+);
+
+requireValue(
+	editableListRowCustomProperties.length > 0 &&
+		editableListRowCustomProperties.every((property) =>
+			property.startsWith('--giu-editable-list-row-')
+		) &&
+		[...editableListRowStyle.matchAll(/var\(([^)]+)\)/g)].every(
+			([, value]) => value.includes(',')
+		) &&
+		editableListRowStyle.includes('touch-action: none') &&
+		editableListRowStyle.includes('user-select: none') &&
+		!editableListRowStyle.includes(':global') &&
+		!editableListRowSource.includes('--studio-') &&
+		!editableListRowSource.includes('--site-'),
+	'EditableListRow drag CSS must remain scoped, handle-local and --giu-editable-list-row-* only'
 );
 
 const reorderActionsStyleMatch = reorderActionsSource.match(

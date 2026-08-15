@@ -1,6 +1,7 @@
 import axe from 'axe-core';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import EditableListDragProbe from '../fixtures/EditableListDragProbe.svelte';
 import EditableListProbe from '../fixtures/EditableListProbe.svelte';
 import ReorderActionsPositionContextProbe from '../fixtures/ReorderActionsPositionContextProbe.svelte';
 
@@ -41,5 +42,26 @@ test('keeps position context visually hidden, accessible, non-live and reference
 		expect(root.querySelector(`#${descriptionId}`)).toBeInstanceOf(HTMLElement);
 	}
 
+	expect((await axe.run(root)).violations).toHaveLength(0);
+});
+
+test('adds an exactly named native drag handle without deprecated drag-and-drop ARIA', async () => {
+	const screen = await render(EditableListDragProbe);
+	const root = screen.getByTestId('editable-list-drag-probe').element();
+	const handle = screen.getByRole('button', { name: 'Drag hero image' });
+	const disabledHandle = screen.getByRole('button', { name: 'Drag detail image' });
+	const liveRegions = root.querySelectorAll('[aria-live], [role="status"], [role="alert"]');
+
+	expect(handle.element()).toHaveAttribute('type', 'button');
+	expect(handle.element()).toHaveAttribute('data-giu-drag-handle');
+	expect(handle).toHaveAccessibleName('Drag hero image');
+	expect(disabledHandle).toBeDisabled();
+	expect(root.querySelector('[draggable="true"]')).toBeNull();
+	expect(root.querySelector('[aria-grabbed]')).toBeNull();
+	expect(root.querySelector('[aria-dropeffect]')).toBeNull();
+	expect(root.querySelector('[data-giu-drag-handle] [aria-hidden="true"]')).toBeInstanceOf(HTMLElement);
+	expect(liveRegions).toHaveLength(1);
+	expect(liveRegions[0]).toHaveClass('giu-reorder-announcement');
+	expect(root.querySelectorAll('.giu-reorder-actions__position-context[aria-live]')).toHaveLength(0);
 	expect((await axe.run(root)).violations).toHaveLength(0);
 });

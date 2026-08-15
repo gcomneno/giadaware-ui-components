@@ -40,6 +40,171 @@ describe('editable-list SSR', () => {
 		expect(body).toContain('consumer-row');
 	});
 
+	test('renders an optional native drag handle without making the row draggable', () => {
+		const onDragStart = vi.fn();
+		const onDragCandidate = vi.fn();
+		const onDrop = vi.fn();
+		const onDragCancel = vi.fn();
+		const first = render(EditableListRow, {
+			props: {
+				position: 1,
+				fields,
+				drag: {
+					id: 'hero',
+					label: 'Drag hero image',
+					candidate: { sourceId: 'hero', targetId: 'detail', position: 'before' },
+					onDragStart,
+					onDragCandidate,
+					onDrop,
+					onDragCancel
+				}
+			}
+		});
+
+		expect(first).toEqual(render(EditableListRow, {
+			props: {
+				position: 1,
+				fields,
+				drag: {
+					id: 'hero',
+					label: 'Drag hero image',
+					candidate: { sourceId: 'hero', targetId: 'detail', position: 'before' },
+					onDragStart,
+					onDragCandidate,
+					onDrop,
+					onDragCancel
+				}
+			}
+		}));
+		expect(first.body).toContain('<button');
+		expect(first.body).toContain('type="button"');
+		expect(first.body).toContain('aria-label="Drag hero image"');
+		expect(first.body).toContain('data-giu-drag-handle');
+		expect(first.body).not.toContain('data-giu-drop-candidate');
+		expect(first.body).not.toContain('draggable=');
+		expect(first.body).not.toContain('aria-grabbed');
+		expect(first.body).not.toContain('aria-dropeffect');
+		expect(first.body).not.toContain('aria-live');
+		expect(first.body).not.toContain('role=');
+		expect(first.body).not.toContain('data-giu-dragging');
+		expect(onDragStart).not.toHaveBeenCalled();
+		expect(onDragCandidate).not.toHaveBeenCalled();
+		expect(onDrop).not.toHaveBeenCalled();
+		expect(onDragCancel).not.toHaveBeenCalled();
+	});
+
+	test('renders a complete candidate only on its target row', () => {
+		const candidate = { sourceId: 'hero', targetId: 'detail', position: 'before' } as const;
+		const source = render(EditableListRow, {
+			props: {
+				position: 1,
+				fields,
+				drag: {
+					id: 'hero',
+					label: 'Drag hero image',
+					candidate,
+					onDrop: vi.fn()
+				}
+			}
+		});
+		const target = render(EditableListRow, {
+			props: {
+				position: 2,
+				fields,
+				drag: {
+					id: 'detail',
+					label: 'Drag detail image',
+					candidate,
+					onDrop: vi.fn()
+				}
+			}
+		});
+
+		expect(source.body).not.toContain('data-giu-drop-candidate');
+		expect(target.body).toContain('data-giu-drop-candidate="before"');
+	});
+
+	test('renders disabled drag handles as native disabled buttons', () => {
+		const { body } = render(EditableListRow, {
+			props: {
+				position: 1,
+				fields,
+				drag: {
+					id: 'hero',
+					label: 'Drag hero image',
+					disabled: true,
+					onDrop: vi.fn()
+				}
+			}
+		});
+
+		expect(body).toContain('data-giu-drag-handle');
+		expect(body).toContain('disabled');
+		expect(body).not.toContain('data-giu-dragging');
+	});
+
+	test('fails closed without warnings for invalid drag configs and candidates', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const invalidConfigs = [
+			null,
+			[],
+			{ id: '', label: 'Drag item', onDrop: vi.fn() },
+			{ id: 'hero image', label: 'Drag item', onDrop: vi.fn() },
+			{ id: ' hero', label: 'Drag item', onDrop: vi.fn() },
+			{ id: 'hero', label: '', onDrop: vi.fn() },
+			{ id: 'hero', label: ' Drag item', onDrop: vi.fn() },
+			{ id: 'hero', label: 'Drag item' },
+			{ id: 'hero', label: 'Drag item', onDrop: 'drop' }
+		] as const;
+		const invalidCandidates = [
+			{ sourceId: '', targetId: 'detail', position: 'before' },
+			{ sourceId: 'hero row', targetId: 'detail', position: 'before' },
+			{ sourceId: ' hero', targetId: 'detail', position: 'before' },
+			{ sourceId: 'hero', targetId: '', position: 'before' },
+			{ sourceId: 'hero', targetId: 'detail row', position: 'before' },
+			{ sourceId: 'hero', targetId: ' detail', position: 'before' },
+			{ sourceId: 'hero', targetId: 'detail', position: 'middle' },
+			{ sourceId: 'hero', targetId: 'hero', position: 'before' },
+			{ targetId: 'detail', position: 'before' },
+			null,
+			[]
+		] as const;
+
+		try {
+			for (const drag of invalidConfigs) {
+				const { body } = render(EditableListRow, {
+					props: { position: 1, fields, drag: drag as never }
+				});
+
+				expect(body).not.toContain('data-giu-drag-handle');
+				expect(body).not.toContain('data-giu-dragging');
+				expect(body).not.toContain('data-giu-drop-candidate');
+			}
+
+			for (const candidate of invalidCandidates) {
+				const { body } = render(EditableListRow, {
+					props: {
+						position: 1,
+						fields,
+						drag: {
+							id: 'hero',
+							label: 'Drag hero image',
+							candidate: candidate as never,
+							onDrop: vi.fn()
+						}
+					}
+				});
+
+				expect(body).toContain('data-giu-drag-handle');
+				expect(body).not.toContain('data-giu-drop-candidate');
+			}
+
+			expect(warn).not.toHaveBeenCalled();
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
 	test('defaults both reorder controls to enabled and supports single-row boundaries', () => {
 		const enabled = render(ReorderActions, {
 			props: {
