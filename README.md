@@ -16,6 +16,10 @@ During the trial, immutable package artifacts are created with `npm pack`,
 identified by source commit, filename and checksum, and installed only in
 controlled consumers.
 
+Release and version semantics are defined by the
+[release guide](docs/releases.md) and the underlying
+[architecture policy](docs/architecture/release-versioning-policy.md).
+
 No npm account, organization, scope, registry identity or publication workflow
 is required.
 
@@ -703,6 +707,9 @@ Run all current validation gates:
 Create a local trial artifact:
 
     npm pack
+
+For immutable release/version rules and the operational release procedure,
+see [Releases](docs/releases.md).
 
 Registry publication is forbidden during private incubation.
 

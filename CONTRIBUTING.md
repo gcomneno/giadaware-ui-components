@@ -11,6 +11,12 @@ canonical English document changes, evaluate and update its maintained Italian
 mirror in the same pull request, keep reciprocal language selectors valid, and
 run `npm run verify:docs`.
 
+Release preparation must follow [docs/releases.md](docs/releases.md) and the
+underlying
+[architecture policy](docs/architecture/release-versioning-policy.md).
+Normal feature merges do not require a release, and release work must not
+enable registry publication.
+
 Before opening a pull request, run:
 
     npm install
