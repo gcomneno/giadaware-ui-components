@@ -82,6 +82,14 @@ const formActionsContract = await readFile(
 	new URL('../src/lib/studio/form-actions.ts', import.meta.url),
 	'utf8'
 );
+const reorderAnnouncementSource = await readFile(
+	new URL('../src/lib/studio/ReorderAnnouncement.svelte', import.meta.url),
+	'utf8'
+);
+const reorderAnnouncementContract = await readFile(
+	new URL('../src/lib/studio/reorder-announcement.ts', import.meta.url),
+	'utf8'
+);
 const panelSource = await readFile(
 	new URL('../src/lib/studio/Panel.svelte', import.meta.url),
 	'utf8'
@@ -712,6 +720,74 @@ requireValue(
 	!formActionsSource.toLowerCase().includes('atelier') &&
 		!formActionsContract.toLowerCase().includes('atelier'),
 	'FormActions must not depend on Atelier-Kit'
+);
+
+const reorderAnnouncementStyleMatch = reorderAnnouncementSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const reorderAnnouncementStyle = reorderAnnouncementStyleMatch?.[1] ?? '';
+const reorderAnnouncementCustomProperties = [
+	...reorderAnnouncementStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	reorderAnnouncementContract.includes(
+		'export type ReorderAnnouncementKey = string | number'
+	) &&
+		reorderAnnouncementContract.includes('message: string | null') &&
+		reorderAnnouncementContract.includes(
+			'eventKey: ReorderAnnouncementKey | null'
+		) &&
+		reorderAnnouncementContract.includes('class?: string') &&
+		reorderAnnouncementContract.includes('style?: string'),
+	'ReorderAnnouncement must expose the required nullable message/eventKey contract'
+);
+
+requireValue(
+	reorderAnnouncementSource.includes(
+		"import { onMount, tick } from 'svelte'"
+	) &&
+		reorderAnnouncementSource.includes('observedEventKey = eventKey') &&
+		reorderAnnouncementSource.includes('nextEventKey === observedEventKey') &&
+		reorderAnnouncementSource.includes('renderedMessage =') &&
+		reorderAnnouncementSource.includes('announcementVersion') &&
+		reorderAnnouncementSource.includes('tick().then'),
+	'ReorderAnnouncement must capture the hydration event key and use eventKey-driven retriggering'
+);
+
+requireValue(
+	reorderAnnouncementSource.includes(
+		"class={['giu-reorder-announcement', className]}"
+	) &&
+		reorderAnnouncementSource.includes('role="status"') &&
+		reorderAnnouncementSource.includes('aria-live="polite"') &&
+		reorderAnnouncementSource.includes('aria-atomic="true"') &&
+		!reorderAnnouncementSource.includes('role="alert"') &&
+		!reorderAnnouncementSource.includes('assertive'),
+	'ReorderAnnouncement must render one polite status live-region shell'
+);
+
+requireValue(
+	reorderAnnouncementCustomProperties.length > 0 &&
+		reorderAnnouncementCustomProperties.every((property) =>
+			property.startsWith('--giu-reorder-announcement-')
+		) &&
+		[...reorderAnnouncementStyle.matchAll(/var\(([^)]+)\)/g)].every(
+			([, value]) => value.includes(',')
+		) &&
+		!reorderAnnouncementStyle.includes(':global') &&
+		!reorderAnnouncementSource.includes('--studio-') &&
+		!reorderAnnouncementSource.includes('--site-'),
+	'ReorderAnnouncement CSS must remain scoped, neutral and fallback-complete'
+);
+
+requireValue(
+	!reorderAnnouncementSource.includes('FormStatus') &&
+		!reorderAnnouncementSource.includes('StatusNotice') &&
+		!reorderAnnouncementSource.includes('Date.now') &&
+		!reorderAnnouncementSource.toLowerCase().includes('atelier') &&
+		!reorderAnnouncementContract.toLowerCase().includes('atelier'),
+	'ReorderAnnouncement must stay isolated from other feedback primitives, clocks and Atelier-Kit'
 );
 
 
