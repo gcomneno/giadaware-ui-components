@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   release:
-    name: Validate and create immutable release
+    name: Validate and create release
     runs-on: ubuntu-latest
 
     permissions:
@@ -67,7 +67,7 @@ jobs:
           --version "$VERSION"
           --notes-file "$NOTES_FILE"
 
-      - name: Require unused immutable identity
+      - name: Require unused release identity
         shell: bash
         run: |
           if git show-ref --verify --quiet "refs/tags/$TAG"; then
@@ -137,7 +137,7 @@ jobs:
           --notes-file "$NOTES_FILE"
           --verify-tag
 
-      - name: Verify GitHub Release identity
+      - name: Verify GitHub Release identity and platform immutability
         shell: bash
         run: |
           release_tag="$(
@@ -148,6 +148,16 @@ jobs:
 
           if [[ "$release_tag" != "$TAG" ]]; then
             echo "GitHub Release does not use the expected tag." >&2
+            false
+          fi
+
+          release_immutable="$(
+            gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" \
+              --jq '.immutable'
+          )"
+
+          if [[ "$release_immutable" != "true" ]]; then
+            echo "GitHub Release $TAG is not reported immutable by GitHub's API." >&2
             false
           fi
 
