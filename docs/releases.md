@@ -15,10 +15,26 @@ The package remains under private incubation.
 The first real release, `v0.1.0`, was created from package version `0.1.0` on
 2026-08-15.
 
+GitHub Immutable Releases is enabled for this repository. In this repository,
+an immutable release means both:
+
+- workflow-enforced release identity invariants bind the package version,
+  annotated Git tag, remote tag target and GitHub Release tag to the same
+  verified commit; and
+- for qualifying releases created after GitHub Immutable Releases was enabled,
+  GitHub's API reports the resulting release as `immutable: true`.
+
+`v0.1.0` is historical. It was published before platform-level Immutable
+Releases was enabled for this repository, so the GitHub Release remains
+`immutable: false`. Do not mutate, delete or recreate `v0.1.0` to change that
+historical platform state.
+
+Future qualifying releases are expected to use GitHub platform immutability.
+
 Downstream consumers may use:
 
 - an exact reviewed Git commit SHA; or
-- an exact immutable release tag.
+- an exact release tag whose identity is fixed by this release contract.
 
 `private: true` and the registry-publication guards remain unchanged.
 
@@ -39,14 +55,14 @@ The release change should:
    section with the release date;
 4. document migration guidance for any deliberate breaking `0.x` change;
 5. run the canonical repository validation gate and `git diff --check`;
-6. merge the reviewed release-preparation change before creating immutable
-   release metadata.
+6. merge the reviewed release-preparation change before creating release
+   metadata.
 
 Do not manually edit generated package output as the source of a release.
 
 The release workflow does not perform any of these preparation edits.
 
-## Creating immutable release metadata
+## Creating release metadata
 
 The normal metadata path is the manually dispatched GitHub Actions
 `Release` workflow.
@@ -78,17 +94,19 @@ It then:
 1. extracts release notes from the human-curated changelog section;
 2. creates the annotated Git tag `v<major>.<minor>.<patch>` at the exact workflow
    commit;
-3. pushes that immutable tag;
+3. pushes that annotated tag;
 4. verifies the remote tag target;
 5. creates the corresponding GitHub Release from the same tag and notes;
-6. verifies that the GitHub Release uses the expected tag.
+6. verifies that the GitHub Release uses the expected tag;
+7. verifies through GitHub's API that the new GitHub Release is reported as
+   `immutable: true`.
 
 The package version, Git tag and GitHub Release version must agree.
 
 Published release tags must not be force-moved or reused for different content.
 If a released version is wrong, correct it with a subsequent SemVer release.
 
-If automation fails after the immutable tag has already been pushed, do not
+If automation fails after the annotated tag has already been pushed, do not
 delete, move or recreate the tag merely to retry the workflow. Inspect the
 partial release state and complete or correct it deliberately.
 
@@ -106,13 +124,15 @@ The fallback must still:
 5. push the tag without rewriting it;
 6. create the GitHub Release from the same tag using the curated changelog
    section;
-7. verify the resulting tag and release identity.
+7. verify the resulting tag and release identity;
+8. for future qualifying releases, verify through GitHub's API that the GitHub
+   Release is reported as `immutable: true`.
 
 Automation and manual fallback implement the same release contract.
 
 ## Consumer usage
 
-Consumers must use immutable references.
+Consumers must use fixed release references.
 
 During private incubation, supported references are:
 
@@ -146,8 +166,8 @@ in force until a separate architecture decision explicitly changes the
 incubation model.
 
 The release workflow uses repository-scoped GitHub permissions only to create
-the immutable Git tag and GitHub Release. It does not publish the package to an
-npm registry.
+the Git tag and GitHub Release and to verify the resulting release metadata. It
+does not publish the package to an npm registry.
 
 ## Automation boundary
 
@@ -160,7 +180,8 @@ It preserves:
 - a human-curated changelog;
 - reviewed release preparation through a pull request;
 - the canonical validation gate;
-- immutable tag/release identity;
+- release identity invariants;
+- GitHub platform immutability for future qualifying releases;
 - the registry-publication prohibition.
 
 The workflow is manual-only and does not turn merges or pushes into releases.

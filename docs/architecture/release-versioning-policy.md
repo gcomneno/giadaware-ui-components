@@ -17,8 +17,7 @@ remain authoritative.
 
 Giada UI uses Semantic Versioning.
 
-The first real release will be `0.1.0`. The current `0.0.0` value represents
-the unreleased incubation state and is not a public release.
+The first real release is `0.1.0`.
 
 Releases are created for coherent, reviewed tranches of package evolution. A
 release is not required after every merge.
@@ -26,10 +25,21 @@ release is not required after every merge.
 Each release is represented by:
 
 1. one package version;
-2. one immutable Git tag using the `v<major>.<minor>.<patch>` form;
+2. one annotated Git tag using the `v<major>.<minor>.<patch>` form;
 3. one GitHub Release associated with that tag;
 4. one human-curated `CHANGELOG.md` entry describing the public changes in that
    release.
+
+For this repository, an immutable release combines two distinct guarantees:
+
+- workflow-enforced release identity invariants bind the package version,
+  annotated Git tag, remote tag target and GitHub Release tag to the same
+  verified commit;
+- GitHub platform-enforced Immutable Releases prevent mutation of qualifying
+  releases created after that repository setting was enabled.
+
+The historical `v0.1.0` GitHub Release was published before platform
+immutability was enabled and remains `immutable: false`.
 
 Git tags and GitHub Releases are the official release history. Moving branches,
 including `main`, are not release identifiers.
@@ -93,11 +103,10 @@ repository reference as a release mechanism.
 During private incubation, supported reproducible consumption remains:
 
 - an exact reviewed Git commit SHA; or
-- an immutable release tag once releases exist.
+- an exact release tag once releases exist.
 
-A consumer adopting a release tag should pin that exact tag or the immutable
-commit it identifies according to the consuming package manager's lockfile
-model.
+A consumer adopting a release tag should pin that exact tag or the commit it
+identifies according to the consuming package manager's lockfile model.
 
 Declared package exports remain the only supported import surface.
 

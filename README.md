@@ -708,8 +708,8 @@ Create a local trial artifact:
 
     npm pack
 
-For immutable release/version rules and the operational release procedure,
-see [Releases](docs/releases.md).
+For release/version rules, GitHub release immutability and the operational
+release procedure, see [Releases](docs/releases.md).
 
 Registry publication is forbidden during private incubation.
 

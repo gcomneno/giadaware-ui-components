@@ -15,10 +15,28 @@ Il package resta in incubazione privata.
 La prima release reale, `v0.1.0`, e' stata creata dalla versione package
 `0.1.0` il 2026-08-15.
 
+GitHub Immutable Releases e' abilitato per questo repository. In questo
+repository, una release immutabile significa entrambe le cose:
+
+- invarianti di identita' della release applicati dal workflow, che legano la
+  versione del package, il tag Git annotato, il target del tag remoto e il tag
+  della GitHub Release allo stesso commit verificato; e
+- per le release qualificanti create dopo l'abilitazione di GitHub Immutable
+  Releases, l'API GitHub riporta la release risultante come `immutable: true`.
+
+`v0.1.0` e' storica. E' stata pubblicata prima che l'immutabilita' di
+piattaforma delle release fosse abilitata per questo repository, quindi la
+GitHub Release resta `immutable: false`. Non modificare, eliminare o ricreare
+`v0.1.0` per cambiare quello stato storico di piattaforma.
+
+Le future release qualificanti sono attese con immutabilita' di piattaforma
+GitHub.
+
 I consumer downstream possono usare:
 
 - uno SHA Git esatto e revisionato; oppure
-- un tag di release esatto e immutabile.
+- un tag di release esatto la cui identita' e' fissata da questo contratto di
+  release.
 
 `private: true` e i guard contro la pubblicazione su registry restano invariati.
 
@@ -42,14 +60,14 @@ La modifica di preparazione della release deve:
 5. eseguire il gate canonico di validazione del repository e
    `git diff --check`;
 6. integrare la modifica di preparazione revisionata prima di creare metadata
-   immutabili di release.
+   di release.
 
 Non modificare manualmente l'output generato del package come fonte di una
 release.
 
 Il workflow di release non esegue nessuna di queste modifiche di preparazione.
 
-## Creare metadata immutabili di release
+## Creare metadata di release
 
 Il percorso normale per i metadata e' il workflow GitHub Actions `Release`,
 avviato manualmente.
@@ -81,10 +99,12 @@ Quindi:
 1. estrae le note di release dalla sezione del changelog curata manualmente;
 2. crea il tag Git annotato `v<major>.<minor>.<patch>` sul commit esatto del
    workflow;
-3. pubblica quel tag immutabile;
+3. pubblica quel tag annotato;
 4. verifica il target del tag remoto;
 5. crea la GitHub Release corrispondente dallo stesso tag e dalle stesse note;
-6. verifica che la GitHub Release usi il tag previsto.
+6. verifica che la GitHub Release usi il tag previsto;
+7. verifica tramite l'API GitHub che la nuova GitHub Release sia riportata come
+   `immutable: true`.
 
 La versione del package, il tag Git e la versione della GitHub Release devono
 coincidere.
@@ -93,7 +113,7 @@ I tag di release pubblicati non devono essere spostati forzatamente o
 riutilizzati per contenuti diversi. Se una versione rilasciata e' errata,
 correggerla con una release SemVer successiva.
 
-Se l'automazione fallisce dopo che il tag immutabile e' gia' stato pubblicato,
+Se l'automazione fallisce dopo che il tag annotato e' gia' stato pubblicato,
 non eliminare, spostare o ricreare il tag soltanto per ritentare il workflow.
 Esaminare lo stato parziale della release e completarlo o correggerlo
 deliberatamente.
@@ -112,13 +132,15 @@ Il fallback deve comunque:
 5. pubblicare il tag senza riscriverlo;
 6. creare la GitHub Release dallo stesso tag usando la sezione curata del
    changelog;
-7. verificare l'identita' risultante di tag e release.
+7. verificare l'identita' risultante di tag e release;
+8. per le future release qualificanti, verificare tramite l'API GitHub che la
+   GitHub Release sia riportata come `immutable: true`.
 
 Automazione e fallback manuale implementano lo stesso contratto di release.
 
 ## Uso da parte dei consumer
 
-I consumer devono usare riferimenti immutabili.
+I consumer devono usare riferimenti di release fissi.
 
 Durante l'incubazione privata, i riferimenti supportati sono:
 
@@ -152,8 +174,8 @@ restano in vigore finche' una decisione architetturale separata non modifica
 esplicitamente il modello di incubazione.
 
 Il workflow di release usa permessi GitHub limitati al repository soltanto per
-creare il tag Git immutabile e la GitHub Release. Non pubblica il package su un
-registry npm.
+creare il tag Git e la GitHub Release e per verificare i metadata di release
+risultanti. Non pubblica il package su un registry npm.
 
 ## Confine dell'automazione
 
@@ -166,7 +188,8 @@ Preserva:
 - changelog curato manualmente;
 - preparazione revisionata della release tramite pull request;
 - gate canonico di validazione;
-- identita' immutabile di tag e release;
+- invarianti di identita' della release;
+- immutabilita' di piattaforma GitHub per le future release qualificanti;
 - divieto di pubblicazione su registry.
 
 Il workflow e' esclusivamente manuale e non trasforma merge o push in release.
