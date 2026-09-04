@@ -33,6 +33,7 @@ The approved trial contains:
 - `StatusNotice`
 - `FormStatus`
 - `ImageAttachmentControl`
+- `ImageFocalPointControl`
 - `AsyncOperationPanel`
 - `Button`
 - `PageIntro`
@@ -58,6 +59,8 @@ are:
   `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`,
   `ImageAttachmentIntent`,
   `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
+  `ImageFocalPointControl` and the `ImageFocalPointControlProps`,
+  `ImageFocalPointImage` and `ImageFocalPointValue` types, plus
   `AsyncOperationPanel` and its public types including `AsyncOperationProgress`,
   plus `Button`, `ButtonProps`, `ButtonVariant` and `ButtonSize`, plus
   `PageIntro` and `PageIntroProps`, plus
@@ -111,6 +114,10 @@ CSS properties.
 See [RelationshipGraph](docs/relationship-graph.md) for its data contract,
 deterministic layout, interactions, callback payloads, resilience policy, and
 CSS customization hooks.
+
+See [ImageFocalPointControl](docs/image-focal-point-control.md) for its
+controlled normalized-coordinate contract, pointer and keyboard interaction,
+accessibility ownership, and styling hooks.
 
 ## ImageLightbox
 
