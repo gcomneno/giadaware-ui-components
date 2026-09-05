@@ -1,1 +1,61 @@
 /* Reserved Studio CSS entry point. */
+
+.giu-image-focal-point-control {
+	box-sizing: border-box;
+	min-width: 0;
+	color: inherit;
+}
+
+.giu-image-focal-point-control__surface {
+	position: relative;
+	display: block;
+	box-sizing: border-box;
+	width: var(--giu-image-focal-point-preview-width, 12rem);
+	max-width: 100%;
+	aspect-ratio: var(--giu-image-focal-point-preview-aspect-ratio, 1 / 1);
+	padding: 0;
+	overflow: hidden;
+	border: var(--giu-image-focal-point-preview-border, 1px solid #767676);
+	border-radius: var(--giu-image-focal-point-preview-radius, 0.5rem);
+	background: var(--giu-image-focal-point-preview-background, #eeeeee);
+	color: inherit;
+	font: inherit;
+	line-height: 1;
+	touch-action: none;
+	cursor: crosshair;
+	user-select: none;
+}
+
+.giu-image-focal-point-control__surface:focus-visible {
+	outline: var(--giu-image-focal-point-focus-width, 3px) solid var(--giu-image-focal-point-focus-color, #1559a6);
+	outline-offset: var(--giu-image-focal-point-focus-offset, 2px);
+}
+
+.giu-image-focal-point-control__surface:disabled {
+	opacity: var(--giu-image-focal-point-disabled-opacity, 0.55);
+	cursor: not-allowed;
+}
+
+.giu-image-focal-point-control__image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: var(--giu-image-focal-point-object-fit, cover);
+	pointer-events: none;
+	user-select: none;
+}
+
+.giu-image-focal-point-control__marker {
+	position: absolute;
+	z-index: 1;
+	display: block;
+	box-sizing: border-box;
+	width: var(--giu-image-focal-point-marker-size, 1rem);
+	height: var(--giu-image-focal-point-marker-size, 1rem);
+	border: var(--giu-image-focal-point-marker-border, 2px solid #ffffff);
+	border-radius: 999px;
+	background: var(--giu-image-focal-point-marker-background, #1559a6);
+	box-shadow: var(--giu-image-focal-point-marker-shadow, 0 0 0 1px #202020);
+	pointer-events: none;
+	transform: translate(-50%, -50%);
+}

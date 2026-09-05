@@ -27,6 +27,7 @@ Il trial approvato contiene:
 - `StatusNotice`
 - `FormStatus`
 - `ImageAttachmentControl`
+- `ImageFocalPointControl`
 - `AsyncOperationPanel`
 - `Button`
 - `PageIntro`
@@ -41,7 +42,7 @@ I tre grafi di entry JavaScript restano isolati. Le API pubbliche correnti sono:
 
 - `giadaware-ui-components` esporta `FormStatus`, `FormStatusTone`, `StatusNotice`, `StatusNoticeAnnouncement`, `StatusNoticeProps`, `StatusNoticeTone`, `SocialIcon`, `SocialIconId`, `SOCIAL_ICON_IDS`, `SocialLink` e `SocialLinkProps`;
 - `giadaware-ui-components/visitor` esporta `ImageLightbox`, `ImageLightboxLabels`, `ImageLightboxProps`, `RelationshipGraph` e i suoi tipi pubblici;
-- `giadaware-ui-components/studio` esporta `ImageAttachmentControl` e i tipi `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`, `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`, `ImageAttachmentIntent`, `ImageAttachmentState` e `ImageAttachmentValidationError`, piu' `AsyncOperationPanel` e i suoi tipi pubblici incluso `AsyncOperationProgress`, piu' `Button`, `ButtonProps`, `ButtonVariant` e `ButtonSize`, piu' `PageIntro` e `PageIntroProps`, piu' `FieldLabel` e `FieldLabelProps`, piu' `FieldDescription`, `FieldDescriptionProps`, `FieldError` e `FieldErrorProps`, piu' `FormActions`, `FormActionsProps` e `FormActionsAlign`, piu' `Panel`, `PanelProps` e `PanelHeadingLevel`, piu' `Surface` e `SurfaceProps`, piu' `EditableList`, `EditableListRow`, `ReorderActions`, `ReorderAnnouncement` e le loro prop pubbliche, tipi drag candidate e cancellation.
+- `giadaware-ui-components/studio` esporta `ImageAttachmentControl` e i tipi `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`, `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`, `ImageAttachmentIntent`, `ImageAttachmentState` e `ImageAttachmentValidationError`, piu' `ImageFocalPointControl` e i tipi `ImageFocalPointControlProps`, `ImageFocalPointImage` e `ImageFocalPointValue`, piu' `AsyncOperationPanel` e i suoi tipi pubblici incluso `AsyncOperationProgress`, piu' `Button`, `ButtonProps`, `ButtonVariant` e `ButtonSize`, piu' `PageIntro` e `PageIntroProps`, piu' `FieldLabel` e `FieldLabelProps`, piu' `FieldDescription`, `FieldDescriptionProps`, `FieldError` e `FieldErrorProps`, piu' `FormActions`, `FormActionsProps` e `FormActionsAlign`, piu' `Panel`, `PanelProps` e `PanelHeadingLevel`, piu' `Surface` e `SurfaceProps`, piu' `EditableList`, `EditableListRow`, `ReorderActions`, `ReorderAnnouncement` e le loro prop pubbliche, tipi drag candidate e cancellation.
 
 Vedi [SocialLink](docs/it/social-link.md) per il contratto di anchor nativo, le regole di nome accessibile, la proprieta' della navigazione, gli hook di stile e la composizione con `SocialIcon`.
 
@@ -66,6 +67,8 @@ Vedi [Surface](docs/it/surface.md) per il contratto di contenitore neutro, confi
 Vedi [EditableList](docs/it/editable-list.md) per struttura componibile di righe ordinate, controlli nativi di riordino, enhancement pointer drag opzionale solo handle, contratto di selezione `isEmpty` di proprieta' del consumatore, confini di proprieta' e proprieta' CSS isolate.
 
 Vedi [RelationshipGraph](docs/it/relationship-graph.md) per contratto dati, layout deterministico, interazioni, payload delle callback, policy di resilienza e hook di personalizzazione CSS.
+
+Vedi [ImageFocalPointControl](docs/it/image-focal-point-control.md) per il contratto di controllo bidimensionale controllato, coordinate normalizzate, interazioni pointer/tastiera, accessibilita' e hook di stile.
 
 ## ImageLightbox
 

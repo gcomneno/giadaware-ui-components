@@ -1,4 +1,5 @@
 import ImageAttachmentControlImplementation from './ImageAttachmentControl.svelte';
+import ImageFocalPointControlImplementation from './ImageFocalPointControl.svelte';
 import AsyncOperationPanelImplementation from './AsyncOperationPanel.svelte';
 import ButtonImplementation from './Button.svelte';
 import IconButtonImplementation from './IconButton.svelte';
@@ -36,6 +37,7 @@ import type {
 	ImageAttachmentFileValidator,
 	ImageAttachmentState
 } from './image-attachment-control.js';
+import type { ImageFocalPointControlProps } from './image-focal-point-control.js';
 
 type ImageAttachmentControlProps = {
 	value: ImageAttachmentState;
@@ -63,6 +65,13 @@ type PropsAreEqual =
 			: false
 		: false;
 type _PropsAreSynchronized = Assert<PropsAreEqual>;
+type ImageFocalPointPropsAreEqual =
+	ImageFocalPointControlProps extends ComponentProps<typeof ImageFocalPointControlImplementation>
+		? ComponentProps<typeof ImageFocalPointControlImplementation> extends ImageFocalPointControlProps
+			? true
+			: false
+		: false;
+type _ImageFocalPointPropsAreSynchronized = Assert<ImageFocalPointPropsAreEqual>;
 type AsyncPropsAreEqual =
 	AsyncOperationPanelProps extends ComponentProps<typeof AsyncOperationPanelImplementation>
 		? ComponentProps<typeof AsyncOperationPanelImplementation> extends AsyncOperationPanelProps
@@ -189,6 +198,9 @@ export const Surface: Component<SurfaceProps, {}, ''> = SurfaceImplementation;
 export const ImageAttachmentControl: Component<ImageAttachmentControlProps, {}, ''> =
 	ImageAttachmentControlImplementation;
 
+export const ImageFocalPointControl: Component<ImageFocalPointControlProps, {}, ''> =
+	ImageFocalPointControlImplementation;
+
 export type {
 	ImageAttachmentControlLabels,
 	ImageAttachmentCurrentImage,
@@ -198,6 +210,12 @@ export type {
 	ImageAttachmentState,
 	ImageAttachmentValidationError
 } from './image-attachment-control.js';
+
+export type {
+	ImageFocalPointControlProps,
+	ImageFocalPointImage,
+	ImageFocalPointValue
+} from './image-focal-point-control.js';
 
 export type {
 	AsyncOperationHeadingLevel,
