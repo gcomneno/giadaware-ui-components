@@ -2,6 +2,7 @@ import ImageAttachmentControlImplementation from './ImageAttachmentControl.svelt
 import ImageFocalPointControlImplementation from './ImageFocalPointControl.svelte';
 import AsyncOperationPanelImplementation from './AsyncOperationPanel.svelte';
 import ButtonImplementation from './Button.svelte';
+import CheckboxImplementation from './Checkbox.svelte';
 import IconButtonImplementation from './IconButton.svelte';
 import FormActionsImplementation from './FormActions.svelte';
 import FieldLabelImplementation from './FieldLabel.svelte';
@@ -18,6 +19,7 @@ import SurfaceImplementation from './Surface.svelte';
 import type { Component, ComponentProps } from 'svelte';
 import type { AsyncOperationPanelProps } from './async-operation-panel.js';
 import type { ButtonProps } from './button.js';
+import type { CheckboxProps } from './checkbox.js';
 import type { IconButtonProps } from './icon-button.js';
 import type { FormActionsProps } from './form-actions.js';
 import type { FieldLabelProps } from './field-label.js';
@@ -86,6 +88,13 @@ type ButtonPropsAreEqual =
 			: false
 		: false;
 type _ButtonPropsAreSynchronized = Assert<ButtonPropsAreEqual>;
+type CheckboxPropsAreEqual =
+	CheckboxProps extends ComponentProps<typeof CheckboxImplementation>
+		? ComponentProps<typeof CheckboxImplementation> extends CheckboxProps
+			? true
+			: false
+		: false;
+type _CheckboxPropsAreSynchronized = Assert<CheckboxPropsAreEqual>;
 type IconButtonPropsAreEqual =
 	IconButtonProps extends ComponentProps<typeof IconButtonImplementation>
 		? ComponentProps<typeof IconButtonImplementation> extends IconButtonProps
@@ -177,6 +186,9 @@ export const AsyncOperationPanel: Component<AsyncOperationPanelProps, {}, ''> =
 	AsyncOperationPanelImplementation;
 
 export const Button: Component<ButtonProps, {}, ''> = ButtonImplementation;
+export const Checkbox: Component<CheckboxProps, {}, 'checked'> =
+	CheckboxImplementation;
+
 export const IconButton: Component<IconButtonProps, {}, ''> = IconButtonImplementation;
 
 export const FieldLabel: Component<FieldLabelProps, {}, ''> = FieldLabelImplementation;
@@ -224,6 +236,7 @@ export type {
 	AsyncOperationState
 } from './async-operation-panel.js';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
+export type { CheckboxProps } from './checkbox.js';
 export type { IconButtonProps } from './icon-button.js';
 export type { FieldLabelProps } from './field-label.js';
 export type { FieldDescriptionProps } from './field-description.js';

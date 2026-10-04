@@ -1,9 +1,11 @@
 # Third-party notices
 
-This package vendors SVG path geometry from the projects listed below.
+This package includes or adapts third-party material from the sources listed
+below.
 
-The geometry is stored locally. Neither `simple-icons` nor
-`@primer/octicons` is a runtime dependency.
+Vendored SVG geometry is stored locally. Neither `simple-icons` nor
+`@primer/octicons` is a runtime dependency. The Uiverse reference described
+below is an adapted design source and is not a runtime dependency.
 
 ## Simple Icons
 
@@ -46,6 +48,51 @@ This notice does not grant any independent trademark rights.
 ### MIT License
 
 Copyright (c) 2026 GitHub Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+## Uiverse checkbox design reference
+
+The Studio `Checkbox` primitive adapts design direction from the Uiverse source
+listed below:
+
+https://uiverse.io/cbolson/calm-wasp-75
+
+Author:
+
+cbolson / Chris Bolson
+
+License:
+
+MIT License
+
+Decision:
+
+ADAPT
+
+Only the high-level technique is used: a native checkbox input styled directly
+with `appearance: none` and scoped CSS states. This package does not copy the
+demo form, wrapper, content, names or colors.
+
+### MIT License
+
+Copyright (c) Chris Bolson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

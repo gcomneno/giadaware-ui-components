@@ -7,6 +7,9 @@
 - Add manual release automation that validates a prepared release, preserves
   registry-publication guards, creates an annotated immutable Git tag and
   creates the matching GitHub Release from curated changelog notes.
+- Add the Studio `Checkbox` primitive with one visible native checkbox input,
+  bindable checked state, native form behavior, scoped styling hooks, high
+  contrast support and Uiverse/cbolson MIT design provenance.
 
 ### Changed
 

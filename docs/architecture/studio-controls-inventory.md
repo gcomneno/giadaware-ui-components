@@ -6,7 +6,7 @@
 
 This document consolidates the Studio control families demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and records both completed Giada UI work and remaining extraction work. It preserves the architectural basis for `AsyncOperationPanel`; its final public contract is now documented here where it resolves the original design questions. Issue #73 explicitly approves `ImageFocalPointControl` as an implemented Studio primitive and requires no separate ADR. This inventory does not decide package versioning or registry publication.
 
-The inventory contains **six definitive control families**. `ImageAttachmentControl`, `AsyncOperationPanel`, and the shared structural subset of the ordered asset or record editor are implemented in Giada UI; the marked-text, color-preset, and font-preset families remain future extraction candidates. `ImageFocalPointControl`, `Button`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, and `Surface` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
+The inventory contains **six definitive control families**. `ImageAttachmentControl`, `AsyncOperationPanel`, and the shared structural subset of the ordered asset or record editor are implemented in Giada UI; the marked-text, color-preset, and font-preset families remain future extraction candidates. `ImageFocalPointControl`, `Button`, `Checkbox`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, and `Surface` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
 
 ## Inventory method
 
@@ -55,13 +55,30 @@ The table count remains six: two complete shared control families, one extracted
 
 `AsyncOperationPanel` was selected as the highest-priority extraction because it has two concrete consumers on one Atelier-Kit page, repeats a coherent interaction rather than domain data editing, and has a clean dependency-inversion boundary. That Giada UI extraction is complete: the component and public types are exported from `src/lib/studio/index.ts`. Its shared responsibility remains visible state and accessible feedback for one consumer-owned operation; server and workflow details remain outside Giada UI.
 
-The currently exported Studio components are `ImageAttachmentControl`, `ImageFocalPointControl`, `AsyncOperationPanel`, `Button`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, `Surface`, `EditableList`, `EditableListRow`, `ReorderActions`, and `ReorderAnnouncement`. Atelier-Kit adopted `ImageAttachmentControl` through #217, `Button` through #220, `AsyncOperationPanel` through #221, `PageIntro` and `FormActions` through #222, `Panel` and `Surface` through #223, and `FieldLabel` through #224. Gallery and Meta characterization is recorded through #225; editable-list adoption remains a future separate consumer issue.
+The currently exported Studio components are `ImageAttachmentControl`, `ImageFocalPointControl`, `AsyncOperationPanel`, `Button`, `Checkbox`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, `Surface`, `EditableList`, `EditableListRow`, `ReorderActions`, and `ReorderAnnouncement`. Atelier-Kit adopted `ImageAttachmentControl` through #217, `Button` through #220, `AsyncOperationPanel` through #221, `PageIntro` and `FormActions` through #222, `Panel` and `Surface` through #223, and `FieldLabel` through #224. Gallery and Meta characterization is recorded through #225; editable-list adoption remains a future separate consumer issue.
 
 The remaining work is classified as follows:
 
 1. The color preset and font preset controls are credible future candidates but currently demonstrated together in only one consumer surface; their generic data and preview extension points need further design.
 2. The ordered editor's shared structure, reorder presentation, optional row-local pointer drag handle, non-live position-context description hook, and confirmed-outcome announcement companion are implemented through #30, #35, #36 and #37. Gallery and Meta adoption remains separate consumer work, while their schemas, cardinality, candidate calculation, position and total calculation, dirty tracking, focus, form naming, defaults, validation, mutation, persistence, resolved messages, event keys, and duplicate-live-region avoidance remain outside Giada UI.
 3. The marked-text editor is a future candidate with broad usage but the greatest architectural coupling. Extracting it now would either leak Atelier Mark and Atelier-Kit typography/i18n into Giada UI or prematurely design a plugin-style editor contract.
+
+## Implemented control primitive: `Checkbox`
+
+`Checkbox` is implemented and exported from the Studio entry point as a native
+controlled checkbox primitive. It renders one visible native `input type="checkbox"`; `checked` is controlled
+and bindable. It owns neutral scoped
+presentation and forced-colors behavior.
+
+The consumer owns labels, grouping, validation, persistence, domain state and
+localization. The component generates no IDs and owns no wrapper, proxy or
+label.
+
+It does not add `role="checkbox"` or `role="switch"`, and does not abstract
+indeterminate state, validation or groups.
+
+The component is covered by type, SSR, hydration, native-form, browser and Axe
+tests.
 
 ## Implemented control primitive: `ImageFocalPointControl`
 

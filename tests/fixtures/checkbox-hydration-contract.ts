@@ -1,0 +1,2 @@
+export const CHECKBOX_HYDRATION_SSR_BODY =
+	'<!--[--><div data-testid="checkbox-hydration-probe" data-checked="true" data-count="0"><label><input name="hydrated" value="yes" data-testid="hydrated-checkbox" type="checkbox" checked="" class="giu-checkbox svelte-1qfx3zp"/><!----> Hydrated checkbox</label> <label><input name="hydrated-secondary" type="checkbox" class="giu-checkbox svelte-1qfx3zp"/><!----> Secondary checkbox</label></div><!--]-->';
