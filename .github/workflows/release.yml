@@ -26,7 +26,6 @@ jobs:
     env:
       VERSION: ${{ inputs.version }}
       TAG: v${{ inputs.version }}
-      NOTES_FILE: ${{ runner.temp }}/release-notes.md
       GH_TOKEN: ${{ github.token }}
 
     steps:
@@ -65,7 +64,7 @@ jobs:
         run: >
           node scripts/verify-release-readiness.mjs
           --version "$VERSION"
-          --notes-file "$NOTES_FILE"
+          --notes-file "$RUNNER_TEMP/release-notes.md"
 
       - name: Require unused release identity
         shell: bash
@@ -98,7 +97,7 @@ jobs:
         run: >
           node scripts/verify-release-readiness.mjs
           --version "$VERSION"
-          --notes-file "$NOTES_FILE"
+          --notes-file "$RUNNER_TEMP/release-notes.md"
 
       - name: Create and push annotated tag
         shell: bash
@@ -134,7 +133,7 @@ jobs:
         run: >
           gh release create "$TAG"
           --title "Giada UI $VERSION"
-          --notes-file "$NOTES_FILE"
+          --notes-file "$RUNNER_TEMP/release-notes.md"
           --verify-tag
 
       - name: Verify GitHub Release identity and platform immutability
