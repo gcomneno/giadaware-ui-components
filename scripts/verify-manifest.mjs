@@ -42,6 +42,14 @@ const buttonContract = await readFile(
 	new URL('../src/lib/studio/button.ts', import.meta.url),
 	'utf8'
 );
+const checkboxSource = await readFile(
+	new URL('../src/lib/studio/Checkbox.svelte', import.meta.url),
+	'utf8'
+);
+const checkboxContract = await readFile(
+	new URL('../src/lib/studio/checkbox.ts', import.meta.url),
+	'utf8'
+);
 const iconButtonSource = await readFile(
 	new URL('../src/lib/studio/IconButton.svelte', import.meta.url),
 	'utf8'
@@ -351,6 +359,62 @@ requireValue(
 requireValue(
 	[...buttonSource.matchAll(/var\(([^)]+)\)/g)].every(([, value]) => value.includes(',')),
 	'Button custom-property uses must provide fallbacks'
+);
+
+requireValue(
+	checkboxSource.includes('<input') &&
+		(checkboxSource.match(/<input(?:\s|>)/g) ?? []).length === 1 &&
+		checkboxSource.includes('{...nativeAttributes}') &&
+		checkboxSource.includes('type="checkbox"') &&
+		checkboxSource.includes('bind:checked') &&
+		checkboxSource.includes("class={['giu-checkbox', className]}") &&
+		checkboxContract.includes("HTMLInputAttributes") &&
+		checkboxContract.includes("'children' | 'class' | 'style' | 'type' | 'checked'") &&
+		checkboxContract.includes("checked?: HTMLInputAttributes['checked']") &&
+		checkboxContract.includes("class?: HTMLInputAttributes['class']") &&
+		checkboxContract.includes("style?: HTMLInputAttributes['style']"),
+	'Checkbox must remain one native checkbox input with checked binding and public native attribute forwarding'
+);
+
+requireValue(
+	!checkboxSource.includes('<label') &&
+		!checkboxSource.includes('<div') &&
+		!checkboxSource.includes('<span') &&
+		!checkboxSource.includes('role="checkbox"') &&
+		!checkboxSource.includes('role="switch"') &&
+		!checkboxSource.includes('$props.id') &&
+		!checkboxSource.includes('crypto') &&
+		!checkboxSource.includes('Math.random') &&
+		!checkboxSource.includes('Date.now') &&
+		!checkboxSource.includes('onMount') &&
+		!checkboxSource.includes('indeterminate'),
+	'Checkbox must not own wrappers, labels, generated IDs, switch semantics, lifecycle or indeterminate state'
+);
+
+const checkboxStyleMatch = checkboxSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const checkboxStyle = checkboxStyleMatch?.[1] ?? '';
+const checkboxCustomProperties = [
+	...checkboxStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	checkboxCustomProperties.length > 0 &&
+		checkboxCustomProperties.every((property) =>
+			property.startsWith('--giu-checkbox-')
+		),
+	'Checkbox must use only neutral --giu-checkbox-* tokens'
+);
+
+requireValue(
+	[...checkboxStyle.matchAll(/var\(([^)]+)\)/g)].every(([, value]) =>
+		value.includes(',')
+	) &&
+		!checkboxStyle.includes(':global') &&
+		!checkboxSource.includes('--studio-') &&
+		!checkboxSource.includes('--site-'),
+	'Checkbox CSS must remain scoped, neutral and fallback-complete'
 );
 
 requireValue(
