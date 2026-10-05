@@ -16,6 +16,9 @@ La semantica di release e versioning e' definita dalla
 [guida alle release](docs/it/releases.md) e dalla relativa
 [policy architetturale](docs/architecture/release-versioning-policy.md).
 
+Per gli sviluppatori applicativi che adottano il package, il punto di ingresso è la
+[guida all'interfaccia di GiadaWare UI](docs/it/interface-guide.md).
+
 Non sono richiesti account npm, organizzazione, scope, identita' registry o workflow di pubblicazione.
 
 Atelier-Kit e' il primo consumer di validazione. Non e' una dipendenza di questo pacchetto.
