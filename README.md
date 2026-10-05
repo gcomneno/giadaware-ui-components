@@ -20,6 +20,9 @@ Release and version semantics are defined by the
 [release guide](docs/releases.md) and the underlying
 [architecture policy](docs/architecture/release-versioning-policy.md).
 
+For application developers adopting the package, start with the
+[GiadaWare UI interface guide](docs/interface-guide.md).
+
 No npm account, organization, scope, registry identity or publication workflow
 is required.
 
