@@ -1,8 +1,8 @@
-import { ReorderAnnouncement } from '../../src/lib/studio/index.js';
+import { ReorderAnnouncement } from '../../src/lib/index.js';
 import type {
 	ReorderAnnouncementKey,
 	ReorderAnnouncementProps
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 import type { ComponentProps } from 'svelte';
 
 type Equal<Left, Right> =
@@ -42,11 +42,6 @@ const missingEventKey: ReorderAnnouncementProps = { message: 'Moved image' };
 // @ts-expect-error event keys are only string or number when present.
 const invalidEventKey: ReorderAnnouncementKey = Symbol('event');
 
-// @ts-expect-error ReorderAnnouncement is Studio-only.
-import { ReorderAnnouncement as RootReorderAnnouncement } from '../../src/lib/index.js';
-
-// @ts-expect-error ReorderAnnouncement is Studio-only.
-import { ReorderAnnouncement as VisitorReorderAnnouncement } from '../../src/lib/visitor/index.js';
 
 void (null as
 	| ReorderAnnouncementKeyContract
@@ -57,5 +52,3 @@ void nullableProps;
 void missingMessage;
 void missingEventKey;
 void invalidEventKey;
-void RootReorderAnnouncement;
-void VisitorReorderAnnouncement;

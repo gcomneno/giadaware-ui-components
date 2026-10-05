@@ -2,7 +2,7 @@
 
 # ImageFocalPointControl
 
-`ImageFocalPointControl` is a controlled Studio primitive for choosing a focal
+`ImageFocalPointControl` is a controlled primitive for choosing a focal
 point on a source image that a consumer may later render in cropped media.
 
 ## Import
@@ -12,13 +12,13 @@ import {
   ImageFocalPointControl,
   type ImageFocalPointImage,
   type ImageFocalPointValue
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 ```
 
-Import the explicit Studio stylesheet where the component is rendered:
+Import the explicit public stylesheet where the component is rendered:
 
 ```ts
-import 'giadaware-ui-components/studio/styles.css';
+import 'giadaware-ui-components/styles.css';
 ```
 
 ## Controlled Usage
@@ -29,8 +29,8 @@ import 'giadaware-ui-components/studio/styles.css';
     ImageFocalPointControl,
     type ImageFocalPointImage,
     type ImageFocalPointValue
-  } from 'giadaware-ui-components/studio';
-  import 'giadaware-ui-components/studio/styles.css';
+  } from 'giadaware-ui-components';
+  import 'giadaware-ui-components/styles.css';
 
   const image = {
     src: '/images/editorial-hero.jpg',

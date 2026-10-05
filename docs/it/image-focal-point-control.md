@@ -13,13 +13,13 @@ import {
   ImageFocalPointControl,
   type ImageFocalPointImage,
   type ImageFocalPointValue
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 ```
 
-Importa lo stylesheet Studio esplicito dove il componente viene renderizzato:
+Importa lo stylesheet pubblico esplicito dove il componente viene renderizzato:
 
 ```ts
-import 'giadaware-ui-components/studio/styles.css';
+import 'giadaware-ui-components/styles.css';
 ```
 
 ## Uso Controllato
@@ -30,8 +30,8 @@ import 'giadaware-ui-components/studio/styles.css';
     ImageFocalPointControl,
     type ImageFocalPointImage,
     type ImageFocalPointValue
-  } from 'giadaware-ui-components/studio';
-  import 'giadaware-ui-components/studio/styles.css';
+  } from 'giadaware-ui-components';
+  import 'giadaware-ui-components/styles.css';
 
   const image = {
     src: '/images/editorial-hero.jpg',

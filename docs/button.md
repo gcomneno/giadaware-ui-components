@@ -2,11 +2,11 @@
 
 # Button
 
-`Button` is available only from `giadaware-ui-components/studio`. It always renders a native `button`, preserves native focus, keyboard, click, form, and disabled behavior, and defaults to `type="button"` to avoid accidental form submission.
+`Button` is available from `giadaware-ui-components`. It always renders a native `button`, preserves native focus, keyboard, click, form, and disabled behavior, and defaults to `type="button"` to avoid accidental form submission.
 
 ```svelte
 <script lang="ts">
-	import { Button } from 'giadaware-ui-components/studio';
+	import { Button } from 'giadaware-ui-components';
 </script>
 
 <Button>Save changes</Button>

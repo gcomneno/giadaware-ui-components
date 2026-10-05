@@ -1,7 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { describe, expect, test, vi } from 'vitest';
-import { AsyncOperationPanel } from '../../src/lib/studio/index.js';
+import { AsyncOperationPanel } from '../../src/lib/index.js';
 
 const action = createRawSnippet(() => ({ render: () => '<button type="submit">Run</button>' }));
 

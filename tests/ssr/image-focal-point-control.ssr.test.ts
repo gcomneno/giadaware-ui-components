@@ -1,7 +1,7 @@
 import { render } from 'svelte/server';
 import { describe, expect, test, vi } from 'vitest';
 
-import { ImageFocalPointControl } from '../../src/lib/studio/index.js';
+import { ImageFocalPointControl } from '../../src/lib/index.js';
 
 const image = {
 	src: '/hero.jpg',

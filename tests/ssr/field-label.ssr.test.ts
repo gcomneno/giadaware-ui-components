@@ -1,7 +1,7 @@
 import { render } from 'svelte/server';
 import { describe, expect, test } from 'vitest';
 
-import { FieldLabel } from '../../src/lib/studio/index.js';
+import { FieldLabel } from '../../src/lib/index.js';
 
 describe('FieldLabel SSR', () => {
 	test('renders deterministic label-only presentation', () => {

@@ -4,8 +4,8 @@
 		EditableListRow,
 		ReorderActions,
 		ReorderAnnouncement
-	} from '../../src/lib/studio/index.js';
-	import type { EditableListRowDragCandidate } from '../../src/lib/studio/index.js';
+	} from '../../src/lib/index.js';
+	import type { EditableListRowDragCandidate } from '../../src/lib/index.js';
 
 	let started = $state(0);
 	let candidates = $state(0);

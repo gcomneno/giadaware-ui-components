@@ -1,6 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, test, vi } from 'vitest';
-import { Checkbox } from '../../src/lib/studio/index.js';
+import { Checkbox } from '../../src/lib/index.js';
 
 describe('Checkbox SSR', () => {
 	test('renders deterministic markup for one native checkbox input', () => {

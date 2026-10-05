@@ -2,23 +2,23 @@
 
 # FieldDescription and FieldError
 
-`FieldDescription` and `FieldError` are Studio primitives for supplementary
+`FieldDescription` and `FieldError` are primitives for supplementary
 field text. They standardize presentation and an explicit validation-message
 announcement policy without owning form controls, validation state or ARIA
 associations.
 
-Import them only from the Studio entry point:
+Import them only from the root public entry point:
 
 ```ts
 import {
 	FieldDescription,
 	FieldError
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 
 import type {
 	FieldDescriptionProps,
 	FieldErrorProps
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 ```
 
 ## Public contracts

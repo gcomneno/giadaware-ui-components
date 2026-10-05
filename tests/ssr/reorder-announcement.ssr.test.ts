@@ -1,7 +1,7 @@
 import { render } from 'svelte/server';
 import { describe, expect, test } from 'vitest';
 
-import { ReorderAnnouncement } from '../../src/lib/studio/index.js';
+import { ReorderAnnouncement } from '../../src/lib/index.js';
 
 describe('ReorderAnnouncement SSR', () => {
 	test('renders one deterministic empty polite live-region shell', () => {

@@ -1,7 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { describe, expect, test, vi } from 'vitest';
-import { IconButton } from '../../src/lib/studio/index.js';
+import { IconButton } from '../../src/lib/index.js';
 
 const icon = createRawSnippet(() => ({
 	render: () => '<svg data-icon="edit" aria-label="Ignored geometry"><path d="M1 1h2"></path></svg>'

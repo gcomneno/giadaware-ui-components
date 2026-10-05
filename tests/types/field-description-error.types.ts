@@ -1,12 +1,12 @@
 import {
 	FieldDescription,
 	FieldError
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 
 import type {
 	FieldDescriptionProps,
 	FieldErrorProps
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 import type { ComponentProps } from 'svelte';
 
 type Equal<Left, Right> =

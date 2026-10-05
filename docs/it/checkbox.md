@@ -2,14 +2,14 @@
 
 # Checkbox
 
-`Checkbox` e' disponibile solo da `giadaware-ui-components/studio`. Renderizza
+`Checkbox` e' disponibile solo da `giadaware-ui-components`. Renderizza
 sempre esattamente un `<input type="checkbox">` nativo e visibile. L'input resta
 il controllo interattivo; non ci sono wrapper, ID generati, elementi proxy, label
 di proprieta' del componente, `role="checkbox"` o `role="switch"`.
 
 ```svelte
 <script lang="ts">
-	import { Checkbox } from 'giadaware-ui-components/studio';
+	import { Checkbox } from 'giadaware-ui-components';
 
 	let featured = $state(false);
 </script>

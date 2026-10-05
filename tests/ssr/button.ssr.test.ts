@@ -1,7 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { describe, expect, test, vi } from 'vitest';
-import { Button } from '../../src/lib/studio/index.js';
+import { Button } from '../../src/lib/index.js';
 
 const children = createRawSnippet(() => ({ render: () => 'Save changes' }));
 const leading = createRawSnippet(() => ({

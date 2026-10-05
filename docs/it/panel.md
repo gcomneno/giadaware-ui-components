@@ -2,7 +2,7 @@
 
 # Panel
 
-`Panel` e' disponibile solo da `giadaware-ui-components/studio`. Renderizza una singola sezione semantica nominata per contenuto correlato e azioni opzionali di proprieta' del consumatore.
+`Panel` e' disponibile solo da `giadaware-ui-components`. Renderizza una singola sezione semantica nominata per contenuto correlato e azioni opzionali di proprieta' del consumatore.
 
 E' una primitiva strutturale di presentazione. Non possiede stato asincrono, submit di form, navigazione, gestione del focus, eventi, live region o workflow di dominio.
 
@@ -28,7 +28,7 @@ Il componente deliberatamente non inoltra attributi arbitrari di section. Nuovi 
 
 ```svelte
 <script lang="ts">
-	import { Button, Panel } from 'giadaware-ui-components/studio';
+	import { Button, Panel } from 'giadaware-ui-components';
 </script>
 
 <Panel

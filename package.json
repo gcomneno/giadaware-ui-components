@@ -45,19 +45,7 @@
 			"svelte": "./dist/index.js",
 			"default": "./dist/index.js"
 		},
-		"./visitor": {
-			"types": "./dist/visitor/index.d.ts",
-			"svelte": "./dist/visitor/index.js",
-			"default": "./dist/visitor/index.js"
-		},
-		"./studio": {
-			"types": "./dist/studio/index.d.ts",
-			"svelte": "./dist/studio/index.js",
-			"default": "./dist/studio/index.js"
-		},
-		"./styles.css": "./dist/styles.css",
-		"./visitor/styles.css": "./dist/visitor/styles.css",
-		"./studio/styles.css": "./dist/studio/styles.css"
+		"./styles.css": "./dist/styles.css"
 	},
 	"peerDependencies": {
 		"svelte": "^5.0.0"

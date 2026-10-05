@@ -2,7 +2,7 @@
 
 # FieldLabel
 
-`FieldLabel` is available only from `giadaware-ui-components/studio`. It
+`FieldLabel` is available from `giadaware-ui-components`. It
 presents a field label row, resolved required or optional copy, and optional
 hint text without creating the semantic association with a form control.
 
@@ -44,7 +44,7 @@ validation.
 
 ```svelte
 <script lang="ts">
-	import { FieldLabel } from 'giadaware-ui-components/studio';
+	import { FieldLabel } from 'giadaware-ui-components';
 </script>
 
 <label>

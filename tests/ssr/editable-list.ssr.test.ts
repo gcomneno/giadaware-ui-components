@@ -1,7 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { describe, expect, test, vi } from 'vitest';
-import { EditableList, EditableListRow, ReorderActions } from '../../src/lib/studio/index.js';
+import { EditableList, EditableListRow, ReorderActions } from '../../src/lib/index.js';
 
 const description = createRawSnippet(() => ({ render: () => '<p>Ordered images.</p>' }));
 const empty = createRawSnippet(() => ({ render: () => '<p>No images.</p>' }));

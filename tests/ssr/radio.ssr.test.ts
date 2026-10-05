@@ -1,6 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, test, vi } from 'vitest';
-import { Radio } from '../../src/lib/studio/index.js';
+import { Radio } from '../../src/lib/index.js';
 
 describe('Radio SSR', () => {
 	test('renders deterministic markup for one native radio input', () => {

@@ -1,9 +1,9 @@
-import { ImageFocalPointControl } from '../../src/lib/studio/index.js';
+import { ImageFocalPointControl } from '../../src/lib/index.js';
 import type {
 	ImageFocalPointControlProps,
 	ImageFocalPointImage,
 	ImageFocalPointValue
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 import type { ComponentProps } from 'svelte';
 
 type Equal<Left, Right> =
@@ -61,16 +61,12 @@ const missingLabel: ImageFocalPointControlProps = {
 	onvaluechange: (_next: ImageFocalPointValue) => {}
 };
 
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { normalizeImageFocalPointValue } from '../../src/lib/studio/index.js';
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { imageFocalPointFromClientPoint } from '../../src/lib/studio/index.js';
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { moveImageFocalPointValue } from '../../src/lib/studio/index.js';
-// @ts-expect-error ImageFocalPointControl is Studio-only.
-import { ImageFocalPointControl as RootImageFocalPointControl } from '../../src/lib/index.js';
-// @ts-expect-error ImageFocalPointControl is Studio-only.
-import { ImageFocalPointControl as VisitorImageFocalPointControl } from '../../src/lib/visitor/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { normalizeImageFocalPointValue } from '../../src/lib/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { imageFocalPointFromClientPoint } from '../../src/lib/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { moveImageFocalPointValue } from '../../src/lib/index.js';
 
 void (null as unknown as ValueContract);
 void (null as unknown as ImageContract);
@@ -87,5 +83,3 @@ void missingLabel;
 void normalizeImageFocalPointValue;
 void imageFocalPointFromClientPoint;
 void moveImageFocalPointValue;
-void RootImageFocalPointControl;
-void VisitorImageFocalPointControl;

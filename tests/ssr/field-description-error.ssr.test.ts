@@ -4,7 +4,7 @@ import { describe, expect, test } from 'vitest';
 import {
 	FieldDescription,
 	FieldError
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 
 describe('FieldDescription SSR', () => {
 	test('renders deterministic static descriptive text with a consumer-owned ID', () => {

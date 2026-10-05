@@ -2,7 +2,7 @@
 
 # ImageLightbox
 
-`ImageLightbox` is a controlled Visitor primitive for presenting one full image
+`ImageLightbox` is a controlled primitive for presenting one full image
 in a native modal dialog without cropping it.
 
 ## Import
@@ -11,7 +11,7 @@ in a native modal dialog without cropping it.
 import {
   ImageLightbox,
   type ImageLightboxLabels
-} from 'giadaware-ui-components/visitor';
+} from 'giadaware-ui-components';
 ```
 
 ## Controlled usage
@@ -23,7 +23,7 @@ The consumer owns the trigger and the `open` state.
   import {
     ImageLightbox,
     type ImageLightboxLabels
-  } from 'giadaware-ui-components/visitor';
+  } from 'giadaware-ui-components';
 
   let open = $state(false);
 

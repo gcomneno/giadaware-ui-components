@@ -1,4 +1,4 @@
-import { ImageAttachmentControl } from '../../src/lib/studio/index.js';
+import { ImageAttachmentControl } from '../../src/lib/index.js';
 import type {
 	ImageAttachmentControlLabels,
 	ImageAttachmentCurrentImage,
@@ -7,7 +7,7 @@ import type {
 	ImageAttachmentIntent,
 	ImageAttachmentState,
 	ImageAttachmentValidationError
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 import type { ComponentProps } from 'svelte';
 
 type Equal<Left, Right> =
@@ -100,20 +100,20 @@ const wrongValidatorParameter: ImageAttachmentFileValidator = (candidate: string
 // @ts-expect-error Validator must return a validation error or null.
 const wrongValidatorReturn: ImageAttachmentFileValidator = (_candidate: File) => 'invalid';
 
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { createImageAttachmentState } from '../../src/lib/studio/index.js';
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { selectImageAttachmentFile } from '../../src/lib/studio/index.js';
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { cancelImageAttachmentReplacement } from '../../src/lib/studio/index.js';
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { chooseImageAttachmentRemoval } from '../../src/lib/studio/index.js';
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { cancelImageAttachmentRemoval } from '../../src/lib/studio/index.js';
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { normalizeImageAttachmentState } from '../../src/lib/studio/index.js';
-// @ts-expect-error Internal helper is not exported by the Studio barrel.
-import { validateImageAttachmentFile } from '../../src/lib/studio/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { createImageAttachmentState } from '../../src/lib/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { selectImageAttachmentFile } from '../../src/lib/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { cancelImageAttachmentReplacement } from '../../src/lib/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { chooseImageAttachmentRemoval } from '../../src/lib/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { cancelImageAttachmentRemoval } from '../../src/lib/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { normalizeImageAttachmentState } from '../../src/lib/index.js';
+// @ts-expect-error Internal helper is not exported by the public root barrel.
+import { validateImageAttachmentFile } from '../../src/lib/index.js';
 
 void (null as unknown as IntentContract);
 void keep;

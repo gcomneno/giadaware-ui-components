@@ -2,14 +2,14 @@
 
 # Checkbox
 
-`Checkbox` is available only from `giadaware-ui-components/studio`. It always
+`Checkbox` is available from `giadaware-ui-components`. It always
 renders exactly one visible native `<input type="checkbox">`. The input remains
 the interactive control; there is no wrapper, generated ID, proxy element,
 component-owned label, `role="checkbox"` or `role="switch"`.
 
 ```svelte
 <script lang="ts">
-	import { Checkbox } from 'giadaware-ui-components/studio';
+	import { Checkbox } from 'giadaware-ui-components';
 
 	let featured = $state(false);
 </script>

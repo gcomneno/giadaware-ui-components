@@ -6,12 +6,12 @@ Import the visitor-facing component and types only from the visitor entry point:
 
 ```svelte
 <script lang="ts">
-	import { RelationshipGraph } from 'giadaware-ui-components/visitor';
+	import { RelationshipGraph } from 'giadaware-ui-components';
 	import type {
 		RelationshipGraphEdge,
 		RelationshipGraphLabels,
 		RelationshipGraphNode
-	} from 'giadaware-ui-components/visitor';
+	} from 'giadaware-ui-components';
 
 	const nodes: RelationshipGraphNode[] = [
 		{ id: 'a', label: 'Alpha' },

@@ -25,7 +25,7 @@ The public peer dependency is Svelte `^5.0.0`.
 
 ## Public entry points
 
-There are three JavaScript entry points:
+There is one public JavaScript entry point:
 
 ```ts
 import {
@@ -38,7 +38,7 @@ import {
 import {
 	ImageLightbox,
 	RelationshipGraph
-} from 'giadaware-ui-components/visitor';
+} from 'giadaware-ui-components';
 
 import {
 	AsyncOperationPanel,
@@ -59,7 +59,7 @@ import {
 	ReorderActions,
 	ReorderAnnouncement,
 	Surface
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 ```
 
 Use only declared package exports.
@@ -73,11 +73,9 @@ CSS is explicit and is not auto-imported:
 
 ```ts
 import 'giadaware-ui-components/styles.css';
-import 'giadaware-ui-components/visitor/styles.css';
-import 'giadaware-ui-components/studio/styles.css';
 ```
 
-Import only the stylesheet families needed by the application.
+Import the public stylesheet when GiadaWare UI presentation is required.
 
 Public component styling uses documented CSS custom properties. Internal
 descendant classes are not automatically public API.
@@ -122,7 +120,7 @@ binding:
 
 ```svelte
 <script lang="ts">
-	import { Checkbox } from 'giadaware-ui-components/studio';
+	import { Checkbox } from 'giadaware-ui-components';
 
 	let accepted = $state(false);
 </script>
@@ -147,7 +145,7 @@ The consumer owns the label, grouping, validation and collection state.
 
 ```svelte
 <script lang="ts">
-	import { Radio } from 'giadaware-ui-components/studio';
+	import { Radio } from 'giadaware-ui-components';
 
 	let importance = $state('normal');
 </script>
@@ -200,7 +198,7 @@ Typical form composition:
 		FieldError,
 		FieldLabel,
 		FormActions
-	} from 'giadaware-ui-components/studio';
+	} from 'giadaware-ui-components';
 
 	let invalid = $state(false);
 </script>

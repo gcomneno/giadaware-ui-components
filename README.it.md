@@ -43,11 +43,13 @@ Il trial approvato contiene:
 - `Surface`
 - `EditableList`, `EditableListRow`, `ReorderActions` e `ReorderAnnouncement`
 
-I tre grafi di entry JavaScript restano isolati. Le API pubbliche correnti sono:
+GiadaWare UI espone un solo entry point JavaScript pubblico:
 
-- `giadaware-ui-components` esporta `FormStatus`, `FormStatusTone`, `StatusNotice`, `StatusNoticeAnnouncement`, `StatusNoticeProps`, `StatusNoticeTone`, `SocialIcon`, `SocialIconId`, `SOCIAL_ICON_IDS`, `SocialLink` e `SocialLinkProps`;
-- `giadaware-ui-components/visitor` esporta `ImageLightbox`, `ImageLightboxLabels`, `ImageLightboxProps`, `RelationshipGraph` e i suoi tipi pubblici;
-- `giadaware-ui-components/studio` esporta `ImageAttachmentControl` e i tipi `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`, `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`, `ImageAttachmentIntent`, `ImageAttachmentState` e `ImageAttachmentValidationError`, piu' `ImageFocalPointControl` e i tipi `ImageFocalPointControlProps`, `ImageFocalPointImage` e `ImageFocalPointValue`, piu' `AsyncOperationPanel` e i suoi tipi pubblici incluso `AsyncOperationProgress`, piu' `Button`, `ButtonProps`, `ButtonVariant` e `ButtonSize`, piu' `Checkbox` e `CheckboxProps`, piu' `Radio`, `RadioProps` e `RadioValue`, piu' `PageIntro` e `PageIntroProps`, piu' `FieldLabel` e `FieldLabelProps`, piu' `FieldDescription`, `FieldDescriptionProps`, `FieldError` e `FieldErrorProps`, piu' `FormActions`, `FormActionsProps` e `FormActionsAlign`, piu' `Panel`, `PanelProps` e `PanelHeadingLevel`, piu' `Surface` e `SurfaceProps`, piu' `EditableList`, `EditableListRow`, `ReorderActions`, `ReorderAnnouncement` e le loro prop pubbliche, tipi drag candidate e cancellation.
+`giadaware-ui-components`
+
+Esporta gli attuali componenti root, immagine/grafo, form, controllo, layout e
+interazione insieme ai relativi tipi pubblici documentati. Il raggruppamento
+interno del sorgente non crea ulteriori entry point per i consumer.
 
 Vedi [SocialLink](docs/it/social-link.md) per il contratto di anchor nativo, le regole di nome accessibile, la proprieta' della navigazione, gli hook di stile e la composizione con `SocialIcon`.
 
@@ -85,7 +87,7 @@ Importa la primitiva modale controllata dall'entry point Visitor:
 
 ```svelte
 <script lang="ts">
-	import { ImageLightbox } from 'giadaware-ui-components/visitor';
+	import { ImageLightbox } from 'giadaware-ui-components';
 </script>
 
 {#snippet caption()}
@@ -122,7 +124,7 @@ Importa `FieldLabel` solo dall'entry point Studio:
 
 ```svelte
 <script lang="ts">
-	import { FieldLabel } from 'giadaware-ui-components/studio';
+	import { FieldLabel } from 'giadaware-ui-components';
 </script>
 
 <label for="display-name">
@@ -154,7 +156,7 @@ Importa entrambe le primitive solo dall'entry point Studio:
 	import {
 		FieldDescription,
 		FieldError
-	} from 'giadaware-ui-components/studio';
+	} from 'giadaware-ui-components';
 </script>
 
 <input
@@ -186,7 +188,7 @@ Importa `Panel` solo dall'entry point Studio:
 
 ```svelte
 <script lang="ts">
-	import { Panel } from 'giadaware-ui-components/studio';
+	import { Panel } from 'giadaware-ui-components';
 </script>
 
 <Panel title="Publishing settings" headingLevel={3}>
@@ -202,7 +204,7 @@ Importa `Surface` solo dall'entry point Studio:
 
 ```svelte
 <script lang="ts">
-	import { Surface } from 'giadaware-ui-components/studio';
+	import { Surface } from 'giadaware-ui-components';
 </script>
 
 <nav aria-label="Resources">
@@ -222,7 +224,7 @@ Importa `PageIntro` solo dall'entry point Studio:
 
 ```svelte
 <script lang="ts">
-	import { PageIntro } from 'giadaware-ui-components/studio';
+	import { PageIntro } from 'giadaware-ui-components';
 </script>
 
 <PageIntro>Manage the current document.</PageIntro>
@@ -241,7 +243,7 @@ Importa `Button` solo dall'entry point Studio:
 
 ```svelte
 <script lang="ts">
-	import { Button } from 'giadaware-ui-components/studio';
+	import { Button } from 'giadaware-ui-components';
 </script>
 
 <Button>Save changes</Button>
@@ -269,7 +271,7 @@ Importa `FormActions` solo dall'entry point Studio:
 
 ```svelte
 <script lang="ts">
-	import { Button, FormActions } from 'giadaware-ui-components/studio';
+	import { Button, FormActions } from 'giadaware-ui-components';
 </script>
 
 <FormActions align="end">
@@ -436,12 +438,12 @@ Il componente accetta `class` e `style` sul proprio elemento root. Il suo CSS sc
 Importa il componente e i suoi tipi rivolti al consumatore dall'entry point Studio:
 
 ```ts
-import { ImageAttachmentControl } from 'giadaware-ui-components/studio';
+import { ImageAttachmentControl } from 'giadaware-ui-components';
 import type {
 	ImageAttachmentControlLabels,
 	ImageAttachmentDropzoneOptions,
 	ImageAttachmentState
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 ```
 
 `ImageAttachmentControl` e' controllato tramite `value` e `onvaluechange`. Il suo intent finale e' `keep`, `replace` (con un `File` nativo) o `remove`. `currentImage` descrive un'immagine esistente quando disponibile. I chiamanti possiedono tutte le label e i messaggi di validazione e possono configurare `accept`, `maxSizeBytes`, un `validator` custom e `disabled`.
@@ -450,12 +452,12 @@ La selezione drag-and-drop e' un progressive enhancement opzionale tramite la pr
 
 ```svelte
 <script lang="ts">
-	import { ImageAttachmentControl } from 'giadaware-ui-components/studio';
+	import { ImageAttachmentControl } from 'giadaware-ui-components';
 	import type {
 		ImageAttachmentControlLabels,
 		ImageAttachmentDropzoneOptions,
 		ImageAttachmentState
-	} from 'giadaware-ui-components/studio';
+	} from 'giadaware-ui-components';
 
 	let value: ImageAttachmentState = $state({ intent: 'keep', file: null });
 

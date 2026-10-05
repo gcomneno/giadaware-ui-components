@@ -2,14 +2,14 @@
 
 # Radio
 
-`Radio` e' disponibile solo da `giadaware-ui-components/studio`. Renderizza
+`Radio` e' disponibile solo da `giadaware-ui-components`. Renderizza
 sempre esattamente un `<input type="radio">` nativo e visibile. L'input resta il
 controllo interattivo; non ci sono wrapper, ID generati, elementi proxy, label
 di proprieta' del componente, `role="radio"` o `role="radiogroup"`.
 
 ```svelte
 <script lang="ts">
-	import { Radio } from 'giadaware-ui-components/studio';
+	import { Radio } from 'giadaware-ui-components';
 
 	let importance = $state('normal');
 </script>

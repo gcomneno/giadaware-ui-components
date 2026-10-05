@@ -2,7 +2,7 @@ import { tick } from 'svelte';
 import { expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import { ReorderAnnouncement } from '../../src/lib/studio/index.js';
+import { ReorderAnnouncement } from '../../src/lib/index.js';
 import ReorderAnnouncementConsumerProbe from '../fixtures/ReorderAnnouncementConsumerProbe.svelte';
 
 test('announces only confirmed consumer-owned reorder outcomes', async () => {

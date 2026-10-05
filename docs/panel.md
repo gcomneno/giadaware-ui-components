@@ -2,7 +2,7 @@
 
 # Panel
 
-`Panel` is available only from `giadaware-ui-components/studio`. It renders one
+`Panel` is available from `giadaware-ui-components`. It renders one
 named semantic section for related content and optional consumer-owned actions.
 
 It is a structural presentation primitive. It does not own asynchronous state,
@@ -34,7 +34,7 @@ surface expansion.
 
 ```svelte
 <script lang="ts">
-	import { Button, Panel } from 'giadaware-ui-components/studio';
+	import { Button, Panel } from 'giadaware-ui-components';
 </script>
 
 <Panel

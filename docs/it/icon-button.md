@@ -2,11 +2,11 @@
 
 # IconButton
 
-`IconButton` e' disponibile solo da `giadaware-ui-components/studio`. Rappresenta un singolo pulsante nativo solo icona con un nome accessibile richiesto e di proprieta' del consumatore.
+`IconButton` e' disponibile solo da `giadaware-ui-components`. Rappresenta un singolo pulsante nativo solo icona con un nome accessibile richiesto e di proprieta' del consumatore.
 
 ```svelte
 <script lang="ts">
-	import { IconButton } from 'giadaware-ui-components/studio';
+	import { IconButton } from 'giadaware-ui-components';
 </script>
 
 {#snippet editIcon()}

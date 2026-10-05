@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ReorderActions } from '../../src/lib/studio/index.js';
+	import { ReorderActions } from '../../src/lib/index.js';
 
 	let firstMoves = $state(0);
 	let secondMoves = $state(0);

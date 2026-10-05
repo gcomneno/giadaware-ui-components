@@ -1,4 +1,4 @@
-import { EditableList, EditableListRow, ReorderActions } from '../../src/lib/studio/index.js';
+import { EditableList, EditableListRow, ReorderActions } from '../../src/lib/index.js';
 import type {
 	EditableListProps,
 	EditableListRowDrag,
@@ -9,7 +9,7 @@ import type {
 	ReorderActionsPositionContext,
 	ReorderActionsProps,
 	ReorderActionsSize
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 declare const snippet: Snippet;
@@ -67,16 +67,8 @@ const missingPositionContextText: ReorderActionsPositionContext = { id: 'hero-re
 const invalidReorderActionsPosition: ReorderActionsProps = { moveUpLabel: 'Up', moveDownLabel: 'Down', onMoveUp: () => {}, onMoveDown: () => {}, position: 1 };
 // @ts-expect-error ReorderActions does not own numeric total
 const invalidReorderActionsTotal: ReorderActionsProps = { moveUpLabel: 'Up', moveDownLabel: 'Down', onMoveUp: () => {}, onMoveDown: () => {}, total: 3 };
-// @ts-expect-error normalizers are not Studio exports
-import { normalizeReorderActionsSize } from '../../src/lib/studio/index.js';
-// @ts-expect-error EditableListRowDrag is Studio-only.
-import { EditableListRowDrag as RootEditableListRowDrag } from '../../src/lib/index.js';
-// @ts-expect-error EditableListRowDrag is Studio-only.
-import { EditableListRowDrag as VisitorEditableListRowDrag } from '../../src/lib/visitor/index.js';
-// @ts-expect-error ReorderActionsPositionContext is Studio-only.
-import { ReorderActionsPositionContext as RootReorderActionsPositionContext } from '../../src/lib/index.js';
-// @ts-expect-error ReorderActionsPositionContext is Studio-only.
-import { ReorderActionsPositionContext as VisitorReorderActionsPositionContext } from '../../src/lib/visitor/index.js';
+// @ts-expect-error normalizers are not public root exports
+import { normalizeReorderActionsSize } from '../../src/lib/index.js';
 
 void [
 	EditableList,
@@ -107,9 +99,5 @@ void [
 	missingPositionContextText,
 	invalidReorderActionsPosition,
 	invalidReorderActionsTotal,
-	normalizeReorderActionsSize,
-	RootEditableListRowDrag,
-	VisitorEditableListRowDrag,
-	RootReorderActionsPositionContext,
-	VisitorReorderActionsPositionContext
+	normalizeReorderActionsSize
 ];

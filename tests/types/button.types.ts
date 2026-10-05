@@ -1,5 +1,5 @@
-import { Button } from '../../src/lib/studio/index.js';
-import type { ButtonProps, ButtonSize, ButtonVariant } from '../../src/lib/studio/index.js';
+import { Button } from '../../src/lib/index.js';
+import type { ButtonProps, ButtonSize, ButtonVariant } from '../../src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 declare const children: Snippet;

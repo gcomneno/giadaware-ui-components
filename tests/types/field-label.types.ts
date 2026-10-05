@@ -1,5 +1,5 @@
-import { FieldLabel } from '../../src/lib/studio/index.js';
-import type { FieldLabelProps } from '../../src/lib/studio/index.js';
+import { FieldLabel } from '../../src/lib/index.js';
+import type { FieldLabelProps } from '../../src/lib/index.js';
 
 const minimalProps: FieldLabelProps = {
 	label: 'Display name',

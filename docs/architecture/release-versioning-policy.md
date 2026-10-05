@@ -138,7 +138,7 @@ Giada UI should reach `1.0.0` only when all of the following are true:
 
 1. multiple real consumers have exercised the package beyond a single
    validation path;
-2. the root, Visitor and Studio public surfaces have demonstrated practical
+2. the root public surface has demonstrated practical
    stability;
 3. public ownership boundaries, accessibility behavior, SSR/hydration
    contracts and package distribution semantics are established enough that

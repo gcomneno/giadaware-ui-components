@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { ImageLightbox, RelationshipGraph } from '$lib/visitor/index.js';
-	import type { ImageLightboxLabels, RelationshipGraphLabels } from '$lib/visitor/index.js';
+	import { ImageLightbox, RelationshipGraph } from '$lib/index.js';
+	import type { ImageLightboxLabels, RelationshipGraphLabels } from '$lib/index.js';
 
 	const relationshipGraphLabels = {
 		region: 'Relationship graph',

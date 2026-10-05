@@ -910,7 +910,7 @@ requireValue(
 		editableListRowContract.includes('onDrop: (candidate: EditableListRowDragCandidate) => void') &&
 		editableListRowContract.includes('onDragCancel?: (reason: EditableListRowDragCancelReason) => void') &&
 		editableListRowContract.includes('drag?: EditableListRowDrag'),
-	'EditableListRow must expose the Studio-only optional pointer-drag contract'
+	'EditableListRow must expose the optional pointer-drag contract'
 );
 
 requireValue(
@@ -1439,14 +1439,7 @@ requireValue(
 	'validate must include packed-consumer verification'
 );
 
-const expectedExports = [
-	'.',
-	'./visitor',
-	'./studio',
-	'./styles.css',
-	'./visitor/styles.css',
-	'./studio/styles.css'
-];
+const expectedExports = ['.', './styles.css'];
 
 requireValue(
 	JSON.stringify(Object.keys(manifest.exports ?? {})) ===
@@ -1454,7 +1447,7 @@ requireValue(
 	'export map does not match the approved contract'
 );
 
-for (const entry of ['.', './visitor', './studio']) {
+for (const entry of ['.']) {
 	const conditions = manifest.exports?.[entry];
 
 	requireValue(

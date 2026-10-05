@@ -3,7 +3,7 @@
 		EditableList,
 		EditableListRow,
 		ReorderActions
-	} from '../../src/lib/studio/index.js';
+	} from '../../src/lib/index.js';
 
 	type Image = { id: string; title: string };
 

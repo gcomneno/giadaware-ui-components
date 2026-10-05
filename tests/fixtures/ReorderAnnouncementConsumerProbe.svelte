@@ -5,7 +5,7 @@
 		EditableListRow,
 		ReorderActions,
 		ReorderAnnouncement
-	} from '../../src/lib/studio/index.js';
+	} from '../../src/lib/index.js';
 
 	type Item = {
 		id: string;

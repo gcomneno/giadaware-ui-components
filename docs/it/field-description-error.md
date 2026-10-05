@@ -4,18 +4,18 @@
 
 `FieldDescription` e `FieldError` sono primitive Studio per testo supplementare dei campi. Standardizzano la presentazione e una policy esplicita di annuncio dei messaggi di validazione senza possedere controlli form, stato di validazione o associazioni ARIA.
 
-Importali solo dall'entry point Studio:
+Importali solo dall'entry point pubblico root:
 
 ```ts
 import {
 	FieldDescription,
 	FieldError
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 
 import type {
 	FieldDescriptionProps,
 	FieldErrorProps
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 ```
 
 ## Contratti pubblici

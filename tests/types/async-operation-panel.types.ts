@@ -1,5 +1,5 @@
-import { AsyncOperationPanel } from '../../src/lib/studio/index.js';
-import type { AsyncOperationPanelProps, AsyncOperationProgress, AsyncOperationState } from '../../src/lib/studio/index.js';
+import { AsyncOperationPanel } from '../../src/lib/index.js';
+import type { AsyncOperationPanelProps, AsyncOperationProgress, AsyncOperationState } from '../../src/lib/index.js';
 import type { Snippet } from 'svelte';
 declare const action: Snippet;
 declare const result: Snippet;

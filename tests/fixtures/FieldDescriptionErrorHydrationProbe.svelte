@@ -3,7 +3,7 @@
 		FieldDescription,
 		FieldError,
 		FieldLabel
-	} from '../../src/lib/studio/index.js';
+	} from '../../src/lib/index.js';
 
 	let interactionCount = $state(0);
 	let dynamicError = $state('');

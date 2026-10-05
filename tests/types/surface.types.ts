@@ -1,5 +1,5 @@
-import { Surface } from '../../src/lib/studio/index.js';
-import type { SurfaceProps } from '../../src/lib/studio/index.js';
+import { Surface } from '../../src/lib/index.js';
+import type { SurfaceProps } from '../../src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 declare const children: Snippet;
