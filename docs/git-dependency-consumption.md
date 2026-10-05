@@ -16,4 +16,4 @@ This does **not** enable registry publication. `prepublishOnly` continues to rej
 
 Pin an exact reviewed commit rather than a moving branch. This keeps UI dependencies reproducible while GIADA UI remains unpublished.
 
-Consumers must use the declared package exports (`giadaware-ui-components`, `/visitor`, `/studio` and the style exports) rather than importing files from `src/`.
+Consumers must use the declared package exports (`giadaware-ui-components` and `giadaware-ui-components/styles.css`) rather than importing files from `src/`.

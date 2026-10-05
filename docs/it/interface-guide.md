@@ -31,18 +31,6 @@ Esiste un solo entry point JavaScript pubblico:
 
 ```ts
 import {
-	FormStatus,
-	SocialIcon,
-	SocialLink,
-	StatusNotice
-} from 'giadaware-ui-components';
-
-import {
-	ImageLightbox,
-	RelationshipGraph
-} from 'giadaware-ui-components';
-
-import {
 	AsyncOperationPanel,
 	Button,
 	Checkbox,
@@ -52,14 +40,20 @@ import {
 	FieldError,
 	FieldLabel,
 	FormActions,
+	FormStatus,
 	IconButton,
 	ImageAttachmentControl,
 	ImageFocalPointControl,
+	ImageLightbox,
 	PageIntro,
 	Panel,
 	Radio,
+	RelationshipGraph,
 	ReorderActions,
 	ReorderAnnouncement,
+	SocialIcon,
+	SocialLink,
+	StatusNotice,
 	Surface
 } from 'giadaware-ui-components';
 ```
@@ -312,29 +306,29 @@ evitare override consumer che rendano invisibile lo stato nativo.
 
 ## Mappa dei componenti
 
-| Famiglia | Entry point | Responsabilità principale | Resta al consumer |
-| --- | --- | --- | --- |
-| `FormStatus` | root | presentazione di stato persistente o temporizzato | contenuto del messaggio e input di lifecycle |
-| `StatusNotice` | root | presentazione componibile di notice | significato di dominio, azioni e policy |
-| `SocialIcon` | root | geometria delle icone social approvate | semantica circostante e uso conforme ai trademark |
-| `SocialLink` | root | composizione accessibile icona/link | href, route, policy target/rel, copy |
-| `ImageLightbox` | visitor | modal controllata per una singola immagine | stato gallery, controlli di navigazione, traduzioni |
-| `RelationshipGraph` | visitor | presentazione e interazione del grafo | routing, localizzazione e stato applicativo |
-| `Button` | studio | un pulsante testuale nativo | lifecycle asincrono e workflow |
-| `IconButton` | studio | un pulsante nativo icon-only con nome accessibile | policy tooltip/help e workflow |
-| `Checkbox` | studio | un checkbox nativo | label, raggruppamento e validazione |
-| `Radio` | studio | un radio nativo | label, raggruppamento e stato selezionato applicativo |
-| `FieldLabel` | studio | presentazione della label di campo | associazione semantica della label e ID |
-| `FieldDescription` | studio | testo descrittivo statico | relazioni ARIA e ID |
-| `FieldError` | studio | presentazione dell'errore di validazione | logica di validazione e focus policy |
-| `FormActions` | studio | layout delle azioni | comportamento dei figli e semantica toolbar |
-| `Panel` | studio | una sezione semantica nominata | form, workflow e stato asincrono |
-| `Surface` | studio | contenimento visuale neutrale | semantica landmark/sezione/form |
-| `PageIntro` | studio | paragrafo introduttivo semantico | copy, link e posizionamento nella pagina |
-| `AsyncOperationPanel` | studio | presentazione di una singola operazione controllata | esecuzione, retry e locking tra operazioni |
-| `ImageAttachmentControl` | studio | intent controllato per file immagine | persistenza e trasporto upload |
-| `ImageFocalPointControl` | studio | interazione controllata del punto focale | persistenza e interpretazione di dominio |
-| famiglia `EditableList` | studio | struttura ordinata e interazione di riordino riutilizzabile | stato della collezione/dominio e persistenza |
+| Famiglia | Responsabilità principale | Resta al consumer |
+| --- | --- | --- |
+| `FormStatus` | presentazione di stato persistente o temporizzato | contenuto del messaggio e input di lifecycle |
+| `StatusNotice` | presentazione componibile di notice | significato di dominio, azioni e policy |
+| `SocialIcon` | geometria delle icone social approvate | semantica circostante e uso conforme ai trademark |
+| `SocialLink` | composizione accessibile icona/link | href, route, policy target/rel, copy |
+| `ImageLightbox` | modal controllata per una singola immagine | stato gallery, controlli di navigazione, traduzioni |
+| `RelationshipGraph` | presentazione e interazione del grafo | routing, localizzazione e stato applicativo |
+| `Button` | un pulsante testuale nativo | lifecycle asincrono e workflow |
+| `IconButton` | un pulsante nativo icon-only con nome accessibile | policy tooltip/help e workflow |
+| `Checkbox` | un checkbox nativo | label, raggruppamento e validazione |
+| `Radio` | un radio nativo | label, raggruppamento e stato selezionato applicativo |
+| `FieldLabel` | presentazione della label di campo | associazione semantica della label e ID |
+| `FieldDescription` | testo descrittivo statico | relazioni ARIA e ID |
+| `FieldError` | presentazione dell'errore di validazione | logica di validazione e focus policy |
+| `FormActions` | layout delle azioni | comportamento dei figli e semantica toolbar |
+| `Panel` | una sezione semantica nominata | form, workflow e stato asincrono |
+| `Surface` | contenimento visuale neutrale | semantica landmark/sezione/form |
+| `PageIntro` | paragrafo introduttivo semantico | copy, link e posizionamento nella pagina |
+| `AsyncOperationPanel` | presentazione di una singola operazione controllata | esecuzione, retry e locking tra operazioni |
+| `ImageAttachmentControl` | intent controllato per file immagine | persistenza e trasporto upload |
+| `ImageFocalPointControl` | interazione controllata del punto focale | persistenza e interpretazione di dominio |
+| famiglia `EditableList` | struttura ordinata e interazione di riordino riutilizzabile | stato della collezione/dominio e persistenza |
 
 ## Scelta tra primitive correlate
 
@@ -422,8 +416,8 @@ ancora di una pagina dedicata.
 
 Prima di adottare un componente:
 
-1. importarlo dal corretto entry point pubblico;
-2. importare il corrispondente entry point CSS esplicito quando serve la sua presentazione;
+1. importare componenti e tipi pubblici da `giadaware-ui-components`;
+2. importare `giadaware-ui-components/styles.css` quando serve la presentazione pubblica;
 3. leggere il contratto specifico del componente;
 4. identificare responsabilità del componente e del consumer;
 5. preservare le semantiche native di form e accessibilità;

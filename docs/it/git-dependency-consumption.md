@@ -16,4 +16,4 @@ Questo **non** abilita la pubblicazione su registry. `prepublishOnly` continua a
 
 Fissa un commit esatto gia' revisionato invece di un branch mobile. Questo mantiene riproducibili le dipendenze UI mentre GIADA UI rimane non pubblicato.
 
-I consumatori devono usare gli export dichiarati del pacchetto (`giadaware-ui-components`, `/visitor`, `/studio` e gli export degli stili) invece di importare file da `src/`.
+I consumer devono usare gli export dichiarati del package (`giadaware-ui-components` e `giadaware-ui-components/styles.css`) invece di importare file da `src/`.

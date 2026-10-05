@@ -29,18 +29,6 @@ There is one public JavaScript entry point:
 
 ```ts
 import {
-	FormStatus,
-	SocialIcon,
-	SocialLink,
-	StatusNotice
-} from 'giadaware-ui-components';
-
-import {
-	ImageLightbox,
-	RelationshipGraph
-} from 'giadaware-ui-components';
-
-import {
 	AsyncOperationPanel,
 	Button,
 	Checkbox,
@@ -50,14 +38,20 @@ import {
 	FieldError,
 	FieldLabel,
 	FormActions,
+	FormStatus,
 	IconButton,
 	ImageAttachmentControl,
 	ImageFocalPointControl,
+	ImageLightbox,
 	PageIntro,
 	Panel,
 	Radio,
+	RelationshipGraph,
 	ReorderActions,
 	ReorderAnnouncement,
+	SocialIcon,
+	SocialLink,
+	StatusNotice,
 	Surface
 } from 'giadaware-ui-components';
 ```
@@ -304,29 +298,29 @@ invisible.
 
 ## Component map
 
-| Component family | Entry point | Main responsibility | Consumer retains |
-| --- | --- | --- | --- |
-| `FormStatus` | root | persistent or timed status presentation | message content and lifecycle inputs |
-| `StatusNotice` | root | composable notice presentation | domain meaning, actions and policy |
-| `SocialIcon` | root | approved social icon geometry | surrounding semantics and trademark-appropriate use |
-| `SocialLink` | root | accessible icon/link composition | href, routes, target/rel policy, copy |
-| `ImageLightbox` | visitor | controlled single-image modal | gallery state, navigation controls, translations |
-| `RelationshipGraph` | visitor | graph presentation and interaction | routing, localization and application state |
-| `Button` | studio | one native text button | async lifecycle and workflow |
-| `IconButton` | studio | one named icon-only native button | tooltip/help policy and workflow |
-| `Checkbox` | studio | one native checkbox | labels, grouping and validation |
-| `Radio` | studio | one native radio | labels, grouping and selected application state |
-| `FieldLabel` | studio | field-label presentation | semantic label association and IDs |
-| `FieldDescription` | studio | static descriptive text | ARIA relationships and IDs |
-| `FieldError` | studio | validation error presentation | validation logic and focus policy |
-| `FormActions` | studio | action-row layout | child behavior and toolbar semantics |
-| `Panel` | studio | one named semantic section | forms, workflows and async state |
-| `Surface` | studio | neutral visual containment | landmark/section/form semantics |
-| `PageIntro` | studio | semantic introductory paragraph | copy, links and page placement |
-| `AsyncOperationPanel` | studio | presentation of one controlled operation | execution, retries and cross-operation locking |
-| `ImageAttachmentControl` | studio | controlled image-file intent | persistence and upload transport |
-| `ImageFocalPointControl` | studio | controlled focal-point interaction | persistence and domain interpretation |
-| `EditableList` family | studio | reusable ordered-list structure and reorder interaction | collection/domain state and persistence |
+| Component family | Main responsibility | Consumer retains |
+| --- | --- | --- |
+| `FormStatus` | persistent or timed status presentation | message content and lifecycle inputs |
+| `StatusNotice` | composable notice presentation | domain meaning, actions and policy |
+| `SocialIcon` | approved social icon geometry | surrounding semantics and trademark-appropriate use |
+| `SocialLink` | accessible icon/link composition | href, routes, target/rel policy, copy |
+| `ImageLightbox` | controlled single-image modal | gallery state, navigation controls, translations |
+| `RelationshipGraph` | graph presentation and interaction | routing, localization and application state |
+| `Button` | one native text button | async lifecycle and workflow |
+| `IconButton` | one named icon-only native button | tooltip/help policy and workflow |
+| `Checkbox` | one native checkbox | labels, grouping and validation |
+| `Radio` | one native radio | labels, grouping and selected application state |
+| `FieldLabel` | field-label presentation | semantic label association and IDs |
+| `FieldDescription` | static descriptive text | ARIA relationships and IDs |
+| `FieldError` | validation error presentation | validation logic and focus policy |
+| `FormActions` | action-row layout | child behavior and toolbar semantics |
+| `Panel` | one named semantic section | forms, workflows and async state |
+| `Surface` | neutral visual containment | landmark/section/form semantics |
+| `PageIntro` | semantic introductory paragraph | copy, links and page placement |
+| `AsyncOperationPanel` | presentation of one controlled operation | execution, retries and cross-operation locking |
+| `ImageAttachmentControl` | controlled image-file intent | persistence and upload transport |
+| `ImageFocalPointControl` | controlled focal-point interaction | persistence and domain interpretation |
+| `EditableList` family | reusable ordered-list structure and reorder interaction | collection/domain state and persistence |
 
 ## Choosing between related primitives
 
@@ -411,8 +405,8 @@ a dedicated focused page.
 
 Before adopting a component:
 
-1. import it from the correct public entry point;
-2. import the matching explicit CSS entry when its presentation is required;
+1. import components and public types from `giadaware-ui-components`;
+2. import `giadaware-ui-components/styles.css` when public presentation is required;
 3. read the focused component contract;
 4. identify component-owned and consumer-owned responsibilities;
 5. preserve native form and accessibility semantics;
