@@ -32,7 +32,7 @@
 
 ## Contratto
 
-Importalo da `giadaware-ui-components`. Non importarlo dall'entry point Studio.
+Importalo da `giadaware-ui-components`. Non importarlo dall'entry point pubblico root.
 
 `title` e' testo richiesto risolto dal consumatore. `children` e' contenuto rich body opzionale. `icon` e' contenuto decorativo opzionale di proprieta' del consumatore ed e' wrappato in `aria-hidden="true"`. `actions` e' contenuto action opzionale di proprieta' del consumatore.
 

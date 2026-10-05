@@ -1,7 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { describe, expect, test } from 'vitest';
-import { FormActions } from '../../src/lib/studio/index.js';
+import { FormActions } from '../../src/lib/index.js';
 
 const plainChildren = createRawSnippet(() => ({
 	render: () => '<button type="button">Save</button>'

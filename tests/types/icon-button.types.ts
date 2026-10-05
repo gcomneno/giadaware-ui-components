@@ -1,9 +1,9 @@
-import { IconButton } from '../../src/lib/studio/index.js';
+import { IconButton } from '../../src/lib/index.js';
 import type {
 	ButtonSize,
 	ButtonVariant,
 	IconButtonProps
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 declare const icon: Snippet;

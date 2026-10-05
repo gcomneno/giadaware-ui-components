@@ -49,33 +49,13 @@ The approved trial contains:
 - `Surface`
 - `EditableList`, `EditableListRow`, `ReorderActions` and `ReorderAnnouncement`
 
-The three JavaScript entry graphs remain isolated. Their current public APIs
-are:
+GiadaWare UI exposes one public JavaScript entry point:
 
-- `giadaware-ui-components` exports `FormStatus`, `FormStatusTone`,
-  `StatusNotice`, `StatusNoticeAnnouncement`, `StatusNoticeProps`,
-  `StatusNoticeTone`, `SocialIcon`, `SocialIconId`, `SOCIAL_ICON_IDS`,
-  `SocialLink` and `SocialLinkProps`;
-- `giadaware-ui-components/visitor` exports `ImageLightbox`,
-  `ImageLightboxLabels`, `ImageLightboxProps`, `RelationshipGraph` and its
-  public types;
-- `giadaware-ui-components/studio` exports `ImageAttachmentControl` and the
-  `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`,
-  `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`,
-  `ImageAttachmentIntent`,
-  `ImageAttachmentState` and `ImageAttachmentValidationError` types, plus
-  `ImageFocalPointControl` and the `ImageFocalPointControlProps`,
-  `ImageFocalPointImage` and `ImageFocalPointValue` types, plus
-  `AsyncOperationPanel` and its public types including `AsyncOperationProgress`,
-  plus `Checkbox` and `CheckboxProps`, plus `Radio`, `RadioProps` and `RadioValue`,
-  plus `Button`, `ButtonProps`, `ButtonVariant` and `ButtonSize`, plus
-  `PageIntro` and `PageIntroProps`, plus
-  `FieldLabel` and `FieldLabelProps`, plus `FieldDescription`,
-  `FieldDescriptionProps`, `FieldError` and `FieldErrorProps`, plus
-  `FormActions`, `FormActionsProps` and `FormActionsAlign`, plus `Panel`,
-  `PanelProps` and `PanelHeadingLevel`, plus `Surface` and `SurfaceProps`, plus
-  `EditableList`, `EditableListRow`, `ReorderActions`, `ReorderAnnouncement`
-  and their public props, drag candidate and cancellation types.
+`giadaware-ui-components`
+
+It exports the current root, image/graph, form, control, layout and interaction
+components together with their documented public types. Internal source grouping
+does not create additional consumer entry points.
 
 See [SocialLink](docs/social-link.md) for its native-anchor contract,
 accessible-name rules, navigation ownership, styling hooks and composition with
@@ -135,11 +115,11 @@ accessibility ownership, and styling hooks.
 
 ## ImageLightbox
 
-Import the controlled modal primitive from the Visitor entry point:
+Import the controlled modal primitive from the public root entry point:
 
 ```svelte
 <script lang="ts">
-	import { ImageLightbox } from 'giadaware-ui-components/visitor';
+	import { ImageLightbox } from 'giadaware-ui-components';
 </script>
 
 {#snippet caption()}
@@ -172,11 +152,11 @@ The component does not infer gallery state, add ArrowLeft/ArrowRight behavior, o
 
 ## FieldLabel
 
-Import `FieldLabel` only from the Studio entry point:
+Import `FieldLabel` from the public root entry point:
 
 ```svelte
 <script lang="ts">
-	import { FieldLabel } from 'giadaware-ui-components/studio';
+	import { FieldLabel } from 'giadaware-ui-components';
 </script>
 
 <label for="display-name">
@@ -204,14 +184,14 @@ presentation, and unresolved marker labels are omitted.
 
 ## FieldDescription and FieldError
 
-Import both primitives only from the Studio entry point:
+Import both primitives from the public root entry point:
 
 ```svelte
 <script lang="ts">
 	import {
 		FieldDescription,
 		FieldError
-	} from 'giadaware-ui-components/studio';
+	} from 'giadaware-ui-components';
 </script>
 
 <input
@@ -245,11 +225,11 @@ Consumers own validation, `aria-invalid`, `aria-describedby`,
 
 ## Panel
 
-Import `Panel` only from the Studio entry point:
+Import `Panel` from the public root entry point:
 
 ```svelte
 <script lang="ts">
-	import { Panel } from 'giadaware-ui-components/studio';
+	import { Panel } from 'giadaware-ui-components';
 </script>
 
 <Panel title="Publishing settings" headingLevel={3}>
@@ -267,11 +247,11 @@ for neutral visual containment without a heading or section landmark.
 
 ## Surface
 
-Import `Surface` only from the Studio entry point:
+Import `Surface` from the public root entry point:
 
 ```svelte
 <script lang="ts">
-	import { Surface } from 'giadaware-ui-components/studio';
+	import { Surface } from 'giadaware-ui-components';
 </script>
 
 <nav aria-label="Resources">
@@ -292,11 +272,11 @@ the content is a named section requiring a visible heading.
 
 ## PageIntro
 
-Import `PageIntro` only from the Studio entry point:
+Import `PageIntro` from the public root entry point:
 
 ```svelte
 <script lang="ts">
-	import { PageIntro } from 'giadaware-ui-components/studio';
+	import { PageIntro } from 'giadaware-ui-components';
 </script>
 
 <PageIntro>Manage the current document.</PageIntro>
@@ -315,11 +295,11 @@ heading, alert, live region or landmark.
 
 ## Button
 
-Import `Button` only from the Studio entry point:
+Import `Button` from the public root entry point:
 
 ```svelte
 <script lang="ts">
-	import { Button } from 'giadaware-ui-components/studio';
+	import { Button } from 'giadaware-ui-components';
 </script>
 
 <Button>Save changes</Button>
@@ -346,7 +326,7 @@ consumer-owned controls with `FormActions`.
 
 ## IconButton
 
-Import `IconButton` only from the Studio entry point. It always represents one
+Import `IconButton` from the public root entry point. It always represents one
 icon-only native button for valid props, defaults to `type="button"`, requires a
 consumer-resolved non-empty `label`, and accepts required consumer-owned `icon`
 snippet content.
@@ -366,11 +346,11 @@ loading lifecycle, confirmation, navigation or toolbar keyboard model. See
 
 ## FormActions
 
-Import `FormActions` only from the Studio entry point:
+Import `FormActions` from the public root entry point:
 
 ```svelte
 <script lang="ts">
-	import { Button, FormActions } from 'giadaware-ui-components/studio';
+	import { Button, FormActions } from 'giadaware-ui-components';
 </script>
 
 <FormActions align="end">
@@ -582,15 +562,15 @@ uses only these public neutral custom properties, each with a readable fallback:
 
 ## ImageAttachmentControl
 
-Import the component and its consumer-facing types from the Studio entry point:
+Import the component and its consumer-facing types from the public root entry point:
 
 ```ts
-import { ImageAttachmentControl } from 'giadaware-ui-components/studio';
+import { ImageAttachmentControl } from 'giadaware-ui-components';
 import type {
 	ImageAttachmentControlLabels,
 	ImageAttachmentDropzoneOptions,
 	ImageAttachmentState
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 ```
 
 `ImageAttachmentControl` is controlled through `value` and `onvaluechange`.
@@ -607,12 +587,12 @@ selected through the picker. Consumers provide all resolved drop instructions.
 
 ```svelte
 <script lang="ts">
-	import { ImageAttachmentControl } from 'giadaware-ui-components/studio';
+	import { ImageAttachmentControl } from 'giadaware-ui-components';
 	import type {
 		ImageAttachmentControlLabels,
 		ImageAttachmentDropzoneOptions,
 		ImageAttachmentState
-	} from 'giadaware-ui-components/studio';
+	} from 'giadaware-ui-components';
 
 	let value: ImageAttachmentState = $state({ intent: 'keep', file: null });
 

@@ -2,14 +2,14 @@
 
 # Radio
 
-`Radio` is available only from `giadaware-ui-components/studio`. It always
+`Radio` is available from `giadaware-ui-components`. It always
 renders exactly one visible native `<input type="radio">`. The input remains
 the interactive control; there is no wrapper, generated ID, proxy element,
 component-owned label, `role="radio"` or `role="radiogroup"`.
 
 ```svelte
 <script lang="ts">
-	import { Radio } from 'giadaware-ui-components/studio';
+	import { Radio } from 'giadaware-ui-components';
 
 	let importance = $state('normal');
 </script>

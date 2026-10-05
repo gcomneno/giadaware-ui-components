@@ -2,7 +2,7 @@
 
 # EditableList, EditableListRow, ReorderActions and ReorderAnnouncement
 
-These primitives are available only from `giadaware-ui-components/studio`.
+These primitives are available only from `giadaware-ui-components`.
 
 ```svelte
 <script lang="ts">
@@ -11,8 +11,8 @@ These primitives are available only from `giadaware-ui-components/studio`.
 		EditableListRow,
 		ReorderActions,
 		ReorderAnnouncement
-	} from 'giadaware-ui-components/studio';
-	import type { ReorderActionsPositionContext } from 'giadaware-ui-components/studio';
+	} from 'giadaware-ui-components';
+	import type { ReorderActionsPositionContext } from 'giadaware-ui-components';
 
 	let images = $state([{ id: 'hero', title: 'Hero' }]);
 	let reorderEventKey = $state<number | null>(null);
@@ -157,7 +157,7 @@ Example row states:
 
 `ReorderActions` does not accept numeric `position` or `total`, arrays, item schemas, keyed loops, localization services, mutation ownership, live-region behavior or focus management. Existing button labels remain the consumer-provided accessible names; position context is an accessible description only.
 
-`ReorderAnnouncement` is the Studio-only companion primitive for confirmed reorder outcomes. It renders one visually hidden polite `role="status"` live-region shell and no visible text. Consumers own item identity, item arrays, reorder intent handling, pointer drag candidate handling, mutation success or failure, position calculation, localization, the final announcement message, and the event key. `ReorderActions` only represents keyboard-equivalent reorder intent, optional drag only represents pointer intent, and `positionContext` only describes the current row/action-group context. Position context is never live and must not be used as, or point at, `ReorderAnnouncement`.
+`ReorderAnnouncement` is the companion primitive for confirmed reorder outcomes. It renders one visually hidden polite `role="status"` live-region shell and no visible text. Consumers own item identity, item arrays, reorder intent handling, pointer drag candidate handling, mutation success or failure, position calculation, localization, the final announcement message, and the event key. `ReorderActions` only represents keyboard-equivalent reorder intent, optional drag only represents pointer intent, and `positionContext` only describes the current row/action-group context. Position context is never live and must not be used as, or point at, `ReorderAnnouncement`.
 
 `eventKey` is the announcement event boundary. Message equality is irrelevant: changing the message while keeping the same `eventKey` is not a new announcement, while changing `eventKey` can announce the same message again. Use a consumer-owned monotonically increasing counter, confirmed mutation ID, or other existing stable event ID. Do not use `Date.now()` as the canonical event key. Use `null` when there is no confirmed reorder event, and pass `null` or blank `message` to fail closed without meaningful announcement text.
 

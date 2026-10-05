@@ -1,8 +1,8 @@
-import { Panel } from '../../src/lib/studio/index.js';
+import { Panel } from '../../src/lib/index.js';
 import type {
 	PanelHeadingLevel,
 	PanelProps,
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 declare const children: Snippet;
@@ -52,8 +52,8 @@ const invalidChildren: PanelProps = {
 	// @ts-expect-error children must be a Svelte snippet
 	children: 'Panel body',
 };
-// @ts-expect-error normalization helper is internal to the Studio entry point
-import { normalizePanelHeadingLevel } from '../../src/lib/studio/index.js';
+// @ts-expect-error normalization helper is internal to the package
+import { normalizePanelHeadingLevel } from '../../src/lib/index.js';
 
 void [
 	Panel,

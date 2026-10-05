@@ -2,7 +2,7 @@
 
 # FieldLabel
 
-`FieldLabel` e' disponibile solo da `giadaware-ui-components/studio`. Presenta una riga di etichetta campo, testo required o optional risolto, e testo hint opzionale senza creare l'associazione semantica con un controllo form.
+`FieldLabel` e' disponibile solo da `giadaware-ui-components`. Presenta una riga di etichetta campo, testo required o optional risolto, e testo hint opzionale senza creare l'associazione semantica con un controllo form.
 
 ## Contratto pubblico
 
@@ -34,7 +34,7 @@ Questi stati sono presentazionali. I consumatori devono applicare `required` nat
 
 ```svelte
 <script lang="ts">
-	import { FieldLabel } from 'giadaware-ui-components/studio';
+	import { FieldLabel } from 'giadaware-ui-components';
 </script>
 
 <label>

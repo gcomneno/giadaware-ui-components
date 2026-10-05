@@ -1,10 +1,10 @@
 import { render } from 'svelte/server';
 import { describe, expect, test, vi } from 'vitest';
 
-import { ImageAttachmentControl } from '../../src/lib/studio/index.js';
+import { ImageAttachmentControl } from '../../src/lib/index.js';
 import { createImageAttachmentState } from '../../src/lib/studio/image-attachment-control.js';
 
-import type { ImageAttachmentControlLabels, ImageAttachmentState } from '../../src/lib/studio/index.js';
+import type { ImageAttachmentControlLabels, ImageAttachmentState } from '../../src/lib/index.js';
 
 const labels: ImageAttachmentControlLabels = {
 	input: 'Choose image', cancelReplacement: 'Cancel replacement', remove: 'Remove image',

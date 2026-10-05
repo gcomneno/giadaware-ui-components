@@ -6,8 +6,8 @@ import EditableListProbe from '../fixtures/EditableListProbe.svelte';
 import EditableListDragProbe from '../fixtures/EditableListDragProbe.svelte';
 import EditableListStateProbe from '../fixtures/EditableListStateProbe.svelte';
 import ReorderActionsPositionContextProbe from '../fixtures/ReorderActionsPositionContextProbe.svelte';
-import { EditableListRow } from '../../src/lib/studio/index.js';
-import type { EditableListRowDrag } from '../../src/lib/studio/index.js';
+import { EditableListRow } from '../../src/lib/index.js';
+import type { EditableListRowDrag } from '../../src/lib/index.js';
 
 const rowFields = createRawSnippet(() => ({ render: () => '<span>Hero image</span>' }));
 

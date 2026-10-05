@@ -2,7 +2,7 @@
 
 # Surface
 
-`Surface` is available only from `giadaware-ui-components/studio`. It provides
+`Surface` is available from `giadaware-ui-components`. It provides
 neutral visual containment without creating a section, heading, landmark,
 accessible name, interaction model, or application workflow.
 
@@ -22,7 +22,7 @@ future explicit contract decision rather than accidental API expansion.
 
 ```svelte
 <script lang="ts">
-	import { Surface } from 'giadaware-ui-components/studio';
+	import { Surface } from 'giadaware-ui-components';
 </script>
 
 <Surface>

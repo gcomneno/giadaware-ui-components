@@ -1,4 +1,4 @@
-import { RelationshipGraph } from '../../src/lib/visitor/index.js';
+import { RelationshipGraph } from '../../src/lib/index.js';
 import type {
 	RelationshipGraphActivation,
 	RelationshipGraphEdge,
@@ -8,7 +8,7 @@ import type {
 	RelationshipGraphRelationshipDetail,
 	RelationshipGraphSelection,
 	RelationshipGraphSummaryDetail
-} from '../../src/lib/visitor/index.js';
+} from '../../src/lib/index.js';
 
 const node: RelationshipGraphNode = { id: 'a', label: 'Alpha', image: '/a.png', href: '/a' };
 const edge: RelationshipGraphEdge = { source: 'a', target: 'b', type: 'shared', label: 'Supports' };

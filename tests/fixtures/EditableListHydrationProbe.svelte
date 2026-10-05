@@ -3,7 +3,7 @@
 		EditableList,
 		EditableListRow,
 		ReorderActions
-	} from '../../src/lib/studio/index.js';
+	} from '../../src/lib/index.js';
 
 	let moveCount = $state(0);
 	let positionText = $state('Hero image, position 1 of 3');

@@ -2,7 +2,7 @@
 
 # EditableList, EditableListRow, ReorderActions e ReorderAnnouncement
 
-Queste primitive sono disponibili solo da `giadaware-ui-components/studio`.
+Queste primitive sono disponibili solo da `giadaware-ui-components`.
 
 ```svelte
 <script lang="ts">
@@ -11,8 +11,8 @@ Queste primitive sono disponibili solo da `giadaware-ui-components/studio`.
 		EditableListRow,
 		ReorderActions,
 		ReorderAnnouncement
-	} from 'giadaware-ui-components/studio';
-	import type { ReorderActionsPositionContext } from 'giadaware-ui-components/studio';
+	} from 'giadaware-ui-components';
+	import type { ReorderActionsPositionContext } from 'giadaware-ui-components';
 
 	let images = $state([{ id: 'hero', title: 'Hero' }]);
 	let reorderEventKey = $state<number | null>(null);
@@ -157,7 +157,7 @@ Stati riga di esempio:
 
 `ReorderActions` non accetta `position` o `total` numerici, array, schemi item, loop keyed, servizi di localizzazione, ownership delle mutation, comportamento live-region o gestione del focus. Le label button esistenti restano i nomi accessibili forniti dal consumatore; il position context e' solo una descrizione accessibile.
 
-`ReorderAnnouncement` e' la primitiva companion solo Studio per esiti confermati di riordino. Renderizza una singola shell live-region visually hidden `role="status"` polite e nessun testo visibile. I consumatori possiedono identita' degli item, array di item, gestione dell'intent di reorder, gestione dei candidate pointer drag, successo o fallimento della mutation, calcolo della posizione, localizzazione, messaggio finale di annuncio ed event key. `ReorderActions` rappresenta solo intent di reorder equivalente da tastiera, il drag opzionale rappresenta solo intent pointer, e `positionContext` descrive solo il contesto riga/gruppo di azioni corrente. Il position context non e' mai live e non deve essere usato come, o puntare a, `ReorderAnnouncement`.
+`ReorderAnnouncement` e' la primitiva companion  per esiti confermati di riordino. Renderizza una singola shell live-region visually hidden `role="status"` polite e nessun testo visibile. I consumatori possiedono identita' degli item, array di item, gestione dell'intent di reorder, gestione dei candidate pointer drag, successo o fallimento della mutation, calcolo della posizione, localizzazione, messaggio finale di annuncio ed event key. `ReorderActions` rappresenta solo intent di reorder equivalente da tastiera, il drag opzionale rappresenta solo intent pointer, e `positionContext` descrive solo il contesto riga/gruppo di azioni corrente. Il position context non e' mai live e non deve essere usato come, o puntare a, `ReorderAnnouncement`.
 
 `eventKey` e' il confine evento dell'annuncio. L'uguaglianza del messaggio e' irrilevante: cambiare il messaggio mantenendo lo stesso `eventKey` non e' un nuovo annuncio, mentre cambiare `eventKey` puo' annunciare di nuovo lo stesso messaggio. Usa un contatore monotonicamente crescente di proprieta' del consumatore, ID di mutation confermata o altro ID evento stabile esistente. Non usare `Date.now()` come event key canonico. Usa `null` quando non c'e' un evento di reorder confermato, e passa `null` o `message` vuoto per fallire in modo chiuso senza testo di annuncio significativo.
 

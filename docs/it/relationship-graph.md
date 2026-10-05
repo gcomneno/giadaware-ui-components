@@ -6,12 +6,12 @@ Importa il componente e i tipi rivolti ai visitor solo dall'entry point visitor:
 
 ```svelte
 <script lang="ts">
-	import { RelationshipGraph } from 'giadaware-ui-components/visitor';
+	import { RelationshipGraph } from 'giadaware-ui-components';
 	import type {
 		RelationshipGraphEdge,
 		RelationshipGraphLabels,
 		RelationshipGraphNode
-	} from 'giadaware-ui-components/visitor';
+	} from 'giadaware-ui-components';
 
 	const nodes: RelationshipGraphNode[] = [
 		{ id: 'a', label: 'Alpha' },

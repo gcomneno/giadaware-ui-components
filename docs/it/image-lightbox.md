@@ -10,7 +10,7 @@
 import {
   ImageLightbox,
   type ImageLightboxLabels
-} from 'giadaware-ui-components/visitor';
+} from 'giadaware-ui-components';
 ```
 
 ## Uso controllato
@@ -22,7 +22,7 @@ Il consumatore possiede il trigger e lo stato `open`.
   import {
     ImageLightbox,
     type ImageLightboxLabels
-  } from 'giadaware-ui-components/visitor';
+  } from 'giadaware-ui-components';
 
   let open = $state(false);
 

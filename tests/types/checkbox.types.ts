@@ -1,5 +1,5 @@
-import { Checkbox } from '../../src/lib/studio/index.js';
-import type { CheckboxProps } from '../../src/lib/studio/index.js';
+import { Checkbox } from '../../src/lib/index.js';
+import type { CheckboxProps } from '../../src/lib/index.js';
 import type { Component } from 'svelte';
 
 type CheckboxBindings = typeof Checkbox extends Component<CheckboxProps, {}, infer Bindings>

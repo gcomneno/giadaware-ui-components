@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte';
-import { ImageLightbox } from '../../src/lib/visitor/index.js';
+import { ImageLightbox } from '../../src/lib/index.js';
 import type {
 	ImageLightboxLabels,
 	ImageLightboxProps
-} from '../../src/lib/visitor/index.js';
+} from '../../src/lib/index.js';
 
 const labels: ImageLightboxLabels = {
 	dialog: 'Preview',

@@ -4,9 +4,9 @@
 
 **Status:** current architectural inventory and decision record for Giada UI epic #8.
 
-This document consolidates the Studio control families demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and records both completed Giada UI work and remaining extraction work. It preserves the architectural basis for `AsyncOperationPanel`; its final public contract is now documented here where it resolves the original design questions. Issue #73 explicitly approves `ImageFocalPointControl` as an implemented Studio primitive and requires no separate ADR. This inventory does not decide package versioning or registry publication.
+This document consolidates the Studio control families demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and records both completed Giada UI work and remaining extraction work. It preserves the architectural basis for `AsyncOperationPanel`; its final public contract is now documented here where it resolves the original design questions. Issue #73 explicitly approves `ImageFocalPointControl` as an implemented Giada UI primitive and requires no separate ADR. This inventory does not decide package versioning or registry publication.
 
-The inventory contains **six definitive control families**. `ImageAttachmentControl`, `AsyncOperationPanel`, and the shared structural subset of the ordered asset or record editor are implemented in Giada UI; the marked-text, color-preset, and font-preset families remain future extraction candidates. `ImageFocalPointControl`, `Button`, `Checkbox`, `Radio`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, and `Surface` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
+The inventory contains **six definitive control families**. `ImageAttachmentControl`, `AsyncOperationPanel`, and the shared structural subset of the ordered asset or record editor are implemented in Giada UI; the marked-text, color-preset, and font-preset families remain future extraction candidates. `ImageFocalPointControl`, `Button`, `Checkbox`, `Radio`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, and `Surface` are also implemented in Giada UI and exposed from the root public entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in Giada UI and exposed from the root public entry point and is outside this Studio inventory.
 
 ## Inventory method
 
@@ -55,7 +55,7 @@ The table count remains six: two complete shared control families, one extracted
 
 `AsyncOperationPanel` was selected as the highest-priority extraction because it has two concrete consumers on one Atelier-Kit page, repeats a coherent interaction rather than domain data editing, and has a clean dependency-inversion boundary. That Giada UI extraction is complete: the component and public types are exported from `src/lib/studio/index.ts`. Its shared responsibility remains visible state and accessible feedback for one consumer-owned operation; server and workflow details remain outside Giada UI.
 
-The currently exported Studio components are `ImageAttachmentControl`, `ImageFocalPointControl`, `AsyncOperationPanel`, `Button`, `Checkbox`, `Radio`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, `Surface`, `EditableList`, `EditableListRow`, `ReorderActions`, and `ReorderAnnouncement`. Atelier-Kit adopted `ImageAttachmentControl` through #217, `Button` through #220, `AsyncOperationPanel` through #221, `PageIntro` and `FormActions` through #222, `Panel` and `Surface` through #223, and `FieldLabel` through #224. Gallery and Meta characterization is recorded through #225; editable-list adoption remains a future separate consumer issue.
+The currently exported Giada UI components originating from this inventory are `ImageAttachmentControl`, `ImageFocalPointControl`, `AsyncOperationPanel`, `Button`, `Checkbox`, `Radio`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, `Surface`, `EditableList`, `EditableListRow`, `ReorderActions`, and `ReorderAnnouncement`. Atelier-Kit adopted `ImageAttachmentControl` through #217, `Button` through #220, `AsyncOperationPanel` through #221, `PageIntro` and `FormActions` through #222, `Panel` and `Surface` through #223, and `FieldLabel` through #224. Gallery and Meta characterization is recorded through #225; editable-list adoption remains a future separate consumer issue.
 
 The remaining work is classified as follows:
 
@@ -65,7 +65,7 @@ The remaining work is classified as follows:
 
 ## Implemented control primitive: `Checkbox`
 
-`Checkbox` is implemented and exported from the Studio entry point as a native
+`Checkbox` is implemented and exported from the root public entry point as a native
 controlled checkbox primitive. It renders one visible native `input type="checkbox"`; `checked` is controlled
 and bindable. It owns neutral scoped
 presentation and forced-colors behavior.
@@ -82,7 +82,7 @@ tests.
 
 ## Implemented control primitive: `ImageFocalPointControl`
 
-`ImageFocalPointControl` is implemented and exported from the Studio entry point
+`ImageFocalPointControl` is implemented and exported from the root public entry point
 as a reusable controlled primitive approved by issue #73. It owns the source-image
 preview, visible focal marker, normalized `x`/`y` coordinate contract, pointer
 interaction against the current preview bounding box, keyboard adjustment,
@@ -97,7 +97,7 @@ meaning, or couple itself to Atelier-Kit data models.
 
 ## Implemented control primitive: `IconButton`
 
-`IconButton` is implemented and exported from the Studio entry point as a
+`IconButton` is implemented and exported from the root public entry point as a
 dedicated icon-only native button primitive. It reuses the closed `ButtonVariant`
 and `ButtonSize` contracts while keeping its own accessible-name, target-size and
 `--giu-icon-button-*` presentation contract.
@@ -117,7 +117,7 @@ hydration, browser interaction, target-size and Axe accessibility tests.
 
 ## Implemented presentation primitive: `FieldLabel`
 
-`FieldLabel` is implemented and exported from the Studio entry point as an
+`FieldLabel` is implemented and exported from the root public entry point as an
 additional presentation primitive, not a seventh control family. It owns the
 visual field-label row, deterministic required-or-optional precedence,
 consumer-resolved marker copy, optional hint text and stable hint IDs.
@@ -132,7 +132,7 @@ hydration, browser-state and Axe accessibility tests.
 
 ## Implemented structural primitive: `Panel`
 
-`Panel` is implemented and exported from the Studio entry point as an additional structural primitive, not a seventh control family. It owns one named semantic section, a required visible title and body snippet, optional description and action snippets, deterministic heading association, a closed native heading-level contract, and neutral `--giu-panel-*` style hooks.
+`Panel` is implemented and exported from the root public entry point as an additional structural primitive, not a seventh control family. It owns one named semantic section, a required visible title and body snippet, optional description and action snippets, deterministic heading association, a closed native heading-level contract, and neutral `--giu-panel-*` style hooks.
 
 It does not own arbitrary section attributes, form behavior, events, focus, navigation, live regions, asynchronous state, operation results, or Atelier-Kit workflow. `Surface` remains distinct because generic visual containment does not necessarily justify a heading or section landmark. `AsyncOperationPanel` remains distinct because it presents one controlled operation lifecycle and its accessible status.
 
@@ -140,7 +140,7 @@ The component is supported by type-contract, deterministic SSR, DOM-preserving h
 
 ## Implemented presentation primitive: `Surface`
 
-`Surface` is implemented and exported from the Studio entry point as an
+`Surface` is implemented and exported from the root public entry point as an
 additional presentation primitive, not a seventh control family. It owns one
 neutral native `div`, required snippet content, consumer class and style
 composition, and independent `--giu-surface-*` presentation hooks.
@@ -157,13 +157,13 @@ accessibility tests.
 
 ## Implemented presentation primitive: `PageIntro`
 
-`PageIntro` is implemented and exported from the Studio entry point. It owns one semantic introductory paragraph, required snippet content, neutral typography and documented `--giu-page-intro-*` style hooks. It does not own translations, links, routing, heading hierarchy, alerts or page placement.
+`PageIntro` is implemented and exported from the root public entry point. It owns one semantic introductory paragraph, required snippet content, neutral typography and documented `--giu-page-intro-*` style hooks. It does not own translations, links, routing, heading hierarchy, alerts or page placement.
 
 The component is supported by deterministic SSR, DOM-preserving hydration, browser rendering, mixed-content, type-contract and accessibility tests. Atelier-Kit adoption remains separate consumer work.
 
 ## Implemented layout primitive: `FormActions`
 
-`FormActions` is implemented and exported from the Studio entry point as an additional layout primitive, not a seventh control family. It owns one horizontal flex container, required snippet content, main-axis alignment, wrapping, and the neutral `--giu-form-actions-gap` hook. `space-between` applies independently to each wrapped flex line; consumers that set `wrap={false}` explicitly accept possible overflow. Margins and page placement remain consumer-owned, as do all child semantics, accessible names, attributes, focus, keyboard, submission, navigation, and event behavior.
+`FormActions` is implemented and exported from the root public entry point as an additional layout primitive, not a seventh control family. It owns one horizontal flex container, required snippet content, main-axis alignment, wrapping, and the neutral `--giu-form-actions-gap` hook. `space-between` applies independently to each wrapped flex line; consumers that set `wrap={false}` explicitly accept possible overflow. Margins and page placement remain consumer-owned, as do all child semantics, accessible names, attributes, focus, keyboard, submission, navigation, and event behavior.
 
 The component is supported by deterministic SSR, DOM-preserving hydration, browser layout and interaction, arbitrary child-content, type-contract and Axe accessibility tests.
 
@@ -278,7 +278,7 @@ No Git, build, deploy, network, SvelteKit form-action, or Promise execution belo
 - Running and terminal announcement behavior is implemented and covered in Giada UI; consumer integration still needs validation to avoid duplicate surrounding live regions or unexpected focus changes.
 - Terminal messages are persistent. Atelier-Kit remains responsible for deciding when results are replaced or cleared.
 - Cancellation remains out of scope unless a real consumer motivates future API expansion. Progress is limited to optional consumer-supplied native progress while `running`.
-- The component name, Studio export path, CSS token names, and prop contract are implemented and documented public contracts.
+- The component name, public root export path, CSS token names, and prop contract are implemented and documented public contracts.
 - Atelier-Kit does not currently map the publication service's `outcome: 'partial'` to a five-state presentation model. Adoption will need an explicit adapter and consumer tests.
 
 ## Next steps and epic status
@@ -289,7 +289,7 @@ Epic #8 must remain open. Its architectural boundary and inventory can be marked
 
 ## Implemented control primitive: `Radio`
 
-`Radio` is implemented and exported from the Studio entry point as one visible
+`Radio` is implemented and exported from the root public entry point as one visible
 native `input type="radio"`. Its public state contract follows Svelte radio
 semantics: `value` is required and the selected value is bindable through
 `bind:group`. `checked` is deliberately not exposed as a component binding.

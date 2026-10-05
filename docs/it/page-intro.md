@@ -2,11 +2,11 @@
 
 # PageIntro
 
-`PageIntro` e' disponibile solo da `giadaware-ui-components/studio`. Renderizza un singolo paragrafo semantico per breve contenuto introduttivo posizionato prima dei controlli principali, dei pannelli o dei gruppi di pannelli di una pagina Studio.
+`PageIntro` e' disponibile solo da `giadaware-ui-components`. Renderizza un singolo paragrafo semantico per breve contenuto introduttivo posizionato prima dei controlli principali, dei pannelli o dei gruppi di pannelli di una pagina Studio.
 
 ```svelte
 <script lang="ts">
-	import { PageIntro } from 'giadaware-ui-components/studio';
+	import { PageIntro } from 'giadaware-ui-components';
 </script>
 
 <PageIntro>Manage the current document.</PageIntro>

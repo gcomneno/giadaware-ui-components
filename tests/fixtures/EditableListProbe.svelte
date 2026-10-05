@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { EditableList, EditableListRow, ReorderActions } from '../../src/lib/studio/index.js';
+	import { EditableList, EditableListRow, ReorderActions } from '../../src/lib/index.js';
 	let up = $state(0); let down = $state(0); let submitted = $state(0);
 </script>
 

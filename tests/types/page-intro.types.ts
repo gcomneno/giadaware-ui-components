@@ -1,5 +1,5 @@
-import { PageIntro } from '../../src/lib/studio/index.js';
-import type { PageIntroProps } from '../../src/lib/studio/index.js';
+import { PageIntro } from '../../src/lib/index.js';
+import type { PageIntroProps } from '../../src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 declare const children: Snippet;

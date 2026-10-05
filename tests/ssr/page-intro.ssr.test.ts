@@ -1,7 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { describe, expect, test } from 'vitest';
-import { PageIntro } from '../../src/lib/studio/index.js';
+import { PageIntro } from '../../src/lib/index.js';
 
 const plainChildren = createRawSnippet(() => ({
 	render: () => 'Manage the current document.'

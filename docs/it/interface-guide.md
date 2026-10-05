@@ -27,7 +27,7 @@ La peer dependency pubblica è Svelte `^5.0.0`.
 
 ## Entry point pubblici
 
-Esistono tre entry point JavaScript:
+Esiste un solo entry point JavaScript pubblico:
 
 ```ts
 import {
@@ -40,7 +40,7 @@ import {
 import {
 	ImageLightbox,
 	RelationshipGraph
-} from 'giadaware-ui-components/visitor';
+} from 'giadaware-ui-components';
 
 import {
 	AsyncOperationPanel,
@@ -61,7 +61,7 @@ import {
 	ReorderActions,
 	ReorderAnnouncement,
 	Surface
-} from 'giadaware-ui-components/studio';
+} from 'giadaware-ui-components';
 ```
 
 Usare soltanto gli export dichiarati dal package.
@@ -75,11 +75,9 @@ Il CSS è esplicito e non viene importato automaticamente:
 
 ```ts
 import 'giadaware-ui-components/styles.css';
-import 'giadaware-ui-components/visitor/styles.css';
-import 'giadaware-ui-components/studio/styles.css';
 ```
 
-Importare soltanto le famiglie di stylesheet necessarie all'applicazione.
+Importare lo stylesheet pubblico quando serve la presentazione di GiadaWare UI.
 
 Lo styling pubblico dei componenti usa CSS custom properties documentate. Le
 classi interne dei discendenti non costituiscono automaticamente API pubblica.
@@ -125,7 +123,7 @@ binding nativo di Svelte:
 
 ```svelte
 <script lang="ts">
-	import { Checkbox } from 'giadaware-ui-components/studio';
+	import { Checkbox } from 'giadaware-ui-components';
 
 	let accepted = $state(false);
 </script>
@@ -151,7 +149,7 @@ non `bind:checked`:
 
 ```svelte
 <script lang="ts">
-	import { Radio } from 'giadaware-ui-components/studio';
+	import { Radio } from 'giadaware-ui-components';
 
 	let importance = $state('normal');
 </script>
@@ -207,7 +205,7 @@ Composizione tipica:
 		FieldError,
 		FieldLabel,
 		FormActions
-	} from 'giadaware-ui-components/studio';
+	} from 'giadaware-ui-components';
 
 	let invalid = $state(false);
 </script>

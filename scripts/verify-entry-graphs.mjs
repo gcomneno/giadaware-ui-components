@@ -83,7 +83,7 @@ function graphFor(path, root) {
 }
 
 const allowedDependencies = {
-	root: new Set(['root', 'internal']),
+	root: new Set(['root', 'internal', 'visitor', 'studio']),
 	visitor: new Set(['visitor', 'internal']),
 	studio: new Set(['studio', 'internal']),
 	internal: new Set(['internal'])
@@ -263,16 +263,6 @@ const cssEntries = [
 		exportPath: './styles.css',
 		source: join(sourceRoot, 'styles.css'),
 		dist: join(distRoot, 'styles.css')
-	},
-	{
-		exportPath: './visitor/styles.css',
-		source: join(sourceRoot, 'visitor', 'styles.css'),
-		dist: join(distRoot, 'visitor', 'styles.css')
-	},
-	{
-		exportPath: './studio/styles.css',
-		source: join(sourceRoot, 'studio', 'styles.css'),
-		dist: join(distRoot, 'studio', 'styles.css')
 	}
 ];
 
@@ -317,11 +307,7 @@ const manifest = JSON.parse(
 );
 
 const expectedCssExports = {
-	'./styles.css': './dist/styles.css',
-	'./visitor/styles.css':
-		'./dist/visitor/styles.css',
-	'./studio/styles.css':
-		'./dist/studio/styles.css'
+	'./styles.css': './dist/styles.css'
 };
 
 for (
@@ -349,8 +335,8 @@ if (errors.length > 0) {
 }
 
 console.log(
-	'Entry graphs follow the root, visitor, studio and internal dependency matrix.'
+	'Internal graphs follow the root-facade, visitor, studio and internal dependency matrix.'
 );
 console.log(
-	'CSS entry points are explicit and not auto-imported.'
+	'The root CSS entry point is explicit and not auto-imported.'
 );

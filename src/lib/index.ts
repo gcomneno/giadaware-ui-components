@@ -11,3 +11,5 @@ export type { SocialIconId } from './social-icon.js';
 export { SOCIAL_ICON_IDS } from './social-icon.js';
 export { default as SocialLink } from './SocialLink.svelte';
 export type { SocialLinkProps } from './social-link.js';
+export * from './visitor/index.js';
+export * from './studio/index.js';

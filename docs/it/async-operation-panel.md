@@ -2,7 +2,7 @@
 
 # AsyncOperationPanel
 
-`AsyncOperationPanel` e' disponibile solo da `giadaware-ui-components/studio`. Presenta una singola operazione controllata dal consumatore senza avviare lavoro o coordinare altri pannelli.
+`AsyncOperationPanel` e' disponibile solo da `giadaware-ui-components`. Presenta una singola operazione controllata dal consumatore senza avviare lavoro o coordinare altri pannelli.
 
 ## Stato e prop
 
@@ -36,7 +36,7 @@ L'output tecnico viene fornito con `technicalDetails`; `technicalDetailsLabel` d
 
 ```svelte
 <script lang="ts">
-	import { AsyncOperationPanel } from 'giadaware-ui-components/studio';
+	import { AsyncOperationPanel } from 'giadaware-ui-components';
 </script>
 
 <AsyncOperationPanel state="running" title="Refresh index" busyLabel="Refreshing index">
@@ -65,7 +65,7 @@ L'output tecnico viene fornito con `technicalDetails`; `technicalDetailsLabel` d
 
 ```svelte
 <script lang="ts">
-	import { AsyncOperationPanel } from 'giadaware-ui-components/studio';
+	import { AsyncOperationPanel } from 'giadaware-ui-components';
 
 	type State = 'idle' | 'running';
 

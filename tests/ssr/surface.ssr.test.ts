@@ -2,7 +2,7 @@ import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { describe, expect, test } from 'vitest';
 
-import { Surface } from '../../src/lib/studio/index.js';
+import { Surface } from '../../src/lib/index.js';
 
 const children = createRawSnippet(() => ({
 	render: () =>

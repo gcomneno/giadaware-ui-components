@@ -2,11 +2,11 @@
 
 # PageIntro
 
-`PageIntro` is available only from `giadaware-ui-components/studio`. It renders one semantic paragraph for short introductory content placed before the primary controls, panels or panel groups of a Studio page.
+`PageIntro` is available from `giadaware-ui-components`. It renders one semantic paragraph for short introductory content placed before the primary controls, panels or panel groups of a Studio page.
 
 ```svelte
 <script lang="ts">
-	import { PageIntro } from 'giadaware-ui-components/studio';
+	import { PageIntro } from 'giadaware-ui-components';
 </script>
 
 <PageIntro>Manage the current document.</PageIntro>

@@ -2,11 +2,11 @@
 
 # FormActions
 
-`FormActions` is available only from `giadaware-ui-components/studio`. It is a layout primitive for an arbitrary consumer-provided action snippet and always renders one native `div`.
+`FormActions` is available from `giadaware-ui-components`. It is a layout primitive for an arbitrary consumer-provided action snippet and always renders one native `div`.
 
 ```svelte
 <script lang="ts">
-	import { Button, FormActions } from 'giadaware-ui-components/studio';
+	import { Button, FormActions } from 'giadaware-ui-components';
 </script>
 
 <FormActions align="end">

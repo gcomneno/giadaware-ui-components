@@ -2,7 +2,7 @@
 
 # Surface
 
-`Surface` e' disponibile solo da `giadaware-ui-components/studio`. Fornisce contenimento visuale neutro senza creare sezione, heading, landmark, nome accessibile, modello di interazione o workflow applicativo.
+`Surface` e' disponibile solo da `giadaware-ui-components`. Fornisce contenimento visuale neutro senza creare sezione, heading, landmark, nome accessibile, modello di interazione o workflow applicativo.
 
 ## Contratto pubblico
 
@@ -18,7 +18,7 @@ Il componente deliberatamente non inoltra attributi arbitrari di `div`. Aggiunge
 
 ```svelte
 <script lang="ts">
-	import { Surface } from 'giadaware-ui-components/studio';
+	import { Surface } from 'giadaware-ui-components';
 </script>
 
 <Surface>

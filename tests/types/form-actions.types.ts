@@ -1,8 +1,8 @@
-import { FormActions } from '../../src/lib/studio/index.js';
+import { FormActions } from '../../src/lib/index.js';
 import type {
 	FormActionsAlign,
 	FormActionsProps
-} from '../../src/lib/studio/index.js';
+} from '../../src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 declare const children: Snippet;
@@ -34,8 +34,8 @@ const invalidWrap: FormActionsProps = { children, wrap: 'yes' };
 const unsupportedRole: FormActionsProps = { children, role: 'group' };
 // @ts-expect-error children must be a Svelte snippet
 const invalidChildren: FormActionsProps = { children: 'Save' };
-// @ts-expect-error normalization helper is internal to the Studio entry point
-import { normalizeFormActionsAlign } from '../../src/lib/studio/index.js';
+// @ts-expect-error normalization helper is internal to the package
+import { normalizeFormActionsAlign } from '../../src/lib/index.js';
 
 void [
 	FormActions,

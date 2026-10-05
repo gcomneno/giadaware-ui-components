@@ -33,7 +33,7 @@ section-level status copy.
 
 ## Contract
 
-Import it from `giadaware-ui-components`. Do not import it from the Studio
+Import it from `giadaware-ui-components`.
 entry point.
 
 `title` is required consumer-resolved text. `children` is optional rich body

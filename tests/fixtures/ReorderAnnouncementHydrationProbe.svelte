@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ReorderAnnouncement } from '../../src/lib/studio/index.js';
+	import { ReorderAnnouncement } from '../../src/lib/index.js';
 
 	let eventKey = $state<string | number | null>('initial-confirmed-event');
 	let message = $state<string | null>('Stale server result');

@@ -3,8 +3,8 @@
 		EditableList,
 		EditableListRow,
 		ReorderActions
-	} from '../../src/lib/studio/index.js';
-	import type { EditableListRowDragCandidate } from '../../src/lib/studio/index.js';
+	} from '../../src/lib/index.js';
+	import type { EditableListRowDragCandidate } from '../../src/lib/index.js';
 
 	let started = $state(0);
 	let dropped = $state(0);

@@ -1,5 +1,5 @@
-import { Radio } from '../../src/lib/studio/index.js';
-import type { RadioProps, RadioValue } from '../../src/lib/studio/index.js';
+import { Radio } from '../../src/lib/index.js';
+import type { RadioProps, RadioValue } from '../../src/lib/index.js';
 import type { Component } from 'svelte';
 
 type RadioBindings = typeof Radio extends Component<RadioProps, {}, infer Bindings>
