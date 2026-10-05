@@ -6,7 +6,7 @@
 
 This document consolidates the Studio control families demonstrated by Giada UI and Atelier-Kit, removes overlapping candidate names, and records both completed Giada UI work and remaining extraction work. It preserves the architectural basis for `AsyncOperationPanel`; its final public contract is now documented here where it resolves the original design questions. Issue #73 explicitly approves `ImageFocalPointControl` as an implemented Studio primitive and requires no separate ADR. This inventory does not decide package versioning or registry publication.
 
-The inventory contains **six definitive control families**. `ImageAttachmentControl`, `AsyncOperationPanel`, and the shared structural subset of the ordered asset or record editor are implemented in Giada UI; the marked-text, color-preset, and font-preset families remain future extraction candidates. `ImageFocalPointControl`, `Button`, `Checkbox`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, and `Surface` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
+The inventory contains **six definitive control families**. `ImageAttachmentControl`, `AsyncOperationPanel`, and the shared structural subset of the ordered asset or record editor are implemented in Giada UI; the marked-text, color-preset, and font-preset families remain future extraction candidates. `ImageFocalPointControl`, `Button`, `Checkbox`, `Radio`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, and `Surface` are also implemented in the Studio entry point but are not additional families from the original six-family classification. `RelationshipGraph` is implemented in the Visitor entry point and is outside this Studio inventory.
 
 ## Inventory method
 
@@ -55,7 +55,7 @@ The table count remains six: two complete shared control families, one extracted
 
 `AsyncOperationPanel` was selected as the highest-priority extraction because it has two concrete consumers on one Atelier-Kit page, repeats a coherent interaction rather than domain data editing, and has a clean dependency-inversion boundary. That Giada UI extraction is complete: the component and public types are exported from `src/lib/studio/index.ts`. Its shared responsibility remains visible state and accessible feedback for one consumer-owned operation; server and workflow details remain outside Giada UI.
 
-The currently exported Studio components are `ImageAttachmentControl`, `ImageFocalPointControl`, `AsyncOperationPanel`, `Button`, `Checkbox`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, `Surface`, `EditableList`, `EditableListRow`, `ReorderActions`, and `ReorderAnnouncement`. Atelier-Kit adopted `ImageAttachmentControl` through #217, `Button` through #220, `AsyncOperationPanel` through #221, `PageIntro` and `FormActions` through #222, `Panel` and `Surface` through #223, and `FieldLabel` through #224. Gallery and Meta characterization is recorded through #225; editable-list adoption remains a future separate consumer issue.
+The currently exported Studio components are `ImageAttachmentControl`, `ImageFocalPointControl`, `AsyncOperationPanel`, `Button`, `Checkbox`, `Radio`, `IconButton`, `PageIntro`, `FieldLabel`, `FormActions`, `Panel`, `Surface`, `EditableList`, `EditableListRow`, `ReorderActions`, and `ReorderAnnouncement`. Atelier-Kit adopted `ImageAttachmentControl` through #217, `Button` through #220, `AsyncOperationPanel` through #221, `PageIntro` and `FormActions` through #222, `Panel` and `Surface` through #223, and `FieldLabel` through #224. Gallery and Meta characterization is recorded through #225; editable-list adoption remains a future separate consumer issue.
 
 The remaining work is classified as follows:
 
@@ -286,3 +286,20 @@ No Git, build, deploy, network, SvelteKit form-action, or Promise execution belo
 Giada UI implementation work for `ImageAttachmentControl` and `AsyncOperationPanel` is complete. The next work for those families is separate Atelier-Kit adoption, including replacement of local controls, consumer integration tests, removal of duplicate implementations, and the readiness page's `partial`-to-`warning` mapping. The other four families remain candidates and require separately scoped design and extraction work before implementation.
 
 Epic #8 must remain open. Its architectural boundary and inventory can be marked complete, and the completed Giada UI component implementations and their library-side test coverage can be recorded. The epic-level items requiring Atelier-Kit adoption, removal of consumer duplicates, permanent consumer regression coverage, and any publication/versioning decision remain incomplete.
+
+## Implemented control primitive: `Radio`
+
+`Radio` is implemented and exported from the Studio entry point as one visible
+native `input type="radio"`. Its public state contract follows Svelte radio
+semantics: `value` is required and the selected value is bindable through
+`bind:group`. `checked` is deliberately not exposed as a component binding.
+
+The primitive owns neutral scoped presentation, focus and disabled treatment,
+and forced-colors behavior. Consumers own labels, fieldsets, legends, group
+composition, validation, localization and domain meaning. The component
+generates no IDs and owns no `RadioGroup` abstraction.
+
+The component is covered by type, SSR, hydration, native-form, browser and Axe
+tests. Its visual direction is adapted from the MIT-licensed Uiverse
+`risabbir/good-chicken-7` source; glassmorphism, glow, animation, positional
+color variants and hidden-input treatment are intentionally excluded.

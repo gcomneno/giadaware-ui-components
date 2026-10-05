@@ -31,6 +31,7 @@ Il trial approvato contiene:
 - `AsyncOperationPanel`
 - `Button`
 - `Checkbox`
+- `Radio`
 - `PageIntro`
 - `FieldLabel`
 - `FieldDescription` e `FieldError`
@@ -43,7 +44,7 @@ I tre grafi di entry JavaScript restano isolati. Le API pubbliche correnti sono:
 
 - `giadaware-ui-components` esporta `FormStatus`, `FormStatusTone`, `StatusNotice`, `StatusNoticeAnnouncement`, `StatusNoticeProps`, `StatusNoticeTone`, `SocialIcon`, `SocialIconId`, `SOCIAL_ICON_IDS`, `SocialLink` e `SocialLinkProps`;
 - `giadaware-ui-components/visitor` esporta `ImageLightbox`, `ImageLightboxLabels`, `ImageLightboxProps`, `RelationshipGraph` e i suoi tipi pubblici;
-- `giadaware-ui-components/studio` esporta `ImageAttachmentControl` e i tipi `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`, `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`, `ImageAttachmentIntent`, `ImageAttachmentState` e `ImageAttachmentValidationError`, piu' `ImageFocalPointControl` e i tipi `ImageFocalPointControlProps`, `ImageFocalPointImage` e `ImageFocalPointValue`, piu' `AsyncOperationPanel` e i suoi tipi pubblici incluso `AsyncOperationProgress`, piu' `Button`, `ButtonProps`, `ButtonVariant` e `ButtonSize`, piu' `Checkbox` e `CheckboxProps`, piu' `PageIntro` e `PageIntroProps`, piu' `FieldLabel` e `FieldLabelProps`, piu' `FieldDescription`, `FieldDescriptionProps`, `FieldError` e `FieldErrorProps`, piu' `FormActions`, `FormActionsProps` e `FormActionsAlign`, piu' `Panel`, `PanelProps` e `PanelHeadingLevel`, piu' `Surface` e `SurfaceProps`, piu' `EditableList`, `EditableListRow`, `ReorderActions`, `ReorderAnnouncement` e le loro prop pubbliche, tipi drag candidate e cancellation.
+- `giadaware-ui-components/studio` esporta `ImageAttachmentControl` e i tipi `ImageAttachmentControlLabels`, `ImageAttachmentCurrentImage`, `ImageAttachmentDropzoneOptions`, `ImageAttachmentFileValidator`, `ImageAttachmentIntent`, `ImageAttachmentState` e `ImageAttachmentValidationError`, piu' `ImageFocalPointControl` e i tipi `ImageFocalPointControlProps`, `ImageFocalPointImage` e `ImageFocalPointValue`, piu' `AsyncOperationPanel` e i suoi tipi pubblici incluso `AsyncOperationProgress`, piu' `Button`, `ButtonProps`, `ButtonVariant` e `ButtonSize`, piu' `Checkbox` e `CheckboxProps`, piu' `Radio`, `RadioProps` e `RadioValue`, piu' `PageIntro` e `PageIntroProps`, piu' `FieldLabel` e `FieldLabelProps`, piu' `FieldDescription`, `FieldDescriptionProps`, `FieldError` e `FieldErrorProps`, piu' `FormActions`, `FormActionsProps` e `FormActionsAlign`, piu' `Panel`, `PanelProps` e `PanelHeadingLevel`, piu' `Surface` e `SurfaceProps`, piu' `EditableList`, `EditableListRow`, `ReorderActions`, `ReorderAnnouncement` e le loro prop pubbliche, tipi drag candidate e cancellation.
 
 Vedi [SocialLink](docs/it/social-link.md) per il contratto di anchor nativo, le regole di nome accessibile, la proprieta' della navigazione, gli hook di stile e la composizione con `SocialIcon`.
 
@@ -54,6 +55,8 @@ Vedi [AsyncOperationPanel](docs/it/async-operation-panel.md) per il modello di s
 Vedi [Button](docs/it/button.md) per inoltro degli attributi nativi, variant, size, responsabilita' di accessibilita', esempi e CSS custom properties.
 
 Vedi [Checkbox](docs/it/checkbox.md) per semantica nativa, `bind:checked`, comportamento form, proprieta' della label, gruppi con lo stesso name, stati disabled/focus, forced colors, hook CSS e provenienza Uiverse/cbolson MIT.
+
+Vedi [Radio](docs/it/radio.md) per semantica radio nativa, `bind:group`, comportamento form, proprieta' del gruppo al consumer, stati disabled/focus, forced colors, hook CSS e provenienza Uiverse/risabbir MIT.
 
 Vedi [PageIntro](docs/it/page-intro.md) per il contratto di paragrafo e snippet, il confine di responsabilita', il comportamento di accessibilita' e le CSS custom properties.
 

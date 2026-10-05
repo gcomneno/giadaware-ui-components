@@ -3,6 +3,7 @@ import ImageFocalPointControlImplementation from './ImageFocalPointControl.svelt
 import AsyncOperationPanelImplementation from './AsyncOperationPanel.svelte';
 import ButtonImplementation from './Button.svelte';
 import CheckboxImplementation from './Checkbox.svelte';
+import RadioImplementation from './Radio.svelte';
 import IconButtonImplementation from './IconButton.svelte';
 import FormActionsImplementation from './FormActions.svelte';
 import FieldLabelImplementation from './FieldLabel.svelte';
@@ -20,6 +21,7 @@ import type { Component, ComponentProps } from 'svelte';
 import type { AsyncOperationPanelProps } from './async-operation-panel.js';
 import type { ButtonProps } from './button.js';
 import type { CheckboxProps } from './checkbox.js';
+import type { RadioProps } from './radio.js';
 import type { IconButtonProps } from './icon-button.js';
 import type { FormActionsProps } from './form-actions.js';
 import type { FieldLabelProps } from './field-label.js';
@@ -95,6 +97,13 @@ type CheckboxPropsAreEqual =
 			: false
 		: false;
 type _CheckboxPropsAreSynchronized = Assert<CheckboxPropsAreEqual>;
+type RadioPropsAreEqual =
+	RadioProps extends ComponentProps<typeof RadioImplementation>
+		? ComponentProps<typeof RadioImplementation> extends RadioProps
+			? true
+			: false
+		: false;
+type _RadioPropsAreSynchronized = Assert<RadioPropsAreEqual>;
 type IconButtonPropsAreEqual =
 	IconButtonProps extends ComponentProps<typeof IconButtonImplementation>
 		? ComponentProps<typeof IconButtonImplementation> extends IconButtonProps
@@ -188,6 +197,8 @@ export const AsyncOperationPanel: Component<AsyncOperationPanelProps, {}, ''> =
 export const Button: Component<ButtonProps, {}, ''> = ButtonImplementation;
 export const Checkbox: Component<CheckboxProps, {}, 'checked'> =
 	CheckboxImplementation;
+export const Radio: Component<RadioProps, {}, 'group'> =
+	RadioImplementation;
 
 export const IconButton: Component<IconButtonProps, {}, ''> = IconButtonImplementation;
 
@@ -237,6 +248,7 @@ export type {
 } from './async-operation-panel.js';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './button.js';
 export type { CheckboxProps } from './checkbox.js';
+export type { RadioProps, RadioValue } from './radio.js';
 export type { IconButtonProps } from './icon-button.js';
 export type { FieldLabelProps } from './field-label.js';
 export type { FieldDescriptionProps } from './field-description.js';

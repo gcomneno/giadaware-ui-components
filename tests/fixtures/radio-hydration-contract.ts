@@ -1,0 +1,2 @@
+export const RADIO_HYDRATION_SSR_BODY =
+	"<!--[--><div data-testid=\"radio-hydration-probe\" data-selected=\"primary\" data-count=\"0\"><label><input name=\"hydrated\" data-testid=\"hydrated-radio\" type=\"radio\" value=\"primary\" checked=\"\" class=\"giu-radio svelte-1yd0z6l\"/><!----> Primary radio</label> <label><input name=\"hydrated\" type=\"radio\" value=\"secondary\" class=\"giu-radio svelte-1yd0z6l\"/><!----> Secondary radio</label></div><!--]-->";

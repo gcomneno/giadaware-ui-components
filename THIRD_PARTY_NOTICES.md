@@ -111,3 +111,26 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Uiverse radio design reference
+
+The Studio `Radio` primitive adapts design direction from the Uiverse source
+listed below:
+
+https://uiverse.io/risabbir/good-chicken-7
+
+Author:
+
+risabbir
+
+License:
+
+MIT License
+
+Decision:
+
+ADAPT
+
+Giada UI keeps the native radio concept with a circular border and selected
+inner dot. It does not retain the source demo container, glassmorphism, glow,
+orbit animation, positional color variants or hidden-input treatment.

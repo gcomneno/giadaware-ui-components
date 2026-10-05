@@ -50,6 +50,14 @@ const checkboxContract = await readFile(
 	new URL('../src/lib/studio/checkbox.ts', import.meta.url),
 	'utf8'
 );
+const radioSource = await readFile(
+	new URL('../src/lib/studio/Radio.svelte', import.meta.url),
+	'utf8'
+);
+const radioContract = await readFile(
+	new URL('../src/lib/studio/radio.ts', import.meta.url),
+	'utf8'
+);
 const iconButtonSource = await readFile(
 	new URL('../src/lib/studio/IconButton.svelte', import.meta.url),
 	'utf8'
@@ -415,6 +423,61 @@ requireValue(
 		!checkboxSource.includes('--studio-') &&
 		!checkboxSource.includes('--site-'),
 	'Checkbox CSS must remain scoped, neutral and fallback-complete'
+);
+
+requireValue(
+	radioSource.includes('<input') &&
+		(radioSource.match(/<input(?:\s|>)/g) ?? []).length === 1 &&
+		radioSource.includes('{...nativeAttributes}') &&
+		radioSource.includes('type="radio"') &&
+		radioSource.includes('bind:group') &&
+		radioSource.includes("class={['giu-radio', className]}") &&
+		radioContract.includes('HTMLInputAttributes') &&
+		radioContract.includes("'children' | 'class' | 'style' | 'type' | 'checked' | 'value'") &&
+		radioContract.includes('value: RadioValue') &&
+		radioContract.includes('group?: RadioValue') &&
+		radioContract.includes("class?: HTMLInputAttributes['class']") &&
+		radioContract.includes("style?: HTMLInputAttributes['style']"),
+	'Radio must remain one native radio input with group binding and public native attribute forwarding'
+);
+
+requireValue(
+	!radioSource.includes('<label') &&
+		!radioSource.includes('<div') &&
+		!radioSource.includes('<span') &&
+		!radioSource.includes('role="radio"') &&
+		!radioSource.includes('role="radiogroup"') &&
+		!radioSource.includes('display: none') &&
+		!radioSource.includes('backdrop-filter') &&
+		!radioSource.includes('@keyframes') &&
+		!radioSource.includes('onMount'),
+	'Radio must not own wrappers, labels, custom group semantics, hidden native input, demo effects or lifecycle'
+);
+
+const radioStyleMatch = radioSource.match(
+	/<style>([\s\S]*?)<\/style>/
+);
+const radioStyle = radioStyleMatch?.[1] ?? '';
+const radioCustomProperties = [
+	...radioStyle.matchAll(/var\((--[a-z0-9-]+)/g)
+].map(([, property]) => property);
+
+requireValue(
+	radioCustomProperties.length > 0 &&
+		radioCustomProperties.every((property) =>
+			property.startsWith('--giu-radio-')
+		),
+	'Radio must use only neutral --giu-radio-* tokens'
+);
+
+requireValue(
+	[...radioStyle.matchAll(/var\(([^)]+)\)/g)].every(([, value]) =>
+		value.includes(',')
+	) &&
+		!radioStyle.includes(':global') &&
+		!radioSource.includes('--studio-') &&
+		!radioSource.includes('--site-'),
+	'Radio CSS must remain scoped, neutral and fallback-complete'
 );
 
 requireValue(

@@ -10,6 +10,9 @@
 - Add the Studio `Checkbox` primitive with one visible native checkbox input,
   bindable checked state, native form behavior, scoped styling hooks, high
   contrast support and Uiverse/cbolson MIT design provenance.
+- Add the Studio `Radio` primitive with one visible native radio input,
+  bindable Svelte group state, native same-name form behavior, scoped styling
+  hooks, high-contrast support and Uiverse/risabbir MIT design provenance.
 
 ### Changed
 
