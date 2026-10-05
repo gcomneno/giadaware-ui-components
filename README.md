@@ -37,6 +37,7 @@ The approved trial contains:
 - `AsyncOperationPanel`
 - `Button`
 - `Checkbox`
+- `Radio`
 - `PageIntro`
 - `FieldLabel`
 - `FieldDescription` and `FieldError`
@@ -63,7 +64,7 @@ are:
   `ImageFocalPointControl` and the `ImageFocalPointControlProps`,
   `ImageFocalPointImage` and `ImageFocalPointValue` types, plus
   `AsyncOperationPanel` and its public types including `AsyncOperationProgress`,
-  plus `Checkbox` and `CheckboxProps`,
+  plus `Checkbox` and `CheckboxProps`, plus `Radio`, `RadioProps` and `RadioValue`,
   plus `Button`, `ButtonProps`, `ButtonVariant` and `ButtonSize`, plus
   `PageIntro` and `PageIntroProps`, plus
   `FieldLabel` and `FieldLabelProps`, plus `FieldDescription`,
@@ -91,6 +92,10 @@ accessibility responsibilities, examples, and CSS custom properties.
 See [Checkbox](docs/checkbox.md) for native checkbox semantics,
 `bind:checked`, form behavior, label ownership, same-name groups, disabled and
 focus behavior, forced-colors support, styling hooks and MIT provenance.
+
+See [Radio](docs/radio.md) for native radio semantics, `bind:group`, form
+behavior, consumer-owned grouping, disabled/focus behavior, forced-colors
+support, styling hooks and MIT provenance.
 
 See [PageIntro](docs/page-intro.md) for its paragraph and snippet contract,
 responsibility boundary, accessibility behavior and CSS custom properties.
