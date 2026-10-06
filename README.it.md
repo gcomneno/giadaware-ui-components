@@ -538,6 +538,32 @@ La presentazione dropzone e' personalizzabile tramite la famiglia di token `--gi
 
 L'enhancement non aggiunge upload transport, progress tracking, persistenza, supporto multi-file, paste handling o dipendenza drag-and-drop.
 
+## Demo consumer eseguibile
+
+La demo offre esempi consumer eseguibili rivolti ai programmatori.
+Avviala localmente con `npm run dev`. I sei scenari pratici mostrano come
+modificare un profilo, consultare record di esempio, presentare il feedback
+di un'operazione, riordinare una checklist, lavorare con una singola immagine
+ed esplorare relazioni. Stato e comportamento applicativo restano nel codice
+consumer degli esempi.
+
+Gli esempi importano intenzionalmente componenti e tipi solo da
+`giadaware-ui-components`, e il CSS pubblico da
+`giadaware-ui-components/styles.css`. Alias Vite limitati al repository
+mappano questi esatti specifier pubblici al sorgente per un riscontro immediato
+durante lo sviluppo. Questa risoluzione tramite alias non dimostra il corretto
+packaging: `npm run verify:pack` resta il controllo autorevole per il consumo
+dell'artefatto packed.
+
+Dopo `npm run build`, esegui `npm run test:demo` per verificare la demo
+compilata e servita con Playwright e axe-core. Il controllo copre SSR senza
+JavaScript, hydration, interazioni locali, stati rappresentativi di tastiera
+e accessibilità, contenimento su schermi stretti e disciplina degli import
+pubblici. `npm run validate` esegue questo controllo dopo la build.
+La verifica usa solo risorse locali e non dipende dai link alla documentazione
+esterna. La demo non implica alcuna pubblicazione su registry; le protezioni
+di pubblicazione dell'incubazione restano in vigore.
+
 ## Requisiti
 
 Node.js:

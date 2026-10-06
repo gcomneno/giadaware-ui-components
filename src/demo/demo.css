@@ -1,0 +1,310 @@
+/*
+ * Consumer-owned presentation. The public stylesheet defines theme tokens;
+ * this demo explicitly maps selected tokens into documented component hooks.
+ * Button/IconButton variants and status tones retain their semantic palettes.
+ */
+html {
+    font-family: system-ui, sans-serif;
+    line-height: 1.55;
+}
+body {
+    margin: 0;
+}
+* {
+    box-sizing: border-box;
+}
+.demo-shell {
+    min-height: 100vh;
+    padding: clamp(1rem, 3vw, 3rem);
+    background: var(--giu-theme-base);
+    color: var(--giu-theme-text);
+    color-scheme: var(--giu-theme-color-scheme);
+    --demo-focus: #1559a6;
+    --demo-link: #174f83;
+
+    --giu-page-intro-color: var(--giu-theme-text);
+    --giu-page-intro-link-color: var(--demo-link);
+    --giu-panel-background: var(--giu-theme-card);
+    --giu-panel-color: var(--giu-theme-text);
+    --giu-panel-border-color: var(--giu-theme-border);
+    --giu-panel-description-color: var(--giu-theme-muted);
+    --giu-panel-title-size: 1.5rem;
+    --giu-surface-background: var(--giu-theme-surface);
+    --giu-surface-color: var(--giu-theme-text);
+    --giu-surface-border-color: var(--giu-theme-border);
+    --giu-field-label-color: var(--giu-theme-text);
+    --giu-field-label-hint-color: var(--giu-theme-muted);
+    --giu-field-label-optional-color: var(--giu-theme-muted);
+    --giu-field-description-color: var(--giu-theme-muted);
+    --giu-field-error-color: #a31c1c;
+
+    --giu-text-input-background: var(--giu-theme-surface);
+    --giu-text-input-color: var(--giu-theme-text);
+    --giu-text-input-border-color: var(--giu-theme-border);
+    --giu-text-input-placeholder-color: var(--giu-theme-muted);
+    --giu-text-input-focus-color: var(--demo-focus);
+    --giu-textarea-background: var(--giu-theme-surface);
+    --giu-textarea-color: var(--giu-theme-text);
+    --giu-textarea-border-color: var(--giu-theme-border);
+    --giu-textarea-focus-color: var(--demo-focus);
+    --giu-select-background: var(--giu-theme-surface);
+    --giu-select-color: var(--giu-theme-text);
+    --giu-select-border-color: var(--giu-theme-border);
+    --giu-select-focus-color: var(--demo-focus);
+    --giu-combobox-background: var(--giu-theme-surface);
+    --giu-combobox-color: var(--giu-theme-text);
+    --giu-combobox-border-color: var(--giu-theme-border);
+    --giu-combobox-listbox-background: var(--giu-theme-surface);
+    --giu-combobox-listbox-color: var(--giu-theme-text);
+    --giu-combobox-listbox-border-color: var(--giu-theme-border);
+    --giu-combobox-option-active-background: var(--giu-theme-accent);
+    --giu-combobox-focus-color: var(--demo-focus);
+
+    --giu-checkbox-background: var(--giu-theme-surface);
+    --giu-checkbox-border-color: var(--giu-theme-border);
+    --giu-checkbox-focus-color: var(--demo-focus);
+    --giu-radio-background: var(--giu-theme-surface);
+    --giu-radio-border-color: var(--giu-theme-border);
+    --giu-radio-checked-color: var(--giu-theme-text);
+    --giu-radio-checked-border-color: var(--giu-theme-text);
+    --giu-radio-hover-border-color: var(--giu-theme-text);
+    --giu-radio-focus-color: var(--demo-focus);
+
+    --giu-table-background: var(--giu-theme-card);
+    --giu-table-color: var(--giu-theme-text);
+    --giu-table-border-color: var(--giu-theme-border);
+    --giu-table-cell-background: var(--giu-theme-card);
+    --giu-table-cell-color: var(--giu-theme-text);
+    --giu-table-cell-border-color: var(--giu-theme-border);
+    --giu-table-caption-color: var(--giu-theme-text);
+    --giu-tabs-tab-background: var(--giu-theme-surface);
+    --giu-tabs-tab-color: var(--giu-theme-text);
+    --giu-tabs-tab-border-color: var(--giu-theme-border);
+    --giu-tabs-tab-hover-background: var(--giu-theme-accent);
+    --giu-tabs-selected-background: var(--giu-theme-text);
+    --giu-tabs-selected-color: var(--giu-theme-base);
+    --giu-tabs-selected-border-color: var(--giu-theme-text);
+    --giu-tabs-panel-background: var(--giu-theme-card);
+    --giu-tabs-panel-color: var(--giu-theme-text);
+    --giu-tabs-focus-color: var(--demo-focus);
+
+    --giu-disclosure-background: var(--giu-theme-surface);
+    --giu-disclosure-color: var(--giu-theme-text);
+    --giu-disclosure-border-color: var(--giu-theme-border);
+    --giu-disclosure-focus-color: var(--demo-focus);
+    --giu-accordion-background: var(--giu-theme-surface);
+    --giu-accordion-color: var(--giu-theme-text);
+    --giu-accordion-border-color: var(--giu-theme-border);
+    --giu-accordion-focus-color: var(--demo-focus);
+    --giu-dialog-background: var(--giu-theme-card);
+    --giu-dialog-color: var(--giu-theme-text);
+    --giu-dialog-border-color: var(--giu-theme-border);
+    --giu-dialog-focus-color: var(--demo-focus);
+    --giu-menu-button-trigger-background: var(--giu-theme-surface);
+    --giu-menu-button-trigger-color: var(--giu-theme-text);
+    --giu-menu-button-trigger-border-color: var(--giu-theme-border);
+    --giu-menu-button-menu-background: var(--giu-theme-surface);
+    --giu-menu-button-menu-color: var(--giu-theme-text);
+    --giu-menu-button-menu-border-color: var(--giu-theme-border);
+    --giu-menu-button-item-background: var(--giu-theme-surface);
+    --giu-menu-button-item-color: var(--giu-theme-text);
+    --giu-menu-button-item-hover-background: var(--giu-theme-accent);
+    --giu-menu-button-focus-color: var(--demo-focus);
+    --giu-pagination-background: var(--giu-theme-surface);
+    --giu-pagination-color: var(--giu-theme-text);
+    --giu-pagination-border-color: var(--giu-theme-border);
+    --giu-pagination-hover-background: var(--giu-theme-accent);
+    --giu-pagination-current-background: var(--giu-theme-text);
+    --giu-pagination-current-color: var(--giu-theme-base);
+    --giu-pagination-focus-color: var(--demo-focus);
+
+    --giu-async-operation-panel-background: var(--giu-theme-card);
+    --giu-async-operation-panel-color: var(--giu-theme-text);
+    --giu-async-operation-panel-border-color: var(--giu-theme-border);
+    --giu-async-operation-panel-focus-color: var(--demo-focus);
+    --giu-editable-list-row-background: var(--giu-theme-surface);
+    --giu-editable-list-row-border: 1px solid var(--giu-theme-border);
+    --giu-editable-list-row-position-color: var(--giu-theme-muted);
+    --giu-reorder-actions-background: var(--giu-theme-surface);
+    --giu-reorder-actions-color: var(--giu-theme-text);
+    --giu-reorder-actions-border: 1px solid var(--giu-theme-border);
+    --giu-reorder-actions-hover-background: var(--giu-theme-accent);
+    --giu-reorder-actions-focus-color: var(--demo-focus);
+
+    --giu-image-attachment-background: var(--giu-theme-surface);
+    --giu-image-attachment-color: var(--giu-theme-text);
+    --giu-image-attachment-border-color: var(--giu-theme-border);
+    --giu-image-attachment-status-color: var(--giu-theme-muted);
+    --giu-image-attachment-action-background: var(--giu-theme-surface);
+    --giu-image-attachment-action-color: var(--giu-theme-text);
+    --giu-image-attachment-action-border-color: var(--giu-theme-border);
+    --giu-image-attachment-focus-color: var(--demo-focus);
+    --giu-image-focal-point-preview-border: 1px solid var(--giu-theme-border);
+    --giu-image-focal-point-focus-color: var(--demo-focus);
+    --giu-image-lightbox-background: var(--giu-theme-card);
+    --giu-image-lightbox-color: var(--giu-theme-text);
+    --giu-image-lightbox-caption-color: var(--giu-theme-text);
+    --giu-image-lightbox-close-background: var(--giu-theme-surface);
+    --giu-image-lightbox-close-color: var(--giu-theme-text);
+    --giu-image-lightbox-close-border-color: var(--giu-theme-border);
+    --giu-image-lightbox-close-hover-background: var(--giu-theme-accent);
+    --giu-image-lightbox-focus-color: var(--demo-focus);
+
+    --giu-relationship-graph-background: var(--giu-theme-surface);
+    --giu-relationship-graph-node-background: var(--giu-theme-card);
+    --giu-relationship-graph-node-color: var(--giu-theme-text);
+    --giu-relationship-graph-node-border: var(--giu-theme-border);
+}
+.demo-shell[data-giu-theme='dark'] {
+    --demo-focus: #9ecbff;
+    --demo-link: #9ecbff;
+    --giu-field-error-color: #ffb4b4;
+    --giu-field-label-required-color: #ffb4b4;
+    --giu-image-attachment-error-color: #ffb4b4;
+}
+.demo-shell a {
+    color: var(--demo-link);
+    text-underline-offset: 0.2em;
+}
+.demo-shell :focus-visible {
+    outline: 3px solid var(--demo-focus);
+    outline-offset: 3px;
+}
+.demo-header,
+.demo-layout {
+    max-width: 88rem;
+    margin-inline: auto;
+}
+.demo-header {
+    margin-bottom: 2rem;
+    display: grid;
+    gap: 1rem;
+}
+.demo-eyebrow {
+    color: var(--giu-theme-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+}
+.demo-shell h1 {
+    color: var(--giu-theme-heading);
+    max-width: 24ch;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.12;
+}
+.demo-shell p,
+.demo-shell h1,
+.demo-shell h3 {
+    margin-block: 0 0.75rem;
+}
+.demo-layout {
+    display: grid;
+    grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+}
+.demo-navigation {
+    position: sticky;
+    top: 1rem;
+}
+.demo-navigation p {
+    margin-top: 1rem;
+    color: var(--giu-theme-muted);
+    font-size: 0.9rem;
+}
+.demo-main,
+.demo-stack {
+    display: grid;
+    gap: 1.5rem;
+    min-width: 0;
+}
+.demo-main > section {
+    scroll-margin-top: 1rem;
+}
+.demo-field {
+    display: grid;
+    gap: 0.5rem;
+    max-width: 42rem;
+    min-width: 0;
+}
+.demo-choice,
+.demo-row-actions,
+.demo-resource-link {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.demo-fieldset {
+    border: 1px solid var(--giu-theme-border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    min-width: 0;
+}
+.demo-fieldset legend {
+    padding-inline: 0.4rem;
+    font-weight: 600;
+}
+.demo-fieldset .demo-choice + .demo-choice {
+    margin-top: 0.75rem;
+}
+.demo-theme-choice {
+    width: fit-content;
+}
+.demo-controls {
+    margin-block: 1rem;
+}
+.demo-state,
+.demo-source {
+    margin-block: 1rem;
+}
+.demo-state pre,
+.demo-source pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+.demo-docs {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--giu-theme-muted);
+}
+.demo-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+.demo-skip-link {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--giu-theme-card);
+    border: 1px solid var(--giu-theme-border);
+    transform: translateY(-180%);
+    z-index: 10;
+}
+.demo-skip-link:focus {
+    transform: translateY(0);
+}
+@media (max-width: 60rem) {
+    .demo-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .demo-navigation {
+        position: static;
+    }
+}
+@media (max-width: 36rem) {
+    .demo-shell {
+        --giu-panel-padding: 0.85rem;
+        --giu-editable-list-row-gap: 0.4rem;
+        --giu-reorder-actions-gap: 0.25rem;
+    }
+}
+@media (forced-colors: active) {
+    .demo-shell :focus-visible {
+        outline-color: Highlight;
+    }
+}

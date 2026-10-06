@@ -683,6 +683,30 @@ rejected border/background hooks.
 The enhancement adds no upload transport, progress tracking, persistence,
 multiple-file support, paste handling or drag-and-drop dependency.
 
+## Living consumer demo
+
+The living demo provides programmer-facing executable consumer examples.
+Run it locally with `npm run dev`. Its six practical scenarios cover editing
+a profile, browsing sample records, presenting operation feedback, reordering
+a checklist, working with one image, and exploring relationships. State and
+application behavior remain in the examples' consumer code.
+
+Examples intentionally import components and types only from
+`giadaware-ui-components`, and public CSS from
+`giadaware-ui-components/styles.css`. Repository-only Vite aliases map these
+exact public specifiers to source for immediate development feedback.
+This aliasing is not packaging evidence: `npm run verify:pack` remains
+authoritative for packed consumption.
+
+After `npm run build`, run `npm run test:demo` to verify the built, served
+demo with Playwright and axe-core. The check covers SSR without JavaScript,
+hydration, local interactions, representative keyboard and accessibility
+states, narrow-screen containment, and public import discipline.
+`npm run validate` runs this check after building. Verification uses only
+local resources and does not depend on external documentation links.
+The demo implies no registry publication; the incubation publication guards
+remain in force.
+
 ## Requirements
 
 Node.js:
