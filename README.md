@@ -41,6 +41,16 @@ The approved trial contains:
 - `Button`
 - `Checkbox`
 - `Radio`
+- `TextInput`, `Textarea` and `Select`
+- `Combobox`
+- `Disclosure`, `Accordion` and `AccordionItem`
+- `Dialog`
+- `Tabs`, `TabList`, `Tab` and `TabPanel`
+- `MenuButton`, `MenuItem` and `MenuSeparator`
+- `Pagination`
+- `Tooltip`
+- `NavList`
+- `Table`, `TableCaption`, `TableHead`, `TableBody`, `TableRow`, `TableHeaderCell` and `TableCell`
 - `PageIntro`
 - `FieldLabel`
 - `FieldDescription` and `FieldError`
@@ -79,6 +89,11 @@ focus behavior, forced-colors support, styling hooks and MIT provenance.
 See [Radio](docs/radio.md) for native radio semantics, `bind:group`, form
 behavior, consumer-owned grouping, disabled/focus behavior, forced-colors
 support, styling hooks and MIT provenance.
+
+See [Component surface expansion](docs/component-surface-expansion.md) for
+`TextInput`, `Textarea`, `Select`, `Combobox`, `Disclosure`, `Accordion`,
+`Dialog`, the Tabs and MenuButton families, `Pagination`, `Tooltip`, `NavList`
+and the semantic Table primitives.
 
 See [PageIntro](docs/page-intro.md) for its paragraph and snippet contract,
 responsibility boundary, accessibility behavior and CSS custom properties.
