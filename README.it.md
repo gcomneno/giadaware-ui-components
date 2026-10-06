@@ -35,6 +35,16 @@ Il trial approvato contiene:
 - `Button`
 - `Checkbox`
 - `Radio`
+- `TextInput`, `Textarea` e `Select`
+- `Combobox`
+- `Disclosure`, `Accordion` e `AccordionItem`
+- `Dialog`
+- `Tabs`, `TabList`, `Tab` e `TabPanel`
+- `MenuButton`, `MenuItem` e `MenuSeparator`
+- `Pagination`
+- `Tooltip`
+- `NavList`
+- `Table`, `TableCaption`, `TableHead`, `TableBody`, `TableRow`, `TableHeaderCell` e `TableCell`
 - `PageIntro`
 - `FieldLabel`
 - `FieldDescription` e `FieldError`
@@ -62,6 +72,8 @@ Vedi [Button](docs/it/button.md) per inoltro degli attributi nativi, variant, si
 Vedi [Checkbox](docs/it/checkbox.md) per semantica nativa, `bind:checked`, comportamento form, proprieta' della label, gruppi con lo stesso name, stati disabled/focus, forced colors, hook CSS e provenienza Uiverse/cbolson MIT.
 
 Vedi [Radio](docs/it/radio.md) per semantica radio nativa, `bind:group`, comportamento form, proprieta' del gruppo al consumer, stati disabled/focus, forced colors, hook CSS e provenienza Uiverse/risabbir MIT.
+
+Vedi [Espansione della superficie dei componenti](docs/it/component-surface-expansion.md) per `TextInput`, `Textarea`, `Select`, `Combobox`, `Disclosure`, `Accordion`, `Dialog`, le famiglie Tabs e MenuButton, `Pagination`, `Tooltip`, `NavList` e le primitive semantiche Table.
 
 Vedi [PageIntro](docs/it/page-intro.md) per il contratto di paragrafo e snippet, il confine di responsabilita', il comportamento di accessibilita' e le CSS custom properties.
 

@@ -29,9 +29,14 @@ There is one public JavaScript entry point:
 
 ```ts
 import {
+	Accordion,
+	AccordionItem,
 	AsyncOperationPanel,
 	Button,
 	Checkbox,
+	Combobox,
+	Dialog,
+	Disclosure,
 	EditableList,
 	EditableListRow,
 	FieldDescription,
@@ -43,16 +48,36 @@ import {
 	ImageAttachmentControl,
 	ImageFocalPointControl,
 	ImageLightbox,
+	MenuButton,
+	MenuItem,
+	MenuSeparator,
+	NavList,
 	PageIntro,
+	Pagination,
 	Panel,
 	Radio,
 	RelationshipGraph,
+	Select,
 	ReorderActions,
 	ReorderAnnouncement,
 	SocialIcon,
 	SocialLink,
 	StatusNotice,
-	Surface
+	Surface,
+	Tab,
+	TabList,
+	TabPanel,
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableHead,
+	TableHeaderCell,
+	TableRow,
+	Tabs,
+	Textarea,
+	TextInput,
+	Tooltip
 } from 'giadaware-ui-components';
 ```
 
@@ -310,6 +335,19 @@ invisible.
 | `IconButton` | one named icon-only native button | tooltip/help policy and workflow |
 | `Checkbox` | one native checkbox | labels, grouping and validation |
 | `Radio` | one native radio | labels, grouping and selected application state |
+| `TextInput` | native text-like input presentation and binding | label, validation and domain meaning |
+| `Textarea` | native multiline input presentation and binding | label, validation and domain meaning |
+| `Select` | native single/multiple selection | option/domain data and filtering policy |
+| `Combobox` | editable ARIA combobox interaction | filtering, fetch, debounce and persistence |
+| `Disclosure` | one native details/summary disclosure | copy and surrounding document structure |
+| `Accordion` family | coordinated native disclosure grouping | item content and domain state |
+| `Dialog` | controlled generic native modal | actions, workflow, copy and confirmation policy |
+| `Tabs` family | tab relationships and keyboard interaction | routing, URL state and persistence |
+| `MenuButton` family | transient action-menu interaction | domain actions and routing policy |
+| `Pagination` | controlled page navigation controls | fetching, URL state, page size and record model |
+| `Tooltip` | non-interactive contextual description | trigger meaning and help copy |
+| `NavList` | semantic navigation list | hrefs, router policy and navigation hierarchy |
+| `Table` family | native semantic table structure | data behavior, sorting, filtering and row actions |
 | `FieldLabel` | field-label presentation | semantic label association and IDs |
 | `FieldDescription` | static descriptive text | ARIA relationships and IDs |
 | `FieldError` | validation error presentation | validation logic and focus policy |
@@ -335,6 +373,20 @@ Use `Checkbox` for native checkbox semantics. Do not convert it into a switch.
 
 Use `Radio` for one choice within a native radio group. GiadaWare UI intentionally
 does not provide a `RadioGroup` abstraction.
+
+Use `Select` when native selection semantics are sufficient. Use `Combobox` when
+the user edits query text while navigating a list of candidate options.
+
+Use `Disclosure` for one native disclosure and `Accordion` when multiple
+disclosures need coordinated grouping.
+
+Use `Dialog` for a generic controlled modal. Keep `ImageLightbox` for the
+single-image modal contract.
+
+Use `MenuButton` for transient action menus. It is not a select replacement or a
+generic dropdown abstraction.
+
+Use the `Table` family for native semantic tables, not data-grid behavior.
 
 Use `FormActions` for action layout. It is not a toolbar and does not implement
 arrow-key toolbar behavior.
@@ -383,6 +435,7 @@ Focused documentation provides the complete contract for each family:
 - [AsyncOperationPanel](async-operation-panel.md)
 - [Button](button.md)
 - [Checkbox](checkbox.md)
+- [Component surface expansion](component-surface-expansion.md)
 - [EditableList family](editable-list.md)
 - [FieldDescription and FieldError](field-description-error.md)
 - [FieldLabel](field-label.md)

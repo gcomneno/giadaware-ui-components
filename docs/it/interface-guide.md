@@ -31,9 +31,14 @@ Esiste un solo entry point JavaScript pubblico:
 
 ```ts
 import {
+	Accordion,
+	AccordionItem,
 	AsyncOperationPanel,
 	Button,
 	Checkbox,
+	Combobox,
+	Dialog,
+	Disclosure,
 	EditableList,
 	EditableListRow,
 	FieldDescription,
@@ -45,16 +50,36 @@ import {
 	ImageAttachmentControl,
 	ImageFocalPointControl,
 	ImageLightbox,
+	MenuButton,
+	MenuItem,
+	MenuSeparator,
+	NavList,
 	PageIntro,
+	Pagination,
 	Panel,
 	Radio,
 	RelationshipGraph,
+	Select,
 	ReorderActions,
 	ReorderAnnouncement,
 	SocialIcon,
 	SocialLink,
 	StatusNotice,
-	Surface
+	Surface,
+	Tab,
+	TabList,
+	TabPanel,
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableHead,
+	TableHeaderCell,
+	TableRow,
+	Tabs,
+	Textarea,
+	TextInput,
+	Tooltip
 } from 'giadaware-ui-components';
 ```
 
@@ -318,6 +343,19 @@ evitare override consumer che rendano invisibile lo stato nativo.
 | `IconButton` | un pulsante nativo icon-only con nome accessibile | policy tooltip/help e workflow |
 | `Checkbox` | un checkbox nativo | label, raggruppamento e validazione |
 | `Radio` | un radio nativo | label, raggruppamento e stato selezionato applicativo |
+| `TextInput` | presentazione e binding di un input text-like nativo | label, validazione e significato di dominio |
+| `Textarea` | presentazione e binding multilinea nativo | label, validazione e significato di dominio |
+| `Select` | selezione nativa single/multiple | dati option/dominio e policy di filtering |
+| `Combobox` | interazione combobox ARIA editabile | filtering, fetch, debounce e persistenza |
+| `Disclosure` | un disclosure nativo details/summary | copy e struttura documentale circostante |
+| famiglia `Accordion` | grouping coordinato di disclosure native | contenuto item e stato di dominio |
+| `Dialog` | modal nativa generica controllata | azioni, workflow, copy e policy di conferma |
+| famiglia `Tabs` | relazioni tab e interazione keyboard | routing, URL state e persistenza |
+| famiglia `MenuButton` | interazione transitoria da action menu | azioni di dominio e policy routing |
+| `Pagination` | controlli di navigazione pagina controllati | fetch, URL state, page size e modello record |
+| `Tooltip` | descrizione contestuale non interattiva | significato del trigger e help copy |
+| `NavList` | lista di navigazione semantica | href, policy router e gerarchia di navigazione |
+| famiglia `Table` | struttura semantica table nativa | comportamento dati, sorting, filtering e row actions |
 | `FieldLabel` | presentazione della label di campo | associazione semantica della label e ID |
 | `FieldDescription` | testo descrittivo statico | relazioni ARIA e ID |
 | `FieldError` | presentazione dell'errore di validazione | logica di validazione e focus policy |
@@ -344,6 +382,22 @@ Usare `Checkbox` per semantica checkbox nativa. Non trasformarlo in switch.
 
 Usare `Radio` per una scelta all'interno di un gruppo radio nativo. GiadaWare UI
 intenzionalmente non fornisce un'astrazione `RadioGroup`.
+
+Usare `Select` quando la semantica di selezione nativa e' sufficiente. Usare
+`Combobox` quando l'utente modifica query text mentre naviga una lista di option
+candidate.
+
+Usare `Disclosure` per un singolo disclosure nativo e `Accordion` quando piu'
+disclosure richiedono grouping coordinato.
+
+Usare `Dialog` per una modal generica controllata. Mantenere `ImageLightbox` per
+il contratto modale a singola immagine.
+
+Usare `MenuButton` per action menu transitori. Non e' un sostituto di select ne'
+un'astrazione dropdown generica.
+
+Usare la famiglia `Table` per tabelle semantiche native, non per comportamento
+da data grid.
 
 Usare `FormActions` per il layout delle azioni. Non è una toolbar e non
 implementa navigazione toolbar con frecce.
@@ -394,6 +448,7 @@ La documentazione dedicata fornisce il contratto completo di ciascuna famiglia:
 - [AsyncOperationPanel](async-operation-panel.md)
 - [Button](button.md)
 - [Checkbox](checkbox.md)
+- [Espansione della superficie dei componenti](component-surface-expansion.md)
 - [Famiglia EditableList](editable-list.md)
 - [FieldDescription e FieldError](field-description-error.md)
 - [FieldLabel](field-label.md)
