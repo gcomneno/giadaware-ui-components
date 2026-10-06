@@ -3,6 +3,20 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    // Repository-only consumer demo resolution. These are exact public specifiers.
+    // Real packed consumption remains independently checked by verify:pack.
+    resolve: {
+        alias: [
+            {
+                find: /^giadaware-ui-components$/,
+                replacement: decodeURIComponent(new URL('./src/lib/index.ts', import.meta.url).pathname)
+            },
+            {
+                find: /^giadaware-ui-components\/styles\.css$/,
+                replacement: decodeURIComponent(new URL('./src/lib/styles.css', import.meta.url).pathname)
+            }
+        ]
+    },
 	plugins: [
 		sveltekit({
 			compilerOptions: {
