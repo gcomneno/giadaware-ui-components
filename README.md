@@ -59,6 +59,10 @@ The approved trial contains:
 - `Surface`
 - `EditableList`, `EditableListRow`, `ReorderActions` and `ReorderAnnouncement`
 
+## Current component map
+
+![GiadaWare UI current component map](docs/assets/current-component-map.png)
+
 GiadaWare UI exposes one public JavaScript entry point:
 
 `giadaware-ui-components`
